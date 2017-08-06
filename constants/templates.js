@@ -48,6 +48,21 @@ exports.INVALID_ESCROW_OR_AUTOBUY =
 'Escrow and autobuy require `**Verifiable** True`.' +
 HOW_TO_REVISE;
 
+exports.INVALID_TYPE_FOR_AUTOBUY =
+'`**Type**` must be `Digital Item` when `**Autobuy** True`.' +
+HOW_TO_REVISE;
+
+exports.INVALID_ADDRESSES =
+'Missing or invalid `**Addresses**` field. This field is required when\
+ `**Verifiable** True`. You should provide an address for each of the\
+ following currencies that you accept: `BTC`, `LTC`, `ETH`.\
+\n\n\
+**Example:**\
+ `BTC=1YourBitcoinAddressObR76b53LETtpyT\
+ LTC=3YourLitecoinAddressHXHXEeLygMXoAj\
+ ETH=0xYourEthereumAddress32487E1EfdD8729b87445`' +
+HOW_TO_REVISE;
+
 exports.SALES_THREAD_APPROVED = link =>
 'Your sales thread was approved and reposted at ' + link + '.\
 \n\n\
