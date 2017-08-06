@@ -21,11 +21,11 @@ module.exports = function(message) {
 
   // REVISE
   let match = message.body.match(/^revise$/i);
-  if (match && message.isMention) return { command: 'revise', message };
+  if (match && message.isMention) return { command: 'revise' };
   
   // PROMOTE
   match = message.body.match(/^promote$/i);
-  if (match && message.isMention) return { command: 'promote', message };
+  if (match && message.isMention) return { command: 'promote' };
 
   // PURCHASE
   match = message.body.match(
@@ -35,7 +35,6 @@ module.exports = function(message) {
     return {
       escrow: !!match[5],
       thread: match[3] || message.parent_id,
-      message,
       command: 'purchase',
       quantity: +match[1],
       paymentMethod: match[4]
@@ -44,20 +43,14 @@ module.exports = function(message) {
   
   // RELEASE ESCROW
   match = message.body.match(/^release escrow for (\w+)$/i);
-  if (match) {
-    return {
-      command: 'release-escrow', order: match[1], message
-    };
-  }
+  if (match) return { command: 'release-escrow', order: match[1] };
 
   // REQUEST ESCROW
   match = message.body.match(
     /^request escrow for (\w+)( because (.+))?$/i
   );
   if (match) {
-    return {
-      command: 'request-escrow', order: match[1], reason: match[3], message
-    };
+    return { command: 'request-escrow', order: match[1], reason: match[3] };
   }
 
   // GIVE FEEDBACK
@@ -67,52 +60,49 @@ module.exports = function(message) {
   if (match) {
     return {
       command: 'give-feedback', type: match[1], order: match[2],
-      feedback: match[3], message
+      feedback: match[3]
     };
   }
 
   // DELETE
   match = message.body.match(/^delete|remove$/i);
-  if (match && message.isMention) return { command: 'delete', message };
+  if (match && message.isMention) return { command: 'delete' };
 
   // REQUEST VERIFICATION
   match = message.body.match(/^request verification( .+)?$/i);
   if (match && message.isMention) {
-    return {
-      command: 'request-verification', reason: match[1] || '', message
-    };
+    return { command: 'request-verification', reason: match[1] || '' };
   }
 
   // VERIFY
   match = message.body.match(/^verify$/i);
-  if (match) return { command: 'verify', message };
+  if (match) return { command: 'verify' };
 
-  // ADD TO AUTOBUY
-  match = message.body.match(/^add items to autobuy\n\n(.+)/i);
+  // ADD AUTOBUY ITEMS
+  match = message.body.match(/^add autobuy items to (\w+)\s/i);
   if (match) {
     return {
-      command: 'add-to-autobuy', message,
+      command: 'add-autobuy-items', thread: match[1],
       items: message.body.split('\n\n').slice(1)
     }
   }
 
   // LIST AUTOBUY ITEMS
-  match = message.body.match(/^list autobuy items$/i);
-  if (match) return { command: 'list-autobuy-items', message };
-
-  // REMOVE AUTOBUY ITEM(S)
-  match = message.body.match(/^remove autobuy items (.+)$/i);
+  match = message.body.match(/^list autobuy items in (\w+)$/i);
   if (match) {
-    return {
-      command: 'remove-autobuy-items', message,
-      items: match[1].replace(/[^0-9,]+/g, '').split(',').map(i => +i)
-    }
+    return { command: 'list-autobuy-items', thread: match[1] };
+  }
+
+  // CLEAR AUTOBUY ITEMS
+  match = message.body.match(/^clear autobuy items in (\w+)$/i);
+  if (match) {
+    return { command: 'clear-autobuy-items', thread: match[1] };
   }
 
   // REPOST
   match = message.body.match(/^repost (\w{6,})$/i);
-  if (match) return { command: 'repost', id: match[1], message };
+  if (match) return { command: 'repost', id: match[1] };
 
-  return { command: 'error', message: 'Invalid command or syntax' };
+  return { command: 'error', reply: 'Invalid command or syntax' };
 
 }
