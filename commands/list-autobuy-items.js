@@ -1,4 +1,4 @@
-const messages = require('constants/messages');
+const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
 /**
@@ -19,9 +19,9 @@ module.exports = async function(r, message, thread) {
     );
 
     if (!rows.length)
-      throw messages.NO_MATCHING_THREAD(thread);
+      throw templates.NO_MATCHING_THREAD(thread);
     if (rows[0].author != message.author.name)
-      throw messages.UNAUTHORIZED_COMMAND;
+      throw templates.UNAUTHORIZED_COMMAND;
 
     rows = await db.query(
       'SELECT item FROM autobuy_items WHERE thread = ? ORDER BY added ASC',
@@ -29,7 +29,7 @@ module.exports = async function(r, message, thread) {
     );
     db.release();
 
-    if (!rows.length) throw messages.NO_AUTOBUY_ITEMS;
+    if (!rows.length) throw templates.NO_AUTOBUY_ITEMS;
 
     await message.reply(
       rows.map(r => r.item).join('\n\n')

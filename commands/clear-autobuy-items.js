@@ -1,4 +1,4 @@
-const messages = require('constants/messages');
+const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
 /**
@@ -19,9 +19,9 @@ module.exports = async function(r, message, thread) {
     );
 
     if (!rows.length)
-      throw messages.NO_MATCHING_THREAD(thread);
+      throw templates.NO_MATCHING_THREAD(thread);
     if (rows[0].author != message.author.name)
-      throw messages.UNAUTHORIZED_COMMAND;
+      throw templates.UNAUTHORIZED_COMMAND;
 
     await db.query(
       'DELETE FROM autobuy_items WHERE thread = ?',
@@ -29,7 +29,7 @@ module.exports = async function(r, message, thread) {
     );
     db.release();
 
-    await message.reply(messages.AUTOBUY_ITEMS_CLEARED);
+    await message.reply(templates.AUTOBUY_ITEMS_CLEARED);
   }
   catch (err) {
     if (typeof err != 'string')

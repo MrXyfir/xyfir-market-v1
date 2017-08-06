@@ -1,4 +1,4 @@
-const messages = require('constants/messages');
+const templates = require('constants/templates');
 const getUser = require('lib/users/get-info');
 const parse = require('lib/threads/parse');
 const build = require('lib/threads/build');
@@ -51,7 +51,7 @@ module.exports = async function(r, post, revise = false) {
     
     // Send poster the link to their thread
     await post.reply(
-      messages.SALES_THREAD_APPROVED(repost.permalink)
+      templates.SALES_THREAD_APPROVED(repost.permalink)
     );
   }
   catch (err) {

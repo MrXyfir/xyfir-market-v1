@@ -1,4 +1,4 @@
-const messages = require('constants/messages');
+const templates = require('constants/templates');
 const config = require('constants/config');
 const moment = require('moment');
 const mysql = require('lib/mysql');
@@ -35,7 +35,7 @@ module.exports = async function() {
         await thread.remove();
 
         // Notify creator that their thread has expired and that they can repost
-        await thread.reply(messages.SALES_THREAD_EXPIRED(thread.id));
+        await thread.reply(templates.SALES_THREAD_EXPIRED(thread.id));
       }
     }
 

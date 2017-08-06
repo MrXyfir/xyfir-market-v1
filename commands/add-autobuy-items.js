@@ -1,4 +1,4 @@
-const messages = require('constants/messages');
+const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
 /**
@@ -25,16 +25,16 @@ module.exports = async function(r, message, command) {
     );
 ``
     if (!rows.length)
-      throw messages.NO_MATCHING_THREAD(command.thread);
+      throw templates.NO_MATCHING_THREAD(command.thread);
     if (rows[0].author != message.author.name)
-      throw messages.UNAUTHORIZED_COMMAND;
+      throw templates.UNAUTHORIZED_COMMAND;
 
     const data = JSON.parse(rows[0].data);
 
     if (!data.autobuy)
-      throw messages.AUTOBUY_NOT_ENABLED;
+      throw templates.AUTOBUY_NOT_ENABLED;
     if (!command.items.length)
-      throw messages.NO_AUTOBUY_ITEMS;
+      throw templates.NO_AUTOBUY_ITEMS;
 
     // Add items to database
     const sql =
@@ -46,7 +46,7 @@ module.exports = async function(r, message, command) {
     db.release();
 
     // Notify user that items were added
-    await message.reply(messages.AUTOBUY_ITEMS_ADDED(result.affectedRows));
+    await message.reply(templates.AUTOBUY_ITEMS_ADDED(result.affectedRows));
   }
   catch (err) {
     if (typeof err != 'string')
