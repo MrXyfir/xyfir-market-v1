@@ -1,7 +1,12 @@
 const parseCommand = require('commands/parse');
 const config = require('constants/config');
-const revise = require('commands/revise');
 const snoo = require('snoowrap');
+
+// Command handler
+const clearAutobuyItems = require('commands/clear-autobuy-items');
+const listAutobuyItems = require('commands/list-autobuy-items');
+const addAutobuyItems = require('commands/add-autobuy-items');
+const revise = require('commands/revise');
 
 const r = new snoo(config.snoowrap);
 
@@ -19,23 +24,36 @@ module.exports = async function() {
 
       switch (command.command) {
         case 'request-verification':
-        case 'remove-autobuy-items':
+          break;
+        case 'clear-autobuy-items':
+          clearAutobuyItems(r, message, command.thread);
+          break;
         case 'list-autobuy-items':
-        case 'add-to-autobuy':
+          listAutobuyItems(r, message, command.thread);
+          break;
+        case 'add-autobuy-items':
+          addAutobuyItems(r, message, command);
+          break;
         case 'release-escrow':
+          break;
         case 'request-escrow':
+          break;
         case 'give-feedback':
+          break;
         case 'purchase':
+          break;
         case 'promote':
           break;
         case 'revise':
           revise(r, message);
           break;
         case 'delete':
+          break;
         case 'verify':
           break;
         case 'error':
-          message.reply(command.message);
+          message.reply(command.reply);
+          break;
       }
     }
     
