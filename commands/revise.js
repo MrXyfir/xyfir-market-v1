@@ -1,4 +1,4 @@
-const create = require('commands/create');
+const create = require('lib/threads/create');
 const mysql = require('lib/mysql');
 
 /**

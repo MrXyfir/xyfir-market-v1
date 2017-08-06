@@ -1,5 +1,5 @@
+const create = require('lib/threads/create');
 const config = require('constants/config');
-const create = require('commands/create');
 const moment = require('moment');
 const mysql = require('lib/mysql');
 const snoo = require('snoowrap');
