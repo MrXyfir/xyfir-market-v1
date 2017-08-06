@@ -1,7 +1,7 @@
 const buildCommandLink = require('lib/messages/build-command-link');
 
 const HOW_TO_REVISE =
-'\n\nEdit your thread and then comment on it `u/xyMarketBot revise`.'
+'\n\nEdit your thread and then comment on it `u/xyMarketBot revise`.';
 
 exports.INVALID_TITLE =
 'Invalid title: it must be 5-200 characters in length.\
@@ -59,3 +59,22 @@ exports.SALES_THREAD_EXPIRED = id =>
  it by clicking [here](' + buildCommandLink('repost ' + id) + '). This thread\
  will remain removed and a new copy of it will be posted. If this thread has\
  autobuy enabled, any items in stock will be transfered.';
+
+exports.NO_MATCHING_THREAD = id =>
+'A sales thread with the id `' + id + '` could not be found. If you are sure\
+ that the id is correct, check if the thread has expired.';
+
+exports.UNAUTHORIZED_COMMAND =
+'You are not authorized to perform that command.';
+
+exports.AUTOBUY_NOT_ENABLED =
+'This thread does not have autobuy enabled.';
+
+exports.NO_AUTOBUY_ITEMS =
+'No autobuy items found.';
+
+exports.AUTOBUY_ITEMS_ADDED = count =>
+`(${count}) autobuy items added.`
+
+exports.AUTOBUY_ITEMS_CLEARED =
+'All autobuy items have been removed.';
