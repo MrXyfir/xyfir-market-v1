@@ -22,9 +22,9 @@ module.exports = async function() {
     );
 
     if (rows.length) {
-      // Delete threads from database
+      // Mark threads as 'removed'
       await db.query(
-        'DELETE FROM sales_threads WHERE id IN (?)',
+        'UPDATE sales_threads SET removed = 1 WHERE id IN (?)',
         [rows.map(r => r.id)]
       );
 
@@ -40,9 +40,11 @@ module.exports = async function() {
     }
 
     // Grab full data for all remaining threads in database
-    rows = await db.query(
-      'SELECT id, data, promoted FROM sales_threads WHERE approved = 1'
-    );
+    rows = await db.query(`
+      SELECT id, data, promoted
+      FROM sales_threads
+      WHERE approved = 1 AND removed = 0
+    `);
     db.release();
 
     if (!rows.length) return;
