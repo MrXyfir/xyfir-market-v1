@@ -116,6 +116,7 @@ module.exports = async function() {
           title: 'Daily Thread',
           sendReplies: false
         })
+        .disableInboxReplies()
         .approve()
         .sticky({ num: 1 });
     }
