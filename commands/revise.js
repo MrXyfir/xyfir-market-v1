@@ -1,19 +1,17 @@
 const create = require('lib/threads/create');
-const mysql = require('lib/mysql');
 
 /**
  * Revise an edited unapproved sales thread and repost it if valid.
  * @param {snoowrap} r
  * @param {snoowrap.Comment} comment
+ * @param {string} thread
  */
-module.exports = async function(r, comment) {
-
-  const db = new mysql;
+module.exports = async function(r, comment, thread) {
 
   try {
     // Load the thread that the comment resides in
     const post = await r
-      .getSubmission(comment.context.split('/')[4])
+      .getSubmission(thread)
       .fetch();
 
     // Only the creator can revise their own thread
@@ -22,7 +20,6 @@ module.exports = async function(r, comment) {
     create(r, post, true);
   }
   catch (err) {
-    db.release();
     comment.reply(err);
   }
 
