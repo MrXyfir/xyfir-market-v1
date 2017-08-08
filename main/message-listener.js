@@ -6,7 +6,8 @@ const snoo = require('snoowrap');
 const clearAutobuyItems = require('commands/clear-autobuy-items');
 const listAutobuyItems = require('commands/list-autobuy-items');
 const addAutobuyItems = require('commands/add-autobuy-items');
-const revise = require('commands/revise');
+const removeThread = require('commands/remove');
+const reviseThread = require('commands/revise');
 
 const r = new snoo(config.snoowrap);
 
@@ -45,9 +46,10 @@ module.exports = async function() {
         case 'promote':
           break;
         case 'revise':
-          revise(r, message);
+          reviseThread(r, message, command.thread);
           break;
-        case 'delete':
+        case 'remove':
+          removeThread(r, message, command.thread);
           break;
         case 'verify':
           break;
