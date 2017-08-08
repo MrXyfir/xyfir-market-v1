@@ -93,3 +93,7 @@ exports.AUTOBUY_ITEMS_ADDED = count =>
 
 exports.AUTOBUY_ITEMS_CLEARED =
 'All autobuy items have been removed.';
+
+exports.THREAD_REMOVED_BY_CREATOR = id =>
+'Your thread has been removed. You may repost\
+ it by clicking [here](' + buildCommandLink('repost ' + id) + ').';
