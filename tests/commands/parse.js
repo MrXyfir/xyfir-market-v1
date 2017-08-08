@@ -7,10 +7,11 @@ module.exports = function() {
 
   // REVISE
   actual = parse({
-    was_comment: true, subject: 'username mention', body: 'revise'
+    was_comment: true, body: 'u/xyMarketBot revise',
+    context: '/r/xyMarket/comments/6s1psl/daily_thread/'
   }),
   expected = {
-    command: 'revise'
+    command: 'revise', thread: '6s1psl'
   };
   assert.deepEqual(actual, expected, 'Command: revise');
 
@@ -48,5 +49,15 @@ module.exports = function() {
     command: 'clear-autobuy-items', thread: '6s1psl'
   };
   assert.deepEqual(actual, expected, 'Command: clear-autobuy-items');
+
+  // REMOVE
+  actual = parse({
+    was_comment: true, body: 'u/xyMarketBot remove',
+    context: '/r/xyMarket/comments/6s1psl/daily_thread/'
+  }),
+  expected = {
+    command: 'remove', thread: '6s1psl'
+  };
+  assert.deepEqual(actual, expected, 'Command: remove');
 
 }
