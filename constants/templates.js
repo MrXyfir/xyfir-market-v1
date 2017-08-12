@@ -76,8 +76,7 @@ exports.SALES_THREAD_EXPIRED = id =>
  autobuy enabled, any items in stock will be transfered.';
 
 exports.NO_MATCHING_THREAD = id =>
-'A sales thread with the id `' + id + '` could not be found. If you are sure\
- that the id is correct, check if the thread has expired.';
+`An active sales thread with the id \`${id}\` could not be found.`;
 
 exports.UNAUTHORIZED_COMMAND =
 'You are not authorized to perform that command.';
@@ -97,3 +96,61 @@ exports.AUTOBUY_ITEMS_CLEARED =
 exports.THREAD_REMOVED_BY_CREATOR = id =>
 'Your thread has been removed. You may repost\
  it by clicking [here](' + buildCommandLink('repost ' + id) + ').';
+
+exports.VERIFIABLE_NOT_ACCEPTED =
+`This sales thread does not accept verifiable purchases. You must contact
+the seller directly to make a purchase. You will not be able to use escrow or
+give or receive feedback on a non-verifiable purchase.`;
+
+exports.CURRENCY_NOT_ACCEPTED = currency =>
+`This sales thread does not accept the currency \`${currency}\`.`;
+
+exports.ESCROW_NOT_ACCEPTED =
+`This sales thread does not accept escrow.`;
+
+exports.BUYER_SENDS_PAYMENT = order =>
+`xyMarket has received your payment! Your order id is \`${order}\`.`;
+
+exports.SELLER_RECEIVES_ORDER = data =>
+`You have received an order for your sales thread:
+[${data.thread}](/r/xyMarket/comments/${data.thread}).
+
+Your order id is \`${data.order}\`.
+u/${data.buyer} has purchased \`${data.quantity}\` item(s).
+You will receive \`${data.amount} ${data.currency}\`.`;
+
+exports.GIVE_AUTOBUY_ITEMS = items =>
+`**Autobuy Items:**
+
+${items.map(i => `- ${i}`).join('\n')}`;
+
+exports.AUTOBUY_ITEMS_REQUIRED = count =>
+`Not enough autobuy items were available to fulfill their order.
+Please send \`${count}\` to the buyer.`;
+
+exports.AUTOBUY_ITEMS_OWED = count =>
+`There were not enough autobuy items to fulfill your order.
+The seller has been notified to send you \`${count}\` item(s).`;
+
+exports.ORDER_IN_ESCROW =
+`This order is in escrow.
+See the documentation for escrow-related commands.`;
+
+exports.ORDER_COMPLETE =
+`This order is complete.
+Remember to give feedback or it will automatically be given after seven days.`;
+
+exports.SEND_PAYMENT = data =>
+`Send \`${data.amount}\` in \`${data.currency}\` to \`${data.address}\` within
+15 minutes of this message being sent. You must send a single payment of the
+exact requested amount before the order expires or your payment will not be
+counted and the funds sent will be lost.
+
+You may abandon this order and start a new one at any time by sending the
+purchase command again.
+
+You will be notified once your payment has been received.`;
+
+exports.UNEXPECTED_ERROR =
+`xyMarketBot ran into an unexpected error.
+You can try sending your command again or contacting a moderator.`;
