@@ -63,6 +63,10 @@ exports.INVALID_ADDRESSES =
  ETH=0xYourEthereumAddress32487E1EfdD8729b87445`' +
 HOW_TO_REVISE;
 
+exports.PRICE_TOO_LOW =
+`Sales threads with \`**Verifiable** True\` require \`**Price**\` to be at or
+above $5.00 (USD).` + HOW_TO_REVISE;
+
 exports.SALES_THREAD_APPROVED = link =>
 'Your sales thread was approved and reposted at ' + link + '.\
 \n\n\
