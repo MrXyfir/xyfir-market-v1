@@ -1,3 +1,4 @@
+const updateThread = require('lib/threads/update');
 const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
@@ -20,18 +21,19 @@ module.exports = async function(r, message, command) {
   try {
     await db.getConnection();
     const rows = await db.query(
-      'SELECT author, data FROM sales_threads WHERE id = ?',
+      'SELECT id, author, data FROM sales_threads WHERE id = ?',
       [command.thread]
     );
-``
+
     if (!rows.length)
       throw templates.NO_MATCHING_THREAD(command.thread);
-    if (rows[0].author != message.author.name)
+
+    const thread = rows[0];
+    thread.data = JSON.parse(thread.data);
+
+    if (thread.author != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
-
-    const data = JSON.parse(rows[0].data);
-
-    if (!data.autobuy)
+    if (!thread.data.autobuy)
       throw templates.AUTOBUY_NOT_ENABLED;
     if (!command.items.length)
       throw templates.NO_AUTOBUY_ITEMS;
@@ -47,12 +49,17 @@ module.exports = async function(r, message, command) {
 
     // Notify user that items were added
     await message.reply(templates.AUTOBUY_ITEMS_ADDED(result.affectedRows));
+
+    // Update stock count
+    thread.data.stock += result.affectedRows;
+    await updateThread(r, thread);
   }
   catch (err) {
+    db.release();
+
     if (typeof err != 'string')
       return console.error('commands/add-autobuy-items', err);
 
-    db.release();
     message.reply(err);
   }
 
