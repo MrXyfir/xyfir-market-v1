@@ -8,6 +8,7 @@ const listAutobuyItems = require('commands/list-autobuy-items');
 const addAutobuyItems = require('commands/add-autobuy-items');
 const removeThread = require('commands/remove');
 const reviseThread = require('commands/revise');
+const purchase = require('commands/purchase');
 
 const r = new snoo(config.snoowrap);
 
@@ -42,6 +43,7 @@ module.exports = async function() {
         case 'give-feedback':
           break;
         case 'purchase':
+          purchase(r, message, command);
           break;
         case 'promote':
           break;
