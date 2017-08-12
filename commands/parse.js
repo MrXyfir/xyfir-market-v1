@@ -35,15 +35,15 @@ module.exports = function(message) {
 
   // PURCHASE
   match = message.body.match(
-    /^purchase (\d+)( of (\w+))? using (BTC|LTC|ETH)( and escrow)?$/i
+    /^(purchase|buy) (\d+)( of (\w+))? using (BTC|LTC|ETH)( and escrow)?$/i
   );
   if (match) {
     return {
-      escrow: !!match[5],
-      thread: match[3] || threadId(message.context),
+      escrow: !!match[6],
+      thread: match[4] || threadId(message.context),
       command: 'purchase',
-      quantity: +match[1],
-      paymentMethod: match[4]
+      quantity: +match[2],
+      currency: match[5].toUpperCase()
     };
   }
   
@@ -71,7 +71,7 @@ module.exports = function(message) {
   }
 
   // REMOVE
-  match = message.body.match(/^delete|remove$/i);
+  match = message.body.match(/^(delete|remove)$/i);
   if (match && message.isMention) {
     return { command: 'remove', thread: threadId(message.context) };
   };
@@ -96,7 +96,7 @@ module.exports = function(message) {
     return {
       command: 'add-autobuy-items', thread: match[1],
       items: message.body.split('\n\n').slice(1)
-    }
+    };
   }
 
   // LIST AUTOBUY ITEMS
