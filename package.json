@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "app-module-path": "^2.2.0",
+    "body-parser": "^1.17.2",
+    "coinbase": "^2.0.6",
+    "express": "^4.15.4",
     "moment": "^2.18.1",
-    "mysql": "^2.14.0",
-    "snoowrap": "^1.14.1"
+    "mysql": "^2.14.1",
+    "snoowrap": "^1.14.2"
   },
   "devDependencies": {}
 }
