@@ -14,10 +14,10 @@ module.exports = async function() {
   const db = new mysql;
 
   try {
-    // Get ids of all threads that are over a week old
+    // Get ids of all active threads that are over a week old
     await db.getConnection();
     let rows = await db.query(
-      'SELECT id FROM sales_threads WHERE created < ?',
+      'SELECT id FROM sales_threads WHERE created < ? AND removed = 0',
       [moment().subtract(1, 'week').utc().unix()]
     );
 
