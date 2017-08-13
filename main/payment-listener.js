@@ -129,31 +129,30 @@ module.exports = async function(req, res) {
       await updateThread(r, thread);
     }
 
-    let status = 0;
-
     if (order.escrow) {
       messagesToSeller.push(templates.ORDER_IN_ESCROW);
       messagesToBuyer.push(templates.ORDER_IN_ESCROW);
 
-      status = orderStatus.IN_ESCROW;
+      await db.query(
+        'UPDATE orders SET status = ? WHERE id = ?',
+        [orderStatus.IN_ESCROW, order.id]
+      );
     }
     else {
       messagesToSeller.push(templates.ORDER_COMPLETE);
       messagesToBuyer.push(templates.ORDER_COMPLETE);
-
-      status = orderStatus.COMPLETE;
 
       // Pay seller
       await sendMoney(
         order.amountForSeller, currency,
         thread.data.addresses[currency]
       );
-    }
 
-    await db.query(
-      'UPDATE orders SET status = ? WHERE id = ?',
-      [status, order.id]
-    );
+      await db.query(
+        'UPDATE orders SET status = ?, completed = NOW() WHERE id = ?',
+        [orderStatus.COMPLETE, order.id]
+      );
+    }
     db.release();
 
     await r.composeMessage({
