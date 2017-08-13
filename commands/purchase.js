@@ -64,7 +64,7 @@ module.exports = async function(r, message, command) {
 
     // Convert USD price to currency
     const amount = await convertCurrency(
-      thread.data.price, 'USD', command.currency
+      thread.data.price * command.quantity, 'USD', command.currency
     );
 
     // 2.5% fee for seller always
