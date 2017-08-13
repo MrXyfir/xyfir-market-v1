@@ -80,7 +80,8 @@ exports.SALES_THREAD_EXPIRED = id =>
  autobuy enabled, any items in stock will be transfered.';
 
 exports.NO_MATCHING_THREAD = id =>
-`An active sales thread with the id \`${id}\` could not be found.`;
+`An sales thread with the id \`${id}\` could not be found. It is possible that
+the thread exists but is currently not in a state to accept that command.`;
 
 exports.UNAUTHORIZED_COMMAND =
 'You are not authorized to perform that command.';
@@ -158,3 +159,18 @@ You will be notified once your payment has been received.`;
 exports.UNEXPECTED_ERROR =
 `xyMarketBot ran into an unexpected error.
 You can try sending your command again or contacting a moderator.`;
+
+exports.NO_MATCHING_ORDER = id =>
+`An order with the id \`${id}\` could not be found. It is possible the order
+exists but is currently not in a state to accept that particular command.`;
+
+exports.ESCROW_RELEASE_REQUESTED = (id, seller, note) =>
+`u/${seller} is requesting that you release escrow for order \`${id}\`.
+
+You can release escrow with following command: \`release escrow for ${id}\`.
+
+If you need to respond to the seller you must contact them directly.
+
+---
+
+**Message from seller:** ${note}`;
