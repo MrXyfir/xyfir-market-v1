@@ -72,8 +72,10 @@ module.exports = function(message) {
   );
   if (match) {
     return {
-      command: 'give-feedback', type: match[1], order: match[2],
-      feedback: match[3] || ''
+      feedback: (match[3] || '').trim(),
+      command: 'give-feedback', 
+      order: match[2],
+      type: match[1].toLowerCase() == 'positive' ? 1 : -1
     };
   }
 

@@ -174,3 +174,10 @@ If you need to respond to the seller you must contact them directly.
 ---
 
 **Message from seller:** ${note}`;
+
+exports.FEEDBACK_GIVEN =
+`Your feedback has been saved.
+You will not be able to update it.`;
+
+exports.FEEDBACK_ALREADY_GIVEN =
+`You have already given feedback for that order.`;
