@@ -83,6 +83,14 @@ module.exports = async function(r, message, command) {
       amount, amountForSeller, amountForBuyer,
       orderId
     ]);
+
+    // Create rows in user table for buyer and seller IF they don't exist
+    await db.query(`
+      INSERT INTO users (name) VALUES (?), (?)
+      ON DUPLICATE KEY UPDATE name = name
+    `, [
+      thread.seller, message.author.name
+    ]);
     db.release();
 
     // Notify the buyer how to send payment
