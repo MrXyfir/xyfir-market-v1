@@ -49,7 +49,7 @@ module.exports = function(message) {
   
   // RELEASE ESCROW
   match = message.body.match(/^release escrow for (\d+)$/i);
-  if (match) return { command: 'release-escrow', order: match[1] };
+  if (match) return { command: 'release-escrow', order: +match[1] };
 
   // REQUEST ESCROW
   match = message.body.match(
@@ -57,7 +57,8 @@ module.exports = function(message) {
   );
   if (match) {
     return {
-      command: 'request-escrow', order: match[1],
+      command: 'request-escrow',
+      order: +match[1],
       note: message.body
         .split('\n\n')
         .slice(1)

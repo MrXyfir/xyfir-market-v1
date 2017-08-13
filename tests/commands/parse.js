@@ -117,4 +117,13 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: give-feedback');
 
+  // RELEASE ESCROW
+  actual = parse({
+    body: 'release escrow for 54321'
+  }),
+  expected = {
+    command: 'release-escrow', order: 54321
+  };
+  assert.deepEqual(actual, expected, 'Command: release-escrow');
+
 }

@@ -181,3 +181,8 @@ You will not be able to update it.`;
 
 exports.FEEDBACK_ALREADY_GIVEN =
 `You have already given feedback for that order.`;
+
+exports.ESCROW_RELEASED = id =>
+`Escrow has been released for order \`${id}\`.
+
+${exports.ORDER_COMPLETE}`;
