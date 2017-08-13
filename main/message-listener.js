@@ -6,6 +6,7 @@ const snoo = require('snoowrap');
 const clearAutobuyItems = require('commands/clear-autobuy-items');
 const listAutobuyItems = require('commands/list-autobuy-items');
 const addAutobuyItems = require('commands/add-autobuy-items');
+const requestEscrow = require('commands/request-escrow');
 const removeThread = require('commands/remove');
 const reviseThread = require('commands/revise');
 const purchase = require('commands/purchase');
@@ -39,6 +40,7 @@ module.exports = async function() {
         case 'release-escrow':
           break;
         case 'request-escrow':
+          requestEscrow(r, message, command);
           break;
         case 'give-feedback':
           break;
