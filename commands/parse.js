@@ -48,25 +48,32 @@ module.exports = function(message) {
   }
   
   // RELEASE ESCROW
-  match = message.body.match(/^release escrow for (\w{6,})$/i);
+  match = message.body.match(/^release escrow for (\d+)$/i);
   if (match) return { command: 'release-escrow', order: match[1] };
 
   // REQUEST ESCROW
   match = message.body.match(
-    /^request escrow for (\w{6,})( because (.+))?$/i
+    /^request escrow for (\d+)\b/i
   );
   if (match) {
-    return { command: 'request-escrow', order: match[1], reason: match[3] };
+    return {
+      command: 'request-escrow', order: match[1],
+      note: message.body
+        .split('\n\n')
+        .slice(1)
+        .join('\n\n')
+        .trim() || 'None'
+    };
   }
 
   // GIVE FEEDBACK
   match = message.body.match(
-    /^give (positive|negative) feedback for (\w{6,})( .+)?$/i
+    /^give (positive|negative) feedback for (\d+)( .+)?$/i
   );
   if (match) {
     return {
       command: 'give-feedback', type: match[1], order: match[2],
-      feedback: match[3]
+      feedback: match[3] || ''
     };
   }
 
