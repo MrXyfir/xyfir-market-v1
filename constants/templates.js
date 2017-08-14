@@ -73,11 +73,11 @@ exports.SALES_THREAD_APPROVED = link =>
 This thread has been removed and will not accept commands. \
 You can now safely delete this thread if you wish.';
 
-exports.SALES_THREAD_EXPIRED = id =>
-'This thread has expired after being live for one week. The owner may repost\
- it by clicking [here](' + buildCommandLink('repost ' + id) + '). This thread\
- will remain removed and a new copy of it will be posted. If this thread has\
- autobuy enabled, any items in stock will be transfered.';
+exports.SALES_THREAD_EXPIRED =
+`This thread has expired after being live for one week. The owner may repost
+it by commenting on this thread \`u/xyMarketBot repost\`. This thread will
+remain removed and a new copy of it will be posted. If this thread has autobuy
+enabled, any items in stock will be transfered.`;
 
 exports.NO_MATCHING_THREAD = id =>
 `An sales thread with the id \`${id}\` could not be found. It is possible that
@@ -193,3 +193,6 @@ exports.VERIFIED = (mod, note) =>
 ---
 
 **Mod note:** ${note}`;
+
+exports.THREAD_REPOSTED = link =>
+`This sales thread has been reposted at ${link}.`;
