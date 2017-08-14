@@ -136,4 +136,14 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: verify');
 
+  // REPOST
+  actual = parse({
+    was_comment: true, context: '/r/xyMarket/comments/6s1psl/daily_thread/',
+    body: 'u/xyMarketBot repost'
+  }),
+  expected = {
+    command: 'repost', thread: '6s1psl'
+  };
+  assert.deepEqual(actual, expected, 'Command: repost');
+
 }

@@ -132,8 +132,9 @@ module.exports = function(message) {
   }
 
   // REPOST
-  match = message.body.match(/^repost (\w{6,})$/i);
-  if (match) return { command: 'repost', id: match[1] };
+  match = message.body.match(/^repost$/i);
+  if (match && message.isMention)
+    return { command: 'repost', thread: threadId(message.context) };
 
   return { command: 'error', reply: 'Invalid command or syntax' };
 

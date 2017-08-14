@@ -13,6 +13,7 @@ const removeThread = require('commands/remove');
 const reviseThread = require('commands/revise');
 const purchase = require('commands/purchase');
 const verify = require('commands/verify');
+const repost = require('commands/repost');
 
 const r = new snoo(config.snoowrap);
 
@@ -63,6 +64,8 @@ module.exports = async function() {
         case 'verify':
           verify(r, message, command);
           break;
+        case 'repost':
+          repost(r, message, command.thread);
         case 'error':
           message.reply(command.reply);
           break;
