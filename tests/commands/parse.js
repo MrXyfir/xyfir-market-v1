@@ -126,4 +126,14 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: release-escrow');
 
+  // VERIFY
+  actual = parse({
+    was_comment: true, context: '/r/xyMarket/comments/6s1psl/daily_thread/',
+    body: 'u/xyMarketBot verify\n\nsome message\n\ncontinued'
+  }),
+  expected = {
+    command: 'verify', thread: '6s1psl', note: 'some message\n\ncontinued'
+  };
+  assert.deepEqual(actual, expected, 'Command: verify');
+
 }

@@ -97,8 +97,18 @@ module.exports = function(message) {
   }
 
   // VERIFY
-  match = message.body.match(/^verify$/i);
-  if (match) return { command: 'verify', thread: threadId(message.context) };
+  match = message.body.match(/^verify\b/i);
+  if (match && message.isMention) {
+    return {
+      command: 'verify',
+      thread: threadId(message.context),
+      note: message.body
+        .split('\n\n')
+        .slice(1)
+        .join('\n\n')
+        .trim() || ''
+    };
+  }
 
   // ADD AUTOBUY ITEMS
   match = message.body.match(/^add autobuy items to (\w{6,})\s/i);

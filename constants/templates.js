@@ -186,3 +186,10 @@ exports.ESCROW_RELEASED = id =>
 `Escrow has been released for order \`${id}\`.
 
 ${exports.ORDER_COMPLETE}`;
+
+exports.VERIFIED = (mod, note) =>
+`This sales thread has been verified by u/${mod}.
+
+---
+
+**Mod note:** ${note}`;
