@@ -35,7 +35,7 @@ module.exports = async function() {
         await thread.remove();
 
         // Notify creator that their thread has expired and that they can repost
-        await thread.reply(templates.SALES_THREAD_EXPIRED(thread.id));
+        await thread.reply(templates.SALES_THREAD_EXPIRED);
       }
     }
 
