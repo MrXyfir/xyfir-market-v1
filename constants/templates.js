@@ -196,3 +196,10 @@ exports.VERIFIED = (mod, note) =>
 
 exports.THREAD_REPOSTED = link =>
 `This sales thread has been reposted at ${link}.`;
+
+exports.VERIFICATION_REQUESTED = data =>
+`Verification has been requested for /r/xyMarket/comments/${data.thread}.
+
+---
+
+${data.note}`;

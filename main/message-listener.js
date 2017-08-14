@@ -2,7 +2,8 @@ const parseCommand = require('commands/parse');
 const config = require('constants/config');
 const snoo = require('snoowrap');
 
-// Command handler
+// Command handlers
+const requestVerification = require('commands/request-verification');
 const clearAutobuyItems = require('commands/clear-autobuy-items');
 const listAutobuyItems = require('commands/list-autobuy-items');
 const addAutobuyItems = require('commands/add-autobuy-items');
@@ -31,6 +32,7 @@ module.exports = async function() {
 
       switch (command.command) {
         case 'request-verification':
+          requestVerification(r, message, command);
           break;
         case 'clear-autobuy-items':
           clearAutobuyItems(r, message, command.thread);

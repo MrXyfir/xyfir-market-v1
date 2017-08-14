@@ -146,4 +146,14 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: repost');
 
+  // REQUEST VERIFICATION
+  actual = parse({
+    was_comment: true, context: '/r/xyMarket/comments/6s1psl/daily_thread/',
+    body: 'u/xyMarketBot request verification\n\nsome note'
+  }),
+  expected = {
+    command: 'request-verification', thread: '6s1psl', note: 'some note'
+  };
+  assert.deepEqual(actual, expected, 'Command: request-verification');
+
 }
