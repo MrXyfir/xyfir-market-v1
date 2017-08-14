@@ -1,4 +1,5 @@
 const threadId = context => context.split('/')[4];
+const note = body => body.split('\n\n').slice(1).join('\n\n').trim();
 
 /**
  * Takes in the content from a username mention or private message and returns 
@@ -59,11 +60,7 @@ module.exports = function(message) {
     return {
       command: 'request-escrow',
       order: +match[1],
-      note: message.body
-        .split('\n\n')
-        .slice(1)
-        .join('\n\n')
-        .trim() || 'None'
+      note: note(message.body) || 'None'
     };
   }
 
@@ -87,12 +84,12 @@ module.exports = function(message) {
   };
 
   // REQUEST VERIFICATION
-  match = message.body.match(/^request verification( .+)?$/i);
+  match = message.body.match(/^request verification\b/i);
   if (match && message.isMention) {
     return {
       command: 'request-verification',
       thread: threadId(message.context),
-      reason: match[1] || ''
+      note: note(message.body)
     };
   }
 
@@ -102,11 +99,7 @@ module.exports = function(message) {
     return {
       command: 'verify',
       thread: threadId(message.context),
-      note: message.body
-        .split('\n\n')
-        .slice(1)
-        .join('\n\n')
-        .trim() || ''
+      note: note(message.body) || ''      
     };
   }
 
