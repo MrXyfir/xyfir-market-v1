@@ -41,7 +41,7 @@ module.exports = async function() {
 
     // Grab full data for all remaining threads in database
     rows = await db.query(`
-      SELECT id, data, promoted
+      SELECT id, data, promoted > NOW() AS promoted
       FROM sales_threads
       WHERE approved = 1 AND removed = 0
     `);
