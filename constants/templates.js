@@ -152,7 +152,7 @@ exact requested amount before the order expires or your payment will not be
 counted and the funds sent will be lost.
 
 You may abandon this order and start a new one at any time by sending the
-purchase command again.
+command again.
 
 You will be notified once your payment has been received.`;
 
@@ -203,3 +203,7 @@ exports.VERIFICATION_REQUESTED = data =>
 ---
 
 ${data.note}`;
+
+exports.THREAD_PROMOTED = (thread, months) =>
+`Your thread /r/xyMarket/comments/${thread} has been promoted for the next
+${months} month(s).`;
