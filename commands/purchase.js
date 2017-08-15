@@ -1,6 +1,7 @@
 const convertCurrency = require('lib/coinbase/convert-currency');
 const generateAddress = require('lib/coinbase/generate-address');
 const orderTypes = require('constants/types/orders');
+const createUser = require('lib/users/create');
 const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
@@ -86,13 +87,7 @@ module.exports = async function(r, message, command) {
       orderId
     ]);
 
-    // Create rows in user table for buyer and seller IF they don't exist
-    await db.query(`
-      INSERT INTO users (name) VALUES (?), (?)
-      ON DUPLICATE KEY UPDATE name = name
-    `, [
-      thread.seller, message.author.name
-    ]);
+    await createUser(message.author.name);
     db.release();
 
     // Notify the buyer how to send payment
