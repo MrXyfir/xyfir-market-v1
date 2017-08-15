@@ -41,18 +41,10 @@ module.exports = async function(r, comment, threadId) {
 
     if (thread.data.nsfw) await repost.markNsfw();
 
-    // Add copy
-    await db.query(`
-      INSERT INTO sales_threads SET ?
-    `, {
-      id: repost.id, author: user.name, created: repost.created,
-      data: JSON.stringify(thread.data), approved: true
-    });
-
-    // Move autobuy items
+    // Updated id will cascade to other tables
     await db.query(
-      'UPDATE autobuy_items SET thread = ? WHERE thread = ?',
-      [repost.id, thread.id]
+      'UPDATE sales_threads SET id = ?, created = ? WHERE id = ?',
+      [repost.id, repost.created, thread.id]
     );
     db.release();
 
