@@ -13,6 +13,7 @@ const giveFeedback = require('commands/give-feedback');
 const removeThread = require('commands/remove');
 const reviseThread = require('commands/revise');
 const purchase = require('commands/purchase');
+const promote = require('commands/promote');
 const verify = require('commands/verify');
 const repost = require('commands/repost');
 
@@ -56,6 +57,7 @@ module.exports = async function() {
           purchase(r, message, command);
           break;
         case 'promote':
+          promote(r, message, command);
           break;
         case 'revise':
           reviseThread(r, message, command.thread);

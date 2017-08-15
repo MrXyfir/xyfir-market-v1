@@ -156,4 +156,29 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: request-verification');
 
+  // PROMOTE (on thread)
+  actual = parse({
+    was_comment: true, context: '/r/xyMarket/comments/6s1psl/daily_thread/',
+    body: 'u/xyMarketBot promote for 2 months using BTC'
+  }),
+  expected = {
+    currency: 'BTC',
+    command: 'promote',
+    thread: '6s1psl',
+    months: 2
+  };
+  assert.deepEqual(actual, expected, 'Command: promote');
+
+  // PROMOTE (in message)
+  actual = parse({
+    body: 'promote 6s1psl for 1 month using ETH'
+  }),
+  expected = {
+    currency: 'ETH',
+    command: 'promote',
+    thread: '6s1psl',
+    months: 1
+  };
+  assert.deepEqual(actual, expected, 'Command: promote');
+
 }

@@ -29,9 +29,16 @@ module.exports = function(message) {
   }
   
   // PROMOTE
-  match = message.body.match(/^promote$/i);
-  if (match && message.isMention) {
-    return { command: 'promote', thread: threadId(message.context) };
+  match = message.body.match(
+    /^promote( (\w{6,}))? for (\d+) months? using (BTC|LTC|ETH)$/i
+  );
+  if (match) {
+    return {
+      thread: match[2] || threadId(message.context),
+      months: +match[3],
+      command: 'promote',
+      currency: match[4].toUpperCase()
+    };
   }
 
   // PURCHASE
