@@ -1,5 +1,6 @@
 const convertCurrency = require('lib/coinbase/convert-currency');
 const generateAddress = require('lib/coinbase/generate-address');
+const orderTypes = require('constants/types/orders');
 const templates = require('constants/templates');
 const mysql = require('lib/mysql');
 
@@ -12,7 +13,7 @@ const mysql = require('lib/mysql');
  */
 
 /**
- * Purchase item(s) from an active sales thread.
+ * Begin process of purchasing item(s) from an active sales thread.
  * @param {snoowrap} r
  * @param {snoowrap.PrivateMessage|snoowrap.Comment} message
  * @param {PurchaseCommand} command
@@ -48,8 +49,9 @@ module.exports = async function(r, message, command) {
     const dbRes = await db.query(`
       INSERT INTO orders SET ?
     `, {
-      thread: command.thread,
+      type: orderTypes.PURCHASE,
       buyer: message.author.name,
+      thread: command.thread,
       escrow: command.escrow,
       currency: command.currency,
       quantity: command.quantity
