@@ -53,7 +53,7 @@ module.exports = async function(r, comment, threadId) {
     // In case thread is promoted and still live
     await r.getSubmission(threadId).remove();
 
-    await comment.reply(templates.THREAD_REPOSTED(repost.permalink));
+    await comment.reply(templates.THREAD_REPOSTED(repost.id));
   }
   catch (err) {
     db.release();

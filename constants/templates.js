@@ -1,4 +1,5 @@
 const buildCommandLink = require('lib/messages/build-command-link');
+const threadLink = id => `/r/xyMarket/comments/${id}`;
 
 const HOW_TO_REVISE =
 '\n\nEdit your thread and then comment on it `u/xyMarketBot revise`.';
@@ -67,11 +68,44 @@ exports.PRICE_TOO_LOW =
 `Sales threads with \`**Verifiable** True\` require \`**Price**\` to be at or
 above $5.00 (USD).` + HOW_TO_REVISE;
 
-exports.SALES_THREAD_APPROVED = link =>
-'Your sales thread was approved and reposted at ' + link + '.\
-\n\n\
-This thread has been removed and will not accept commands. \
-You can now safely delete this thread if you wish.';
+exports.SALES_THREAD_COMMANDS = id =>
+`# Commands
+
+If your thread has autobuy enabled, you can use the following commands to
+manage autobuy items:
+
+- [Add autobuy items](${
+  buildCommandLink(
+    'add autobuy items to ' + id + '\n\n' +
+    'item 1...\n\n' +
+    'item 2...\n\n' +
+    'item 3...'
+  )
+})
+- [Clear autobuy items](${buildCommandLink(`clear autobuy items in ${id}`)})
+- [List autobuy items](${buildCommandLink(`list autobuy items in ${id}`)})
+
+You can promote your thread with the [promote](${
+  buildCommandLink(`promote ${id} for 2 months using BTC`)
+}) command.
+
+The following commands must be commented on the thread itself:
+
+- \`u/xyMarketBot request verification <your message here>\`
+- \`u/xyMarketBot remove\`
+- \`u/xyMarketBot repost\` (thread must be expired or promoted)
+
+See xyMarket's documentation for more information.`;
+
+exports.SALES_THREAD_APPROVED = id =>
+`Your sales thread was approved and reposted at ${threadLink(id)}.
+
+This thread has been removed and will not accept commands. You can now safely
+delete this thread if you wish.
+
+---
+
+${exports.SALES_THREAD_COMMANDS(id)}`;
 
 exports.SALES_THREAD_EXPIRED =
 `This thread has expired after being live for one week. The owner may repost
@@ -117,8 +151,7 @@ exports.BUYER_SENDS_PAYMENT = order =>
 `xyMarket has received your payment! Your order id is \`${order}\`.`;
 
 exports.SELLER_RECEIVES_ORDER = data =>
-`You have received an order for your sales thread:
-[${data.thread}](/r/xyMarket/comments/${data.thread}).
+`You have received an order for your sales thread ${threadLink(data.thread)}.
 
 Your order id is \`${data.order}\`.
 u/${data.buyer} has purchased \`${data.quantity}\` item(s).
@@ -137,9 +170,16 @@ exports.AUTOBUY_ITEMS_OWED = count =>
 `There were not enough autobuy items to fulfill your order.
 The seller has been notified to send you \`${count}\` item(s).`;
 
-exports.ORDER_IN_ESCROW =
-`This order is in escrow.
-See the documentation for escrow-related commands.`;
+exports.BUYER_ORDER_IN_ESCROW = id =>
+`This order is in escrow. You may release the funds to the seller at any time
+by clicking [here](${buildCommandLink(`release escrow for ${id}`)}). If there
+is a dispute between you and the seller you should contact a moderator.`;
+
+exports.SELLER_ORDER_IN_ESCROW = id =>
+`This order is in escrow. You may request that the buyer release the funds to
+you by clicking [here](${buildCommandLink(`request escrow for ${id}`)}). Try
+not to annoy the buyer by requesting too soon or too often! If there is a
+dispute between you and the seller you should contact a moderator.`;
 
 exports.ORDER_COMPLETE = id =>
 `This order is now complete. Give [positive](${
@@ -170,7 +210,9 @@ exists but is currently not in a state to accept that particular command.`;
 exports.ESCROW_RELEASE_REQUESTED = (id, seller, note) =>
 `u/${seller} is requesting that you release escrow for order \`${id}\`.
 
-You can release escrow with following command: \`release escrow for ${id}\`.
+You can release escrow by clicking [here](${
+  buildCommandLink(`release escrow for ${id}`)
+}).
 
 If you need to respond to the seller you must contact them directly.
 
@@ -197,16 +239,20 @@ exports.VERIFIED = (mod, note) =>
 
 **Mod note:** ${note}`;
 
-exports.THREAD_REPOSTED = link =>
-`This sales thread has been reposted at ${link}.`;
+exports.THREAD_REPOSTED = id =>
+`This sales thread has been reposted at ${threadLink(id)}.
+
+---
+
+${exports.SALES_THREAD_COMMANDS(id)}`;
 
 exports.VERIFICATION_REQUESTED = data =>
-`Verification has been requested for /r/xyMarket/comments/${data.thread}.
+`Verification has been requested for ${threadLink(data.thread)}.
 
 ---
 
 ${data.note}`;
 
 exports.THREAD_PROMOTED = (thread, months) =>
-`Your thread /r/xyMarket/comments/${thread} has been promoted for the next
+`Your thread ${threadLink(thread)} has been promoted for the next
 ${months} month(s).`;

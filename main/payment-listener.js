@@ -158,8 +158,8 @@ module.exports = async function(req, res) {
       }
   
       if (order.escrow) {
-        messagesToSeller.push(templates.ORDER_IN_ESCROW);
-        messagesToBuyer.push(templates.ORDER_IN_ESCROW);
+        messagesToSeller.push(templates.SELLER_ORDER_IN_ESCROW(order.id));
+        messagesToBuyer.push(templates.BUYER_ORDER_IN_ESCROW(order.id));
   
         await db.query(
           'UPDATE orders SET status = ? WHERE id = ?',
