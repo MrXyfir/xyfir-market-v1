@@ -99,8 +99,8 @@ exports.AUTOBUY_ITEMS_CLEARED =
 'All autobuy items have been removed.';
 
 exports.THREAD_REMOVED_BY_CREATOR = id =>
-'Your thread has been removed. You may repost\
- it by clicking [here](' + buildCommandLink('repost ' + id) + ').';
+`Your thread has been removed. You may repost
+it by clicking [here](${buildCommandLink('repost ' + id)}).`;
 
 exports.VERIFIABLE_NOT_ACCEPTED =
 `This sales thread does not accept verifiable purchases. You must contact
@@ -141,9 +141,12 @@ exports.ORDER_IN_ESCROW =
 `This order is in escrow.
 See the documentation for escrow-related commands.`;
 
-exports.ORDER_COMPLETE =
-`This order is complete.
-Remember to give feedback or it will automatically be given after seven days.`;
+exports.ORDER_COMPLETE = id =>
+`This order is now complete. Give [positive](${
+  buildCommandLink(`give positive feedback for ${id} <your message here>`)
+}) or [negative](${
+  buildCommandLink(`give negative feedback for ${id} <your message here>`)
+}) feedback.`;
 
 exports.SEND_PAYMENT = data =>
 `Send \`${data.amount}\` in \`${data.currency}\` to \`${data.address}\` within
@@ -185,7 +188,7 @@ exports.FEEDBACK_ALREADY_GIVEN =
 exports.ESCROW_RELEASED = id =>
 `Escrow has been released for order \`${id}\`.
 
-${exports.ORDER_COMPLETE}`;
+${exports.ORDER_COMPLETE(id)}`;
 
 exports.VERIFIED = (mod, note) =>
 `This sales thread has been verified by u/${mod}.

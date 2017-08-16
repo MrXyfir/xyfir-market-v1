@@ -167,8 +167,8 @@ module.exports = async function(req, res) {
         );
       }
       else {
-        messagesToSeller.push(templates.ORDER_COMPLETE);
-        messagesToBuyer.push(templates.ORDER_COMPLETE);
+        messagesToSeller.push(templates.ORDER_COMPLETE(order.id));
+        messagesToBuyer.push(templates.ORDER_COMPLETE(order.id));
   
         // Pay seller
         await sendMoney(
