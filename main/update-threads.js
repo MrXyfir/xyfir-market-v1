@@ -87,7 +87,7 @@ module.exports = async function() {
           })
           // Convert to string for post
           .map(thread =>
-            `  - ${thread.promoted ? '⭐ ' : ''}` +
+            `  - ${thread.promoted ? '💎' : ''}` +
             `[${thread.data.title}](/r/xyMarket/comments/${thread.id})`
           )
           .join('\n')
