@@ -17,7 +17,9 @@ module.exports = async function(r, comment, threadId) {
     await db.getConnection();
     const [thread] = await db.query(`
       SELECT id, data FROM sales_threads
-      WHERE id = ? AND author = ? AND removed = ? AND approved = ?
+      WHERE
+        id = ? AND author = ? AND approved = ? AND
+        (removed = ? OR promoted > NOW())
     `, [
       threadId, comment.author.name, 1, 1
     ]);
@@ -44,9 +46,12 @@ module.exports = async function(r, comment, threadId) {
     // Updated id will cascade to other tables
     await db.query(
       'UPDATE sales_threads SET id = ?, created = ? WHERE id = ?',
-      [repost.id, repost.created, thread.id]
+      [repost.id, repost.created, threadId]
     );
     db.release();
+
+    // In case thread is promoted and still live
+    await r.getSubmission(threadId).remove();
 
     await comment.reply(templates.THREAD_REPOSTED(repost.permalink));
   }
