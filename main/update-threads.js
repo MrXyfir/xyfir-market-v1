@@ -16,10 +16,12 @@ module.exports = async function() {
   try {
     // Get ids of all active threads that are over a week old
     await db.getConnection();
-    let rows = await db.query(
-      'SELECT id FROM sales_threads WHERE created < ? AND removed = 0',
-      [moment().subtract(1, 'week').utc().unix()]
-    );
+    let rows = await db.query(`
+      SELECT id FROM sales_threads
+      WHERE created < ? AND removed = 0 AND NOW() > promoted
+    `, [
+      moment().subtract(1, 'week').utc().unix()
+    ]);
 
     if (rows.length) {
       // Mark threads as 'removed'
