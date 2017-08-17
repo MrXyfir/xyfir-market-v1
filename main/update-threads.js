@@ -41,11 +41,11 @@ module.exports = async function() {
       }
     }
 
-    // Grab full data for all remaining threads in database
+    // Grab full data for all active structured threads
     rows = await db.query(`
       SELECT id, data, promoted > NOW() AS promoted
       FROM sales_threads
-      WHERE approved = 1 AND removed = 0
+      WHERE approved = 1 AND removed = 0 AND unstructured = 0
     `);
     db.release();
 
