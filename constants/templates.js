@@ -108,10 +108,10 @@ delete this thread if you wish.
 ${exports.SALES_THREAD_COMMANDS(id)}`;
 
 exports.SALES_THREAD_EXPIRED =
-`This thread has expired after being live for one week. The owner may repost
-it by commenting on this thread \`u/xyMarketBot repost\`. This thread will
-remain removed and a new copy of it will be posted. If this thread has autobuy
-enabled, any items in stock will be transfered.`;
+`This thread has expired. The owner may repost it by commenting on this thread
+\`u/xyMarketBot repost\`. This thread will remain removed and a new copy of it
+will be posted. If this thread has autobuy enabled, any items in stock will be
+transfered.`;
 
 exports.NO_MATCHING_THREAD = id =>
 `An sales thread with the id \`${id}\` could not be found. It is possible that
@@ -256,3 +256,10 @@ ${data.note}`;
 exports.THREAD_PROMOTED = (thread, months) =>
 `Your thread ${threadLink(thread)} has been promoted for the next
 ${months} month(s).`;
+
+exports.UNSTRUCTURED_THREAD =
+`**This is an unstructured thread.**
+
+If you're the thread author, only the
+\`u/xyMarketBot remove\` command will work on it. For other users, no commands
+will work.`;
