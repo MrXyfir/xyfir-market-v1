@@ -1,3 +1,4 @@
+const createUnstructured = require('lib/threads/create-unstructured');
 const create = require('lib/threads/create');
 const config = require('constants/config');
 const moment = require('moment');
@@ -49,7 +50,11 @@ module.exports = async function() {
       else if (dbItems.findIndex(i => i.id == post.id) > -1) {
         continue;
       }
-      // Validate data, add to database, repost or notify creator of error
+      // Unstructured sales thread
+      else if (/^@unstructured\b/.test(post.selftext)) {
+        createUnstructured(post);
+      }
+      // Structured sales thread
       else {
         create(r, post);
       }
