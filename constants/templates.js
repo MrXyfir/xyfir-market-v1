@@ -263,3 +263,50 @@ exports.UNSTRUCTURED_THREAD =
 If you're the thread author, only the
 \`u/xyMarketBot remove\` command will work on it. For other users, no commands
 will work.`;
+
+exports.POST_FINDER_REPOST = (author, text) =>
+`@unstructured
+
+Contact the original poster u/${author} if you're interested.
+
+---
+
+${text}`;
+
+exports.POST_FINDER_REQUEST = link =>
+`Hello! I'm a bot from a new marketplace subreddit: /r/xyMarket. Would you be
+interested in reposting your thread ${link} to /r/xyMarket? If posted in the
+proper format, you can take advantage of some of xyMarket's great features like
+verifiable purchases, autobuy, escrow, and more. More information is available
+[here](https://www.reddit.com/r/xyMarket/submit?selftext=true).
+
+**Note:** This action was performed automatically by a bot. It's possible that
+your post may not be a good fit for xyMarket. If this is the case, simply
+disregard this message.
+
+Have a nice day!`;
+
+exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
+`Hello! I'm a bot from a new marketplace subreddit: /r/xyMarket. I've
+discovered your thread ${oldLink} and reposted it to xyMarket. You can find
+the repost at ${newLink}.
+
+If you don't want your thread in xyMarket or if your item has sold, you can
+remove it by commenting on the new post \`u/xyMarketBot remove\`.
+
+Your thread has been reposted as an *unstructured* thread. Unstructured threads
+do not have access to some of xyMarket's best features, like verifiable
+purchases, autobuy, escrow, and more. If you'd like to take advantage of more of
+xyMarket's features, you must post a *structured* thread. You can do this by
+posting your own thread directly to xyMarket and using the proper format. More
+information is available
+[here](https://www.reddit.com/r/xyMarket/submit?selftext=true).
+
+**Note:** This action was performed automatically by a bot. A xyMarket moderator
+may remove your unstructured thread from xyMarket once noticed if it doesn't
+meet certain requirements.
+
+Have questions, complaints, or feedback? Post them in xyMarket's stickied
+Meta thread.
+
+Have a nice day!`;
