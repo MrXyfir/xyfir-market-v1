@@ -1,12 +1,10 @@
 module.exports = [
   'Advertising',
   'Automotives',
-  'Body and Soul',
   'Books',
   'Collectibles',
   'Computers',
-  'Crypto Coins',
-  'Crypto Mining',
+  'Cryptocurrency',
   'Digital Goods',
   'Electronics',
   'Entertainment',
@@ -16,11 +14,12 @@ module.exports = [
   'Home & Garden',
   'Industrial',
   'NSFW',
+  'Other',
   'Precious Metals',
   'Printed Media',
   'Real Estate',
   'Services',
   'Sports & Hobbies',
   'Vouchers & Gift Cards',
-  'Web, IT & Support'
+  'Web'
 ]
