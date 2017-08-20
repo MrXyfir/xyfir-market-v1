@@ -119,6 +119,7 @@ module.exports = async function() {
           sendReplies: false
         })
         .disableInboxReplies()
+        .lock()
         .approve()
         .sticky({ num: 1 });
     }
