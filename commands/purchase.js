@@ -87,7 +87,7 @@ module.exports = async function(r, message, command) {
       orderId
     ]);
 
-    await createUser(message.author.name);
+    await createUser(message.author.name, db);
     db.release();
 
     // Notify the buyer how to send payment
