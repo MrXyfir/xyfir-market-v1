@@ -54,6 +54,17 @@ module.exports = function(message) {
       currency: match[5].toUpperCase()
     };
   }
+
+  match = message.body.match(
+    /^confirm purchase for (\d+) with transaction (\w+)$/i
+  );
+  if (match) {
+    return {
+      command: 'confirm-purchase',
+      orderId: +match[1],
+      transaction: match[2]
+    };
+  }
   
   // RELEASE ESCROW
   match = message.body.match(/^release escrow for (\d+)$/i);
