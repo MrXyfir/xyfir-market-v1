@@ -2,5 +2,6 @@ module.exports = {
   UNPAID: 0,
   COMPLETE: 1,
   IN_ESCROW: 2,
-  REFUNDED: 3
+  REFUNDED: 3,
+  AWAITING_CONFIRMATIONS: 4
 };
