@@ -147,6 +147,10 @@ exports.CURRENCY_NOT_ACCEPTED = currency =>
 exports.ESCROW_NOT_ACCEPTED =
 `This sales thread does not accept escrow.`;
 
+exports.ESCROW_DISABLED =
+`Escrow is currently disabled while we determine its feasibility and consider 
+other implementations of an escrow system.`;
+
 exports.BUYER_SENDS_PAYMENT = order =>
 `xyMarket has received your payment! Your order id is \`${order}\`.`;
 
@@ -194,10 +198,20 @@ exports.SEND_PAYMENT = data =>
 exact requested amount before the order expires or your payment will not be
 counted and the funds sent will be lost.
 
-You may abandon this order and start a new one at any time by sending the
-command again.
+After sending the payment, you must confirm it by clicking [here](${
+  buildCommandLink(
+    `confirm purchase for ${data.orderId} ` +
+    `with transaction <your transaction hash here>`
+  )
+}).
 
-You will be notified once your payment has been received.`;
+You may abandon this order and start a new one at any time by sending the
+purchase command again.`;
+
+exports.PAYMENT_AWAITING_CONFIRMATIONS =
+`The transaction you provided is valid. You will be notified once the 
+transaction has reached the required number of confirmations. This process 
+should take *at most* around 30 minutes depending on the currency used.`;
 
 exports.UNEXPECTED_ERROR =
 `xyMarketBot ran into an unexpected error.
