@@ -73,31 +73,31 @@ module.exports = function() {
 
   // PURCHASE (in message)
   actual = parse({
-    body: 'buy 3 of 6s1psl using LTC and escrow'
+    body: 'buy 3 of 6s1psl using LTC'
   }),
   expected = {
     command: 'purchase',
-    escrow: true, thread: '6s1psl', quantity: 3, currency: 'LTC'
+    escrow: false, thread: '6s1psl', quantity: 3, currency: 'LTC'
   };
   assert.deepEqual(actual, expected, 'Command: purchase');
 
   // REQUEST ESCROW (without note)
-  actual = parse({
-    body: 'request escrow for 54321'
-  }),
-  expected = {
-    command: 'request-escrow', order: 54321, note: 'None'
-  };
-  assert.deepEqual(actual, expected, 'Command: request-escrow');
+  // actual = parse({
+  //   body: 'request escrow for 54321'
+  // }),
+  // expected = {
+  //   command: 'request-escrow', order: 54321, note: 'None'
+  // };
+  // assert.deepEqual(actual, expected, 'Command: request-escrow');
 
   // REQUEST ESCROW (with note)
-  actual = parse({
-    body: 'request escrow for 54321\n\nsome note'
-  }),
-  expected = {
-    command: 'request-escrow', order: 54321, note: 'some note'
-  };
-  assert.deepEqual(actual, expected, 'Command: request-escrow');
+  // actual = parse({
+  //   body: 'request escrow for 54321\n\nsome note'
+  // }),
+  // expected = {
+  //   command: 'request-escrow', order: 54321, note: 'some note'
+  // };
+  // assert.deepEqual(actual, expected, 'Command: request-escrow');
 
   // GIVE FEEDBACK
   actual = parse({
@@ -118,13 +118,13 @@ module.exports = function() {
   assert.deepEqual(actual, expected, 'Command: give-feedback');
 
   // RELEASE ESCROW
-  actual = parse({
-    body: 'release escrow for 54321'
-  }),
-  expected = {
-    command: 'release-escrow', order: 54321
-  };
-  assert.deepEqual(actual, expected, 'Command: release-escrow');
+  // actual = parse({
+  //   body: 'release escrow for 54321'
+  // }),
+  // expected = {
+  //   command: 'release-escrow', order: 54321
+  // };
+  // assert.deepEqual(actual, expected, 'Command: release-escrow');
 
   // VERIFY
   actual = parse({
@@ -180,5 +180,16 @@ module.exports = function() {
     months: 1
   };
   assert.deepEqual(actual, expected, 'Command: promote');
+
+  // CONFIRM PURCHASE
+  actual = parse({
+    body: 'confirm purchase for 54321 with transaction abcDEF123'
+  }),
+  expected = {
+    command: 'confirm-purchase',
+    orderId: 54321,
+    transaction: 'abcDEF123'
+  };
+  assert.deepEqual(actual, expected, 'Command: confirm-purchase');
 
 }
