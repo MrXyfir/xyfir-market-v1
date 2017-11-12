@@ -50,13 +50,13 @@ module.exports = async function() {
       else if (dbItems.findIndex(i => i.id == post.id) > -1) {
         continue;
       }
-      // Unstructured sales thread
-      else if (/^@unstructured\b/.test(post.selftext)) {
-        createUnstructured(post);
-      }
       // Structured sales thread
-      else {
+      else if (/^@structured\b/.test(post.selftext)) {
         create(r, post);
+      }
+      // Unstructured sales thread
+      else {
+        createUnstructured(post);
       }
     }
 

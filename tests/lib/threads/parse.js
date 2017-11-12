@@ -6,6 +6,7 @@ module.exports = function() {
   const data = parse({
     title: 'Some Title',
     selftext: [
+      '@structured',
       '**Type** Digital Item',
       '**Category** Digital Goods',
       '**Description** Some description\n\ncontinued description',
