@@ -40,8 +40,8 @@ module.exports = async function(r, message, command) {
     const thread = rows[0];
     thread.data = JSON.parse(thread.data);
 
-    if (!thread.data.verifiable)
-      throw templates.VERIFIABLE_NOT_ACCEPTED;
+    if (!thread.data.tracking)
+      throw templates.TRACKING_NOT_ENABLED;
     if (!thread.data.addresses[command.currency])
       throw templates.CURRENCY_NOT_ACCEPTED(command.currency);
     if (command.escrow && !thread.data.escrow)
