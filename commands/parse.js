@@ -142,10 +142,14 @@ module.exports = function(message) {
     return { command: 'clear-autobuy-items', thread: match[1] };
   }
 
-  // REPOST
+  // REPOST (on thread)
   match = message.body.match(/^repost$/i);
   if (match && message.isMention)
     return { command: 'repost', thread: threadId(message.context) };
+
+  // REPOST (in private message)
+  match = message.body.match(/^repost (\w+)$/i);
+  if (match) return { command: 'repost', thread: match[1] };
 
   return { command: 'error', reply: 'Invalid command or syntax' };
 

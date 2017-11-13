@@ -74,6 +74,7 @@ module.exports = async function() {
           break;
         case 'repost':
           repost(r, message, command.thread);
+          break;
         case 'error':
           message.reply(command.reply);
           break;
