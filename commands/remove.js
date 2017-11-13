@@ -1,5 +1,5 @@
 const templates = require('constants/templates');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 
 /**
  * Remove an approved sales thread from the subreddit.
@@ -9,12 +9,12 @@ const mysql = require('lib/mysql');
  */
 module.exports = async function(r, comment, thread) {
 
-  const db = new mysql;
+  const db = new MySQL;
 
   try {
     await db.getConnection();
     const result = await db.query(
-      'UPDATE sales_threads SET removed = 0 WHERE id = ? AND author = ?',
+      'UPDATE sales_threads SET removed = 1 WHERE id = ? AND author = ?',
       [thread, comment.author.name]
     );
     db.release();

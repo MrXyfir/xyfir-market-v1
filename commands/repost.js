@@ -1,7 +1,7 @@
 const templates = require('constants/templates');
 const getUser = require('lib/users/get-info');
 const build = require('lib/threads/build');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 
 /**
  * Allow a thread creator to repost their expired thread.
@@ -11,7 +11,7 @@ const mysql = require('lib/mysql');
  */
 module.exports = async function(r, comment, threadId) {
 
-  const db = new mysql;
+  const db = new MySQL;
 
   try {
     await db.getConnection();
@@ -21,7 +21,8 @@ module.exports = async function(r, comment, threadId) {
         id = ? AND author = ? AND approved = ? AND
         (removed = ? OR promoted > NOW())
     `, [
-      threadId, comment.author.name, 1, 1
+      threadId, comment.author.name, 1,
+      1
     ]);
 
     if (!thread) throw templates.NO_MATCHING_THREAD(threadId);
@@ -45,8 +46,8 @@ module.exports = async function(r, comment, threadId) {
 
     // Updated id will cascade to other tables
     await db.query(
-      'UPDATE sales_threads SET id = ?, created = ? WHERE id = ?',
-      [repost.id, repost.created, threadId]
+      'UPDATE sales_threads SET id = ?, created = ?, removed = ? WHERE id = ?',
+      [repost.id, repost.created, 0, threadId]
     );
     db.release();
 
