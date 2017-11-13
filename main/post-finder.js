@@ -2,7 +2,7 @@ const createUser = require('lib/users/create');
 const templates = require('constants/templates');
 const config = require('constants/config');
 const moment = require('moment');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 const snoo = require('snoowrap');
 
 const r = new snoo(config.snoowrap);
@@ -13,12 +13,13 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
-  const db = new mysql;
+  const db = new MySQL;
 
   try {
-    // Most to least active
+    // Most to least active (kind of)
     const subreddits = [
-      'BitMarket', 'barter', 'REDDITEXCHANGE', 'forsale', 'Sell', 'marketplace'
+      'BitMarket', 'redditbay', 'barter', 'REDDITEXCHANGE', 'forsale',
+      'Sell', 'marketplace'
     ];
 
     let posts = [], mods = [];
@@ -27,7 +28,7 @@ module.exports = async function() {
       // Load new posts
       let _posts = await r.getSubreddit(sub).getNew();
 
-      // Filter out posts over 2 hours old
+      // Filter out posts over 2 hours old (should already have been seen)
       _posts = _posts.filter(post =>
         moment.utc().subtract(2, 'hours').unix() < post.created_utc
       );
@@ -79,38 +80,32 @@ module.exports = async function() {
 
       let text = '';
 
-      // Contact only (no auto repost)
-      if (['barter', 'Sell'].indexOf(post.subreddit.display_name) > -1) {
-        text = templates.POST_FINDER_REQUEST(post.permalink);
-      }
       // Post to r/xyMarket as unstructured
-      else {
-        const repost = await r
-          .getSubreddit('xyMarket')
-          .submitSelfpost({
-            title: post.title,
-            text: templates.POST_FINDER_REPOST(author.name, post.selftext)
-          })
-          .disableInboxReplies()
-          .approve()
-          .assignFlair({
-            text: 'Unstructured', cssClass: 'unstructured'
-          })
-          .fetch();
+      const repost = await r
+        .getSubreddit('xyMarket')
+        .submitSelfpost({
+          title: post.title,
+          text: templates.POST_FINDER_REPOST(author.name, post.selftext)
+        })
+        .disableInboxReplies()
+        .approve()
+        .assignFlair({
+          text: 'Unstructured', cssClass: 'unstructured'
+        })
+        .fetch();
 
-        text = templates.POST_FINDER_REPOSTED(
-          post.permalink, repost.permalink
-        );
+      text = templates.POST_FINDER_REPOSTED(
+        post.permalink, repost.permalink
+      );
 
-        await createUser(author.name, db);
+      await createUser(author.name, db);
 
-        await db.query(`
-          INSERT INTO sales_threads SET ?
-        `, {
-          id: repost.id, author: post.author.name, created: repost.created_utc,
-          data: '{}', unstructured: true, approved: true
-        });
-      }
+      await db.query(`
+        INSERT INTO sales_threads SET ?
+      `, {
+        id: repost.id, author: post.author.name, created: repost.created_utc,
+        data: '{}', unstructured: true, approved: true
+      });
 
       // Notify author
       await r.composeMessage({
