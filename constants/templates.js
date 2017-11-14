@@ -41,12 +41,12 @@ exports.INVALID_IMAGES =
  https://i.imgur.com/XXXXXXXXXXXXXZ.png`' +
 HOW_TO_REVISE;
 
-exports.INVALID_VERIFIABLE =
-'Verifiable purchases require accepting `BTC`, `LTC`, or `ETH` currency.' +
+exports.INVALID_TRACKING =
+'Enabling tracking requires accepting `BTC`, `LTC`, or `ETH` currency.' +
 HOW_TO_REVISE;
 
 exports.INVALID_ESCROW_OR_AUTOBUY =
-'Escrow and/or autobuy require `**Verifiable** True`.' +
+'Escrow and/or autobuy require `**Tracking** True`.' +
 HOW_TO_REVISE;
 
 exports.INVALID_TYPE_FOR_AUTOBUY =
@@ -55,7 +55,7 @@ HOW_TO_REVISE;
 
 exports.INVALID_ADDRESSES =
 'Missing or invalid `**Addresses**` field. This field is required when\
- `**Verifiable** True`. You should provide an address for each of the\
+ `**Tracking** True`. You should provide an address for each of the\
  following currencies that you accept: `BTC`, `LTC`, `ETH`.\
 \n\n\
 **Example:**\
@@ -65,7 +65,7 @@ exports.INVALID_ADDRESSES =
 HOW_TO_REVISE;
 
 exports.PRICE_TOO_LOW =
-`Sales threads with \`**Verifiable** True\` require \`**Price**\` to be at or
+`Sales threads with \`**Tracking** True\` require \`**Price**\` to be at or
 above $5.00 (USD).` + HOW_TO_REVISE;
 
 exports.SALES_THREAD_COMMANDS = id =>
@@ -89,7 +89,7 @@ You can promote your thread with the [promote](${
   buildCommandLink(`promote ${id} for 2 months using BTC`)
 }) command.
 
-The following commands must be commented on the thread itself:
+The following commands must be commented on the *new* thread:
 
 - \`u/xyMarketBot request verification <your message here>\`
 - \`u/xyMarketBot remove\`
@@ -114,7 +114,7 @@ will be posted. If this thread has autobuy enabled, any items in stock will be
 transfered.`;
 
 exports.NO_MATCHING_THREAD = id =>
-`An sales thread with the id \`${id}\` could not be found. It is possible that
+`A sales thread with the id \`${id}\` could not be found. It is possible that
 the thread exists but is currently not in a state to accept that command.`;
 
 exports.UNAUTHORIZED_COMMAND =
@@ -136,10 +136,10 @@ exports.THREAD_REMOVED_BY_CREATOR = id =>
 `Your thread has been removed. You may repost
 it by clicking [here](${buildCommandLink('repost ' + id)}).`;
 
-exports.VERIFIABLE_NOT_ACCEPTED =
-`This sales thread does not accept verifiable purchases. You must contact
-the seller directly to make a purchase. You will not be able to use escrow or
-give or receive feedback on a non-verifiable purchase.`;
+exports.TRACKING_NOT_ENABLED =
+`This sales thread does not have tracking enabled. You must contact the seller 
+directly to make a purchase. You will not be able to use escrow or give or 
+receive feedback on a non-tracked purchase.`;
 
 exports.CURRENCY_NOT_ACCEPTED = currency =>
 `This sales thread does not accept the currency \`${currency}\`.`;
@@ -295,7 +295,7 @@ If you don't want your thread in xyMarket or if your item has sold, you can
 remove it by commenting on the new post \`u/xyMarketBot remove\`.
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
-do not have access to some of xyMarket's best features like verifiable
+do not have access to some of xyMarket's best features like tracked
 purchases or autobuy. If you'd like to take advantage of more of
 xyMarket's features, you must post a *structured* thread. You can do this by
 posting your own thread directly to xyMarket and using the proper format. More
@@ -306,6 +306,6 @@ information is available
 may remove your unstructured thread from xyMarket once noticed if it doesn't
 meet certain requirements.
 
-If you have questions, complaints, or feedback, contact my creator: u/MrXyfir.
+Post your questions, complaints, or feedback in r/xyMarketMeta.
 
 Have a nice day!`;
