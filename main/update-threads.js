@@ -115,7 +115,10 @@ module.exports = async function() {
         .getSubreddit('xyMarket')
         .submitSelfpost({
           text,
-          title: 'Daily Thread',
+          title: 'Categorized Sales Threads for ' +
+            moment.utc().subtract(12, 'hours').format('YYYY/MM/DD') +
+            ' - ' +
+            moment.utc().add(12, 'hours').format('YYYY/MM/DD'),
           sendReplies: false
         })
         .disableInboxReplies()
