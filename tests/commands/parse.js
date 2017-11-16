@@ -181,15 +181,15 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: promote');
 
-  // CONFIRM PURCHASE
+  // CONFIRM ORDER
   actual = parse({
-    body: 'confirm purchase for 54321 with transaction abcDEF123'
+    body: 'confirm order 54321 with transaction abcDEF123'
   }),
   expected = {
-    command: 'confirm-purchase',
+    command: 'confirm-order',
     orderId: 54321,
     transaction: 'abcDEF123'
   };
-  assert.deepEqual(actual, expected, 'Command: confirm-purchase');
+  assert.deepEqual(actual, expected, 'Command: confirm-order');
 
 }

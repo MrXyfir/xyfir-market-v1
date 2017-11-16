@@ -56,11 +56,11 @@ module.exports = function(message) {
   }
 
   match = message.body.match(
-    /^confirm purchase for (\d+) with transaction (\w+)$/i
+    /^confirm order (\d+) with transaction (\w+)$/i
   );
   if (match) {
     return {
-      command: 'confirm-purchase',
+      command: 'confirm-order',
       orderId: +match[1],
       transaction: match[2]
     };

@@ -203,7 +203,7 @@ counted and the funds sent will be lost.
 
 After sending the payment, you must confirm it by clicking [here](${
   buildCommandLink(
-    `confirm purchase for ${data.orderId} ` +
+    `confirm order ${data.orderId} ` +
     `with transaction <your transaction hash here>`
   )
 }).
