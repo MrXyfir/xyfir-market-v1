@@ -5,8 +5,8 @@ const MySQL = require('lib/mysql');
 
 /**
  * Allow a thread creator to repost their expired thread.
- * @param {snoowrap} r
- * @param {snoowrap.Comment} comment
+ * @param {Snoowrap} r
+ * @param {Snoowrap.Comment} comment
  * @param {string} threadId
  */
 module.exports = async function(r, comment, threadId) {
@@ -28,7 +28,7 @@ module.exports = async function(r, comment, threadId) {
     if (!thread) throw templates.NO_MATCHING_THREAD(threadId);
 
     thread.data = JSON.parse(thread.data);
-    const user = await getUser(comment.author.name);
+    const user = await getUser(comment.author.name, db);
 
     // Create thread
     const repost = await r
