@@ -192,4 +192,14 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: confirm-order');
 
+  // USER STATS LOOKUP
+  actual = parse({
+    body: 'get stats for u\/MrXyfir'
+  }),
+  expected = {
+    command: 'stats-lookup',
+    user: 'MrXyfir'
+  },
+  assert.deepEqual(actual, expected, 'Command: stats-lookup');
+
 }

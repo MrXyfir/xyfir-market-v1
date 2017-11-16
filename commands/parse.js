@@ -151,6 +151,10 @@ module.exports = function(message) {
   match = message.body.match(/^repost (\w+)$/i);
   if (match) return { command: 'repost', thread: match[1] };
 
+  // USER STATS LOOKUP
+  match = message.body.match(/^get stats for u\/(\w+)$/);
+  if (match) return { command: 'stats-lookup', user: match[1] };
+
   return { command: 'error', reply: 'Invalid command or syntax' };
 
 }

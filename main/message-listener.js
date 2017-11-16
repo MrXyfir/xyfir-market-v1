@@ -13,6 +13,7 @@ const confirmOrder = require('commands/order/confirm');
 const giveFeedback = require('commands/order/give-feedback');
 const removeThread = require('commands/thread/remove');
 const reviseThread = require('commands/thread/revise');
+const statsLookup = require('commands/user/stats-lookup');
 const purchase = require('commands/thread/purchase');
 const promote = require('commands/thread/promote');
 const verify = require('commands/thread/promote');
@@ -56,6 +57,9 @@ module.exports = async function() {
         //   break;
         case 'give-feedback':
           giveFeedback(r, message, command);
+          break;
+        case 'stats-lookup':
+          statsLookup(r, message, command.user);
           break;
         case 'purchase':
           purchase(r, message, command);

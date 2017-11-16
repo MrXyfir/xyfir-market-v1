@@ -372,3 +372,7 @@ ${stats.feedback.buyer.list
 
 exports.USER_STATS_THREAD_MOVED = id =>
 `This thread has moved: /r/xyMarketStats/comments/${id}`;
+
+exports.USER_STATS_LOOKUP = id => id ?
+`/r/xyMarketStats/comments/${id}` :
+`That user is not in my database.`;
