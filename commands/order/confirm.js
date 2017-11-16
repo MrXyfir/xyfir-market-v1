@@ -4,16 +4,15 @@ const templates = require('constants/templates');
 const MySQL = require('lib/mysql');
 
 /**
- * @typedef {object} ConfirmPurchaseCommand
+ * @typedef {object} ConfirmOrderCommand
  * @prop {string} orderId
  * @prop {string} transaction
  */
 /**
- * Begin process of confirming a purchase of item(s) from an active sales 
- * thread.
+ * Begin process of confirming an order.
  * @param {snoowrap} r
  * @param {snoowrap.PrivateMessage|snoowrap.Comment} message
- * @param {ConfirmPurchaseCommand} command
+ * @param {ConfirmOrderCommand} command
  */
 module.exports = async function(r, message, command) {
 
@@ -61,7 +60,7 @@ module.exports = async function(r, message, command) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/confirm-purchase', err);
+      return console.error('commands/order/confirm', err);
 
     message.reply(err);
   }

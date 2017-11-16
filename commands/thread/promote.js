@@ -96,7 +96,8 @@ module.exports = async function(r, message, command) {
   catch (err) {
     db.release();
 
-    if (typeof err != 'string') return console.error('commands/promote', err);
+    if (typeof err != 'string')
+      return console.error('commands/thread/promote', err);
 
     message.reply(err);
   }

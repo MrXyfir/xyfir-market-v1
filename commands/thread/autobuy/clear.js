@@ -44,7 +44,7 @@ module.exports = async function(r, message, thread) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/list-autobuy-items', err);
+      return console.error('commands/thread/autobuy/clear', err);
 
     message.reply(err);
   }

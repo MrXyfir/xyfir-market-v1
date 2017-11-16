@@ -49,7 +49,7 @@ module.exports = async function(r, message, command) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/request-escrow', err);
+      return console.error('commands/order/escrow/request', err);
 
     message.reply(err);
   }

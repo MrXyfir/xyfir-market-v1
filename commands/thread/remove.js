@@ -26,7 +26,7 @@ module.exports = async function(r, comment, thread) {
   }
   catch (err) {
     db.release();
-    console.error('commands/remove', err);
+    console.error('commands/thread/remove', err);
   }
 
 }

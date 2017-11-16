@@ -69,7 +69,7 @@ module.exports = async function(r, message, command) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/give-feedback', err);
+      return console.error('commands/order/give-feedback', err);
 
     message.reply(err);
   }

@@ -58,7 +58,7 @@ module.exports = async function(r, message, command) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/add-autobuy-items', err);
+      return console.error('commands/thread/autobuy/add', err);
 
     message.reply(err);
   }

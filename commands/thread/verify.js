@@ -46,7 +46,7 @@ module.exports = async function(r, comment, command) {
     db.release();
 
     if (typeof err != 'string')
-      console.error('commands/verify', err);
+      console.error('commands/thread/verify', err);
 
     comment.reply(err);
   }

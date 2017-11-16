@@ -38,7 +38,7 @@ module.exports = async function(r, comment, command) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/add-autobuy-items', err);
+      return console.error('commands/thread/request-verification', err);
 
     comment.reply(err);
   }

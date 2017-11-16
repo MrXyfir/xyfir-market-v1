@@ -60,7 +60,7 @@ module.exports = async function(r, comment, threadId) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/repost', err);
+      return console.error('commands/thread/repost', err);
 
     comment.reply(err);
   }

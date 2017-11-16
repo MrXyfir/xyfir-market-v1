@@ -63,7 +63,7 @@ module.exports = async function(r, message, orderId) {
     db.release();
 
     if (typeof err != 'string')
-      return console.error('commands/release-escrow', err);
+      return console.error('commands/order/escrow/release', err);
 
     message.reply(err);
   }

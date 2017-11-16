@@ -115,7 +115,8 @@ module.exports = async function(r, message, command) {
   catch (err) {
     db.release();
 
-    if (typeof err != 'string') return console.error('commands/purchase', err);
+    if (typeof err != 'string')
+      return console.error('commands/thread/purchase', err);
 
     message.reply(err);
   }
