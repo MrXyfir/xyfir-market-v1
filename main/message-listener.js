@@ -3,20 +3,20 @@ const config = require('constants/config');
 const snoo = require('snoowrap');
 
 // Command handlers
-const requestVerification = require('commands/request-verification');
-const clearAutobuyItems = require('commands/clear-autobuy-items');
-const listAutobuyItems = require('commands/list-autobuy-items');
-const addAutobuyItems = require('commands/add-autobuy-items');
-const confirmPurchase = require('commands/confirm-purchase');
-//const requestEscrow = require('commands/request-escrow');
-//const releaseEscrow = require('commands/release-escrow');
-const giveFeedback = require('commands/give-feedback');
-const removeThread = require('commands/remove');
-const reviseThread = require('commands/revise');
-const purchase = require('commands/purchase');
-const promote = require('commands/promote');
-const verify = require('commands/verify');
-const repost = require('commands/repost');
+const requestVerification = require('commands/thread/request-verification');
+const clearAutobuyItems = require('commands/thread/autobuy/clear');
+const listAutobuyItems = require('commands/thread/autobuy/list');
+const addAutobuyItems = require('commands/thread/autobuy/add');
+//const requestEscrow = require('commands/order/escrow/request');
+//const releaseEscrow = require('commands/order/escrow/release');
+const confirmOrder = require('commands/order/confirm');
+const giveFeedback = require('commands/order/give-feedback');
+const removeThread = require('commands/thread/remove');
+const reviseThread = require('commands/thread/revise');
+const purchase = require('commands/thread/purchase');
+const promote = require('commands/thread/promote');
+const verify = require('commands/thread/promote');
+const repost = require('commands/thread/repost');
 
 const r = new snoo(config.snoowrap);
 
@@ -45,8 +45,8 @@ module.exports = async function() {
         case 'add-autobuy-items':
           addAutobuyItems(r, message, command);
           break;
-        case 'confirm-purchase':
-          confirmPurchase(r, message, command);
+        case 'confirm-order':
+          confirmOrder(r, message, command);
           break;
         // case 'release-escrow':
         //   releaseEscrow(r, message, command.order);
