@@ -14,7 +14,7 @@ module.exports = function() {
       '**Currency** BTC PP ETH',
       '**Images** http://i.imgur.com/XXXXXXXXXXXXXX.jpg https://i.imgur.com/XXXXXXXXXXXXXZ.png',
       '**NSFW** True',
-      '**Verifiable** True',
+      '**Tracking** True',
       '**Escrow** True',
       '**Autobuy** True',
       '**Addresses** BTC=1MyAddress ETH=0xMyAddress'
@@ -32,7 +32,7 @@ module.exports = function() {
       '[Image 1](http://i.imgur.com/XXXXXXXXXXXXXX.jpg)',
       '[Image 2](https://i.imgur.com/XXXXXXXXXXXXXZ.png)'
     ].join(', '),
-    nsfw: true, verifiable: true, escrow: true, autobuy: true, verified: false,
+    nsfw: true, tracking: true, escrow: true, autobuy: true, verified: false,
     stock: 0,
     addresses: {
       BTC: '1MyAddress',
