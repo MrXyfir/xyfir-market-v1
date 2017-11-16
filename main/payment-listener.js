@@ -1,3 +1,4 @@
+const updateUserStatsThread = require('lib/users/stats-thread/update');
 const validateTransaction = require('lib/blockchain/validate-transaction');
 const updateThread = require('lib/threads/update');
 const orderStatus = require('constants/types/order-statuses');
@@ -173,6 +174,10 @@ module.exports = async function() {
             'UPDATE orders SET status = ?, completed = NOW() WHERE id = ?',
             [orderStatus.COMPLETE, order.id]
           );
+
+          // Update seller's and buyer's stats threads
+          await updateUserStatsThread(thread.author, db);
+          await updateUserStatsThread(order.buyer, db);
         }
     
         await r.composeMessage({

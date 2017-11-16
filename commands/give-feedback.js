@@ -1,4 +1,4 @@
-const giveReputation = require('lib/users/give-reputation');
+const updateUserStatsThread = require('lib/users/stats-thread/update');
 const updateThread = require('lib/threads/update');
 const orderStatus = require('constants/types/order-statuses');
 const templates = require('constants/templates');
@@ -10,11 +10,10 @@ const mysql = require('lib/mysql');
  * @prop {number} type - 1|-1
  * @prop {string} feedback
  */
-
 /**
  * Add item(s) to autobuy-enabled sales thread.
- * @param {snoowrap} r
- * @param {snoowrap.PrivateMessage} message
+ * @param {Snoowrap} r
+ * @param {Snoowrap.PrivateMessage} message
  * @param {GiveFeedbackCommand} command
  */
 module.exports = async function(r, message, command) {
@@ -59,9 +58,11 @@ module.exports = async function(r, message, command) {
       orderId: command.order,
       user: message.author.name
     });
+
+    // Update the stats thread of the user who received the feedback
+    await updateUserStatsThread(isBuyer ? order.seller : order.buyer, db);
     db.release();
 
-    await giveReputation(isBuyer ? order.seller : order.buyer, command.type);
     await message.reply(templates.FEEDBACK_GIVEN);
   }
   catch (err) {
