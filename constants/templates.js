@@ -190,7 +190,10 @@ exports.ORDER_COMPLETE = id =>
   buildCommandLink(`give positive feedback for ${id} <your message here>`)
 }) or [negative](${
   buildCommandLink(`give negative feedback for ${id} <your message here>`)
-}) feedback.`;
+}) feedback.
+
+**Warning:** Your feedback message (but not your username) will be public! You 
+will not be able to change your feedback type or message afterwards.`;
 
 exports.SEND_PAYMENT = data =>
 `Send \`${data.amount}\` in \`${data.currency}\` to \`${data.address}\` within
@@ -309,3 +312,63 @@ meet certain requirements.
 Post your questions, complaints, or feedback in r/xyMarketMeta.
 
 Have a nice day!`;
+
+exports.USER_STATS_THREAD = stats =>
+`
+# Stats
+
+Name | Value
+- | -
+Joined xyMarket | ${stats.joined}
+Reputation | ${
+  (stats.feedback.seller.positive - stats.feedback.seller.negative) +
+  (stats.feedback.buyer.positive - stats.feedback.buyer.negative)
+} points
+Completed Orders | ${stats.sales} sales, ${stats.buys} buys
+Seller Feedback | +${
+  stats.feedback.seller.positive
+}, -${
+  stats.feedback.seller.negative
+}
+Buyer Feedback | +${
+  stats.feedback.buyer.positive
+}, -${
+  stats.feedback.buyer.negative
+}
+
+# Feedback
+
+Up to 30 seller and 10 buyer feedback are displayed in order of newest to oldest. Usernames are obscured for privacy.
+
+## Received as seller:
+
+* | Buyer | Date | Message
+- | - | - | -
+${stats.feedback.seller.list
+  .map(fb => [
+    fb.type == 1 ? '+' : '-',
+    fb.user,
+    fb.given,
+    fb.message
+  ]
+  .join(' | '))
+  .join('\n')
+}
+
+## Received as buyer:
+
+* | Seller | Date | Message
+- | - | - | -
+${stats.feedback.buyer.list
+  .map(fb => [
+    fb.type == 1 ? '+' : '-',
+    fb.user,
+    fb.given,
+    fb.message
+  ]
+  .join(' | '))
+  .join('\n')
+}`;
+
+exports.USER_STATS_THREAD_MOVED = id =>
+`This thread has moved: /r/xyMarketStats/comments/${id}`;
