@@ -298,7 +298,7 @@ exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
 I've discovered your thread ${oldLink} and reposted it to xyMarket. You can 
 find the repost at ${newLink}.
 
-If you don't want your thread in xyMarket, you can remove it by commenting 
+If you don't want your thread on xyMarket, you can remove it by commenting 
 on the new post \`u/${config.ids.reddit.user} remove\`.
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
@@ -308,8 +308,9 @@ more of xyMarket's features, you must post a *structured* thread. You can post
 a structured thread to xyMarket using [this form](https://xyfir.com/#/market).
 
 If you decide to post a structured thread, be sure to remove your unstructured 
-thread. You should also update your original thread that was reposted to point 
-to your structured thread so more people can take advantage of its features!
+thread from xyMarket. You should also update your original thread that was 
+reposted to point to your structured thread so more people can take advantage 
+of its features!
 
 If you have questions, complaints, or feedback, post them in r/xyMarketMeta.
 
