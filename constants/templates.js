@@ -1,8 +1,13 @@
+const config = require('constants/config');
+
 const buildCommandLink = require('lib/messages/build-command-link');
-const threadLink = id => `/r/xyMarket/comments/${id}`;
+const threadLink = id => `/r/${config.ids.reddit.sub}/comments/${id}`;
 
 const HOW_TO_REVISE =
-'\n\nEdit your thread and then comment on it `u/xyMarketBot revise`.';
+`
+
+Edit your thread and then comment on it 
+\`u/${config.ids.reddit.user} revise\`.`;
 
 exports.INVALID_TITLE =
 'Invalid title: it must be 5-200 characters in length.\
@@ -91,9 +96,9 @@ You can promote your thread with the [promote](${
 
 The following commands must be commented on the *new* thread:
 
-- \`u/xyMarketBot request verification <your message here>\`
-- \`u/xyMarketBot remove\`
-- \`u/xyMarketBot repost\` (thread must be expired or promoted)
+- \`u/${config.ids.reddit.user} request verification <your message here>\`
+- \`u/${config.ids.reddit.user} remove\`
+- \`u/${config.ids.reddit.user} repost\` (thread must be expired or promoted)
 
 See xyMarket's documentation for more information.`;
 
@@ -109,9 +114,9 @@ ${exports.SALES_THREAD_COMMANDS(id)}`;
 
 exports.SALES_THREAD_EXPIRED =
 `This thread has expired. The owner may repost it by commenting on this thread
-\`u/xyMarketBot repost\`. This thread will remain removed and a new copy of it
-will be posted. If this thread has autobuy enabled, any items in stock will be
-transfered.`;
+\`u/${config.ids.reddit.user} repost\`. This thread will remain removed and a 
+new copy of it will be posted. If this thread has autobuy enabled, any items 
+in stock will be transferred.`;
 
 exports.NO_MATCHING_THREAD = id =>
 `A sales thread with the id \`${id}\` could not be found. It is possible that
@@ -217,7 +222,7 @@ transaction has reached the required number of confirmations. This process
 should take *at most* around 30 minutes depending on the currency used.`;
 
 exports.UNEXPECTED_ERROR =
-`xyMarketBot ran into an unexpected error.
+`xyMarketBot has encountered an unexpected error.
 You can try sending your command again or contacting a moderator.`;
 
 exports.NO_MATCHING_ORDER = id =>
@@ -277,9 +282,8 @@ ${months} month(s).`;
 exports.UNSTRUCTURED_THREAD =
 `**This is an unstructured thread.**
 
-If you're the thread author, only the
-\`u/xyMarketBot remove\` command will work on it. For other users, no commands
-will work.`;
+If you're the thread author, only the \`u/${config.ids.reddit.user} remove\` 
+command will work on it. For other users, no commands will work.`;
 
 exports.POST_FINDER_REPOST = (author, text) =>
 `Contact the original poster u/${author} if you're interested.
@@ -294,24 +298,26 @@ exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
 I've discovered your thread ${oldLink} and reposted it to xyMarket. You can 
 find the repost at ${newLink}.
 
-If you don't want your thread in xyMarket or if your item has sold, you can
-remove it by commenting on the new post \`u/xyMarketBot remove\`.
+If you don't want your thread in xyMarket, you can remove it by commenting 
+on the new post \`u/${config.ids.reddit.user} remove\`.
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
 do not have access to some of xyMarket's best features like tracked
-purchases or autobuy. If you'd like to take advantage of more of
-xyMarket's features, you must post a *structured* thread. You can do this by
-posting your own thread directly to xyMarket and using the proper format. More
-information is available
-[here](https://github.com/Xyfir/Documentation/blob/master/xyfir-market/sellers.md).
+purchases, autobuy, and increased exposure. If you'd like to take advantage of 
+more of xyMarket's features, you must post a *structured* thread. You can post 
+a structured thread to xyMarket using [this form](https://xyfir.com/#/market).
 
-**Note:** This action was performed automatically by a bot. A xyMarket moderator
+If you decide to post a structured thread, be sure to remove your unstructured 
+thread. You should also update your original thread that was reposted to point 
+to your structured thread so more people can take advantage of its features!
+
+If you have questions, complaints, or feedback, post them in r/xyMarketMeta.
+
+Have a nice day!
+
+*This action was performed automatically by a bot. A xyMarket moderator
 may remove your unstructured thread from xyMarket once noticed if it doesn't
-meet certain requirements.
-
-Post your questions, complaints, or feedback in r/xyMarketMeta.
-
-Have a nice day!`;
+meet certain requirements.*`;
 
 exports.USER_STATS_THREAD = stats =>
 `

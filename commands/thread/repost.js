@@ -1,5 +1,6 @@
 const templates = require('constants/templates');
 const getUser = require('lib/users/get-info');
+const config = require('constants/config');
 const build = require('lib/threads/build');
 const MySQL = require('lib/mysql');
 
@@ -32,7 +33,7 @@ module.exports = async function(r, comment, threadId) {
 
     // Create thread
     const repost = await r
-      .getSubreddit('xyMarket')
+      .getSubreddit(config.ids.reddit.sub)
       .submitSelfpost({
         title: thread.data.title, text: ''
       })

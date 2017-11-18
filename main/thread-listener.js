@@ -2,7 +2,7 @@ const createUnstructured = require('lib/threads/create-unstructured');
 const create = require('lib/threads/create');
 const config = require('constants/config');
 const moment = require('moment');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 const snoo = require('snoowrap');
 
 const r = new snoo(config.snoowrap);
@@ -12,15 +12,16 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
-  const db = new mysql;
+  const db = new MySQL;
 
   try {
-    let posts = await r.getSubreddit('xyMarket').getUnmoderated();
-    //console.log(posts);
+    let posts = await r
+      .getSubreddit(config.ids.reddit.sub)
+      .getUnmoderated();
 
     // Posts by xyMarketBot will eventually be approved by code that
     // originally created the post
-    posts = posts.filter(p => p.author.name != 'xyMarketBot');
+    posts = posts.filter(p => p.author.name != config.ids.reddit.user);
 
     if (!posts.length) return;
 

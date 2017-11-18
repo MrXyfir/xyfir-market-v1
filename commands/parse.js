@@ -14,10 +14,10 @@ module.exports = function(message) {
 
   message.isMention =
     message.was_comment &&
-    /^\/?u\/xyMarketBot\s+/i.test(message.body);
+    /^\/?u\/xyMarket(Dev)?Bot\s+/i.test(message.body);
 
   if (message.isMention) {
-    message.body = message.body.replace(/^\/?u\/xyMarketBot\s+/i, '');
+    message.body = message.body.replace(/^\/?u\/xyMarket(Dev)?Bot\s+/i, '');
   }
 
   message.body = message.body.trim();

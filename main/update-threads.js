@@ -88,7 +88,8 @@ module.exports = async function() {
           // Convert to string for post
           .map(thread =>
             `  - ${thread.promoted ? '💎' : ''}` +
-            `[${thread.data.title}](/r/xyMarket/comments/${thread.id})`
+            `[${thread.data.title}]` +
+            `(/r/${config.ids.reddit.sub}/comments/${thread.id})`
           )
           .join('\n')
       )
@@ -98,7 +99,7 @@ module.exports = async function() {
     
     // Get age of daily thread
     let daily = await r
-      .getSubreddit('xyMarket')
+      .getSubreddit(config.ids.reddit.sub)
       .getSticky({ num: 1 })
       .fetch(),
     expires = moment
@@ -112,7 +113,7 @@ module.exports = async function() {
       await daily.remove();
 
       daily = await r
-        .getSubreddit('xyMarket')
+        .getSubreddit(config.ids.reddit.sub)
         .submitSelfpost({
           text,
           title: `Categorized Sales Threads (${

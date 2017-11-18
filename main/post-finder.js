@@ -82,7 +82,7 @@ module.exports = async function() {
 
       // Post to r/xyMarket as unstructured
       const repost = await r
-        .getSubreddit('xyMarket')
+        .getSubreddit(config.ids.reddit.sub)
         .submitSelfpost({
           title: post.title,
           text: templates.POST_FINDER_REPOST(author.name, post.selftext)

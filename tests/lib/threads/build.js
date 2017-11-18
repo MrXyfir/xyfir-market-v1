@@ -1,7 +1,10 @@
+const config = require('constants/config');
 const assert = require('assert');
 const build = require('lib/threads/build');
 
 module.exports = function() {
+
+  const {user} = config.ids.reddit;
 
   const actual = build('6tb80h', {
     title: 'Some Title',
@@ -21,12 +24,12 @@ module.exports = function() {
       ETH: '0xMyAddress'
     }
   }, {
-    name: 'xyMarketBot', statsThread: '6tb80z'
+    name: user, statsThread: '6tb80z'
   }),
   expected =
     '\n' +
     '**Price** $5.1 USD\n\n' +
-    '**Sold By** u/xyMarketBot \n' +
+    `**Sold By** u/${user} \n` +
     '[[view stats](/r/xyMarketStats/comments/6tb80z)]\n\n' +
     '**Description** Some description\n\ncontinued description\n\n' +
     '**Type** Digital Item\n\n' +
@@ -41,10 +44,10 @@ module.exports = function() {
     '**Escrow** Yes' +
     '\n\n---\n\n' +
     '**Purchase Links**\n\n' +
-    '- [Purchase with BTC](/message/compose?to=xyMarketBot&subject=command&message=purchase%201%20of%206tb80h%20using%20BTC)\n' +
-    '- [Purchase with BTC + Escrow](/message/compose?to=xyMarketBot&subject=command&message=purchase%201%20of%206tb80h%20using%20BTC%20and%20escrow)\n' +
-    '- [Purchase with ETH](/message/compose?to=xyMarketBot&subject=command&message=purchase%201%20of%206tb80h%20using%20ETH)\n' +
-    '- [Purchase with ETH + Escrow](/message/compose?to=xyMarketBot&subject=command&message=purchase%201%20of%206tb80h%20using%20ETH%20and%20escrow)';
+    `- [Purchase with BTC](/message/compose?to=${user}&subject=command&message=purchase%201%20of%206tb80h%20using%20BTC)\n` +
+    `- [Purchase with BTC + Escrow](/message/compose?to=${user}&subject=command&message=purchase%201%20of%206tb80h%20using%20BTC%20and%20escrow)\n` +
+    `- [Purchase with ETH](/message/compose?to=${user}&subject=command&message=purchase%201%20of%206tb80h%20using%20ETH)\n` +
+    `- [Purchase with ETH + Escrow](/message/compose?to=${user}&subject=command&message=purchase%201%20of%206tb80h%20using%20ETH%20and%20escrow)`;
 
   assert.equal(actual, expected, 'Build thread with all fields');
 
