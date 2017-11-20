@@ -12,6 +12,8 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
+  console.log('main/thread-listener: start');
+
   const db = new MySQL;
 
   try {
@@ -23,7 +25,7 @@ module.exports = async function() {
     // originally created the post
     posts = posts.filter(p => p.author.name != config.ids.reddit.user);
 
-    if (!posts.length) return;
+    if (!posts.length) return console.log('main/thread-listener: end1');
 
     // Load posts from database that match post ids
     await db.getConnection();
@@ -67,7 +69,9 @@ module.exports = async function() {
         [remove]
       );
     }
+
     db.release();
+    console.log('main/thread-listener: end2');
   }
   catch (err) {
     db.release();

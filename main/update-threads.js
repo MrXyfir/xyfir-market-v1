@@ -1,7 +1,7 @@
 const templates = require('constants/templates');
 const config = require('constants/config');
 const moment = require('moment');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 const snoo = require('snoowrap');
 
 const r = new snoo(config.snoowrap);
@@ -11,7 +11,9 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
-  const db = new mysql;
+  console.log('main/update-threads: start');
+
+  const db = new MySQL;
 
   try {
     // Get ids of all active threads that are over a week old
@@ -49,7 +51,7 @@ module.exports = async function() {
     `);
     db.release();
 
-    if (!rows.length) return;
+    if (!rows.length) return console.log('main/update-threads: end1');
 
     rows = rows.map(row => {
       const { title, category } = JSON.parse(row.data);
@@ -132,6 +134,8 @@ module.exports = async function() {
     else {
       await daily.edit(text);
     }
+
+    console.log('main/update-threads: end2');
   }
   catch (err) {
     db.release();

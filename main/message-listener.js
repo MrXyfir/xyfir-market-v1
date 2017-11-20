@@ -26,6 +26,8 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
+  console.log('main/message-listener: start');
+
   try {
     // Get all messages not marked as read
     const messages = await r.getUnreadMessages();
@@ -86,6 +88,8 @@ module.exports = async function() {
     }
     
     if (messages.length) await r.markMessagesAsRead(messages);
+
+    console.log('main/message-listener: end');
   }
   catch (err) {
     console.error('main/messageListener', err);

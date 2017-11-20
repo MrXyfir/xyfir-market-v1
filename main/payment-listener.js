@@ -15,6 +15,8 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
+  console.log('main/payment-listener: start');
+
   const db = new MySQL;
 
   try {
@@ -40,7 +42,10 @@ module.exports = async function() {
       ]);
     }
 
-    if (!orders.length) return;
+    if (!orders.length) {
+      db.release();
+      return console.log('main/message-listener: end1');
+    }
 
     for (let order of orders) {
       // Get needed data from thread
@@ -195,6 +200,7 @@ module.exports = async function() {
     }
 
     db.release();
+    console.log('main/message-listener: end2');
   }
   catch (err) {
     db.release();

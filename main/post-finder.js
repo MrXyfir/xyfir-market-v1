@@ -13,6 +13,8 @@ const r = new snoo(config.snoowrap);
  */
 module.exports = async function() {
 
+  console.log('main/post-finder: start');
+
   const db = new MySQL;
 
   try {
@@ -55,7 +57,7 @@ module.exports = async function() {
         !/\[WTS\]/.test(post.title)
       ));
 
-    if (!posts.length) return;
+    if (!posts.length) return console.log('main/post-finder: end1');
 
     await db.getConnection();
 
@@ -113,6 +115,7 @@ module.exports = async function() {
     }
 
     db.release();
+    console.log('main/post-finder: end2');
   }
   catch (err) {
     db.release();

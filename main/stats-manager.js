@@ -9,6 +9,8 @@ const r = new snoo(config.snoowrap);
 
 module.exports = async function() {
 
+  console.log('main/stats-manager: start');
+
   const db = new MySQL;
 
   try {
@@ -48,6 +50,7 @@ module.exports = async function() {
     }
 
     db.release();
+    console.log('main/post-finder: end');
   }
   catch (err) {
     db.release();
