@@ -50,7 +50,7 @@ module.exports = async function() {
     }
 
     db.release();
-    console.log('main/post-finder: end');
+    console.log('main/stats-manager: end');
   }
   catch (err) {
     db.release();

@@ -44,7 +44,7 @@ module.exports = async function() {
 
     if (!orders.length) {
       db.release();
-      return console.log('main/message-listener: end1');
+      return console.log('main/payment-listener: end1');
     }
 
     for (let order of orders) {
@@ -200,7 +200,7 @@ module.exports = async function() {
     }
 
     db.release();
-    console.log('main/message-listener: end2');
+    return console.log('main/payment-listener: end2');
   }
   catch (err) {
     db.release();
