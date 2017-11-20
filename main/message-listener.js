@@ -16,7 +16,7 @@ const reviseThread = require('commands/thread/revise');
 const statsLookup = require('commands/user/stats-lookup');
 const purchase = require('commands/thread/purchase');
 const promote = require('commands/thread/promote');
-const verify = require('commands/thread/promote');
+const verify = require('commands/thread/verify');
 const repost = require('commands/thread/repost');
 
 const r = new snoo(config.snoowrap);
