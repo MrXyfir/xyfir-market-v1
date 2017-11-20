@@ -285,15 +285,17 @@ exports.UNSTRUCTURED_THREAD =
 If you're the thread author, only the \`u/${config.ids.reddit.user} remove\` 
 command will work on it. For other users, no commands will work.`;
 
-exports.POST_FINDER_REPOST = (author, text) =>
-`Contact the original poster u/${author} if you're interested.
+exports.POST_FINDER_REPOST = (oldLink, text) =>
+`*This has been automatically reposted from ${oldLink}. Contact the original 
+poster if you're interested.*
 
 ---
 
 ${text}`;
 
 exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
-`Hello! I'm a bot for a new marketplace subreddit: r/xyMarket.
+`Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace 
+subreddit.
 
 I've discovered your thread ${oldLink} and reposted it to xyMarket. You can 
 find the repost at ${newLink}.
