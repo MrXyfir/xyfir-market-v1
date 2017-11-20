@@ -62,11 +62,8 @@ module.exports = async function() {
     for (let post of posts) {
       const author = await post.author.fetch();
 
-      // Author must have positive comment and link karma and over 10 karma total
-      if (
-        author.comment_karma < 0 || author.link_karma < 0 ||
-        author.comment_karma + author.link_karma < 10
-      ) continue;
+      // Author must have positive comment and link karma
+      if (author.comment_karma < 0 || author.link_karma < 0) continue;
 
       // Thread must not already exist in database
       const rows = await db.query(`
@@ -85,7 +82,7 @@ module.exports = async function() {
         .getSubreddit(config.ids.reddit.sub)
         .submitSelfpost({
           title: post.title,
-          text: templates.POST_FINDER_REPOST(author.name, post.selftext)
+          text: templates.POST_FINDER_REPOST(post.permalink, post.selftext)
         })
         .disableInboxReplies()
         .approve()
