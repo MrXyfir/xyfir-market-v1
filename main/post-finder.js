@@ -103,7 +103,8 @@ module.exports = async function() {
         INSERT INTO sales_threads SET ?
       `, {
         id: repost.id, author: post.author.name, created: repost.created_utc,
-        data: '{}', unstructured: true, approved: true
+        data: JSON.stringify({ title: repost.title }),
+        unstructured: true, approved: true
       });
 
       // Notify author
