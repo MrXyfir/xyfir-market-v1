@@ -43,18 +43,18 @@ module.exports = async function() {
       }
     }
 
-    // Grab full data for all active structured threads
+    // Grab full data for all active threads
     rows = await db.query(`
       SELECT id, data, promoted > NOW() AS promoted
       FROM sales_threads
-      WHERE approved = 1 AND removed = 0 AND unstructured = 0
+      WHERE approved = 1 AND removed = 0 AND data != '{}'
     `);
     db.release();
 
     if (!rows.length) return console.log('main/update-threads: end1');
 
     rows = rows.map(row => {
-      const { title, category } = JSON.parse(row.data);
+      const { title, category = 'Uncategorized' } = JSON.parse(row.data);
       row.data = { title, category };
       return row;
     });
@@ -71,9 +71,13 @@ module.exports = async function() {
 
     rows = null;
 
-    const text = Object
+    let text = Object
       .keys(categories)
+      // Remove 'Uncategorized' category
+      .filter(category => category != 'Uncategorized')
+      // Sort the categories randomly
       .sort(() => Math.round(Math.random()) ? 1 : -1)
+      // Build list of categories
       .map(category =>
         `- **${category}**\n` +
         categories[category]
@@ -96,6 +100,18 @@ module.exports = async function() {
           .join('\n')
       )
       .join('\n');
+
+    // **Uncategorized** is always added to the very bottom
+    if (categories.Uncategorized) {
+      text +=
+        '\n- **Uncategorized / Unstructured**\n' +
+        categories.Uncategorized
+          .map(thread =>
+            `  - [${thread.data.title}]` +
+            `(/r/${config.ids.reddit.sub}/comments/${thread.id})`
+          )
+          .join('\n')
+    }
     
     categories = null;
     
