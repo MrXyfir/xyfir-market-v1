@@ -286,33 +286,40 @@ If you're the thread author, only the \`u/${config.ids.reddit.user} remove\`
 command will work on it. For other users, no commands will work.`;
 
 exports.POST_FINDER_REPOST = (oldLink, text) =>
-`*This has been automatically reposted from ${oldLink}. Contact the original 
-poster if you're interested.*
+`*[This thread has been automatically reposted](${oldLink}). Contact the 
+original poster if you're interested.*
 
 ---
 
 ${text}`;
 
 exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
-`Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace 
-subreddit.
+`Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace subreddit.
 
-I've discovered your thread ${oldLink} and reposted it to xyMarket. You can 
-find the repost at ${newLink}.
-
-If you don't want your thread on xyMarket, you can remove it by commenting 
-on the new post \`u/${config.ids.reddit.user} remove\`.
+I've discovered your [thread](${oldLink}) and reposted it [here](${newLink}). 
+If you don't want your thread on xyMarket, you can remove it by commenting on 
+the new post \`u/${config.ids.reddit.user} remove\`.
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
-do not have access to some of xyMarket's best features like tracked
-purchases, autobuy, and increased exposure. If you'd like to take advantage of 
-more of xyMarket's features, you must post a *structured* thread. You can post 
-a structured thread to xyMarket using [this form](https://xyfir.com/#/market).
+miss out on most of xyMarket's special features. You can optionally post a 
+structured thread to xyMarket using [this form](https://xyfir.com/#/market).
 
-If you decide to post a structured thread, be sure to remove your unstructured 
-thread from xyMarket. You should also update your original thread that was 
-reposted to point to your structured thread so more people can take advantage 
-of its features!
+Some of the benefits structured sales threads offer are:
+
+- If you accept BTC, LTC, or ETH, and add payment addresses to your structured 
+thread, payments using those currencies will be tracked by xyMarketBot and 
+you'll be notified when a buyer makes a purchase. Payments go directly from 
+the buyer to your receiving address, so there are no added fees.
+- You can build your reputation by receiving feedback on sales, and you can 
+give feedback to buyers.
+- Your thread will be categorized and easier to find in xyMarket's daily thread.
+- You can enable 'Autobuy' and have your items automatically sent out to a 
+buyer after a successful purchase.
+
+If you decide to post a structured thread, be sure to remove the unstructured 
+one from xyMarket. You should also update your original thread that was 
+reposted, and point it to your structured thread so more people can take 
+advantage of its features!
 
 If you have questions, complaints, or feedback, post them in r/xyMarketMeta.
 
