@@ -96,10 +96,14 @@ module.exports = function(message) {
   }
 
   // REMOVE
-  match = message.body.match(/^(delete|remove)$/i);
+  match = message.body.match(/^remove$/i);
   if (match && message.isMention) {
     return { command: 'remove', thread: threadId(message.context) };
   };
+
+  // DELETE
+  match = message.body.match(/^delete (\w+)$/i);
+  if (match) return { command: 'delete', thread: match[1] };
 
   // REQUEST VERIFICATION
   match = message.body.match(/^request verification\b/i);

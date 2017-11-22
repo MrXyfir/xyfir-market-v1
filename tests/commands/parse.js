@@ -60,6 +60,15 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: remove');
 
+  // DELETE
+  actual = parse({
+    body: 'delete 6s1psl'
+  }),
+  expected = {
+    command: 'delete', thread: '6s1psl'
+  };
+  assert.deepEqual(actual, expected, 'Command: delete');
+
   // PURCHASE (on thread)
   actual = parse({
     was_comment: true, body: 'u/xyMarketBot purchase 1 using BTC',

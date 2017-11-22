@@ -11,6 +11,7 @@ const addAutobuyItems = require('commands/thread/autobuy/add');
 //const releaseEscrow = require('commands/order/escrow/release');
 const confirmOrder = require('commands/order/confirm');
 const giveFeedback = require('commands/order/give-feedback');
+const deleteThread = require('commands/thread/delete');
 const removeThread = require('commands/thread/remove');
 const reviseThread = require('commands/thread/revise');
 const statsLookup = require('commands/user/stats-lookup');
@@ -74,6 +75,9 @@ module.exports = async function() {
           break;
         case 'remove':
           removeThread(r, message, command.thread);
+          break;
+        case 'delete':
+          deleteThread(r, message, command.thread);
           break;
         case 'verify':
           verify(r, message, command);
