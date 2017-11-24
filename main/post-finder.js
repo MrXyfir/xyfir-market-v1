@@ -18,11 +18,17 @@ module.exports = async function() {
   const db = new MySQL;
 
   try {
-    // Most to least active (kind of)
     const subreddits = [
-      'BitMarket', 'redditbay', 'barter', 'REDDITEXCHANGE', 'forsale',
-      'Sell', 'marketplace'
-    ];
+      'BitMarket', 'redditbay', 'barter', 'forsale', 'Sell', 'marketplace',
+      'REDDITEXCHANGE', 'giftcardexchange', 'appleswap', 'GameSale',
+      'SteamGameSwap'
+    ],
+    subredditCategory = {
+      giftcardexchange: 'Vouchers & Gift Cards',
+      SteamGameSwap: 'Video Games & Items',
+      appleswap: 'Electronics',
+      GameSale: 'Video Games & Items'
+    };
 
     let posts = [], mods = [];
 
@@ -30,32 +36,49 @@ module.exports = async function() {
       // Load new posts
       let _posts = await r.getSubreddit(sub).getNew();
 
-      // Filter out posts over 2 hours old (should already have been seen)
-      _posts = _posts.filter(post =>
-        moment.utc().subtract(2, 'hours').unix() < post.created_utc
-      );
+      _posts = _posts
+        // Filter out posts over 2 hours old (should already have been seen)
+        .filter(post =>
+          moment.utc().subtract(2, 'hours').unix() < post.created_utc
+        )
+        // Ignore link and empty selftext posts
+        .filter(post => !!post.selftext)
+        // Ignore posts marked as completed or closed
+        .filter(post =>
+          !post.link_flair_text || !/complete|close/i.test(post.link_flair_text)
+        )
+        // BitMarket threads must start with [WTS]
+        .filter(post => !(sub == 'BitMarket' && !/\[WTS\]/.test(post.title)))
+        // Make sure posts in trade subreddits with strict title formats are
+        // looking to receive some known currency
+        .filter(post => {
+          if (subreddits.indexOf(sub) < 6) return true;
+
+          // Title must be [H] <something> [W] <something>
+          if (!/\[H\].+\[W\]/.test(post.title)) return false;
+
+          const want = post.title.split('[W]')[1];
+
+          if (/\bPayPal|BTC|Bitcoin|ETH|Ethereum|LTC|Litecoin\b/i.test(want))
+            return true;
+        });
       posts = posts.concat(_posts);
 
       // Load moderators
       let _mods = await r.getSubreddit(sub).getModerators();
 
-      // Filter out moderators already in array
-      _mods = _mods.filter(mod => mods.indexOf(mod) == -1);
+      _mods = _mods
+        // Just get their username
+        .map(mod => mod.name)
+        // Filter out moderators already in array
+        .filter(mod => mods.indexOf(mod) == -1);
       mods = mods.concat(_mods);
     }
 
-    posts = posts
-      // Ignore posts made by users in mods[]
-      .filter(post =>
-        mods.findIndex(m => post.author.name == m.name) == -1
-      )
-      // Ignore link and empty selftext posts
-      .filter(post => !!post.selftext)
-      // BitMarket threads must start with [WTS]
-      .filter(post => !(
-        post.subreddit.display_name == 'BitMarket' &&
-        !/\[WTS\]/.test(post.title)
-      ));
+    // Ignore posts made by users in mods[]
+    posts = posts.filter(post =>
+      mods.findIndex(mod => post.author.name == mod) == -1
+    );
 
     if (!posts.length) return console.log('main/post-finder: end1');
 
@@ -103,8 +126,11 @@ module.exports = async function() {
         INSERT INTO sales_threads SET ?
       `, {
         id: repost.id, author: post.author.name, created: repost.created_utc,
-        data: JSON.stringify({ title: repost.title }),
-        unstructured: true, approved: true
+        unstructured: true, approved: true,
+        data: JSON.stringify({
+          category: subredditCategory[post.subreddit.display_name],
+          title: repost.title
+        })
       });
 
       // Notify author
