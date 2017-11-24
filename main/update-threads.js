@@ -13,7 +13,7 @@ module.exports = async function() {
 
   console.log('main/update-threads: start');
 
-  const db = new MySQL;
+  const db = new MySQL, {sub} = config.ids.reddit;
 
   try {
     // Get ids of all active threads that are over a week old
@@ -45,7 +45,7 @@ module.exports = async function() {
 
     // Grab full data for all active threads
     rows = await db.query(`
-      SELECT id, data, promoted > NOW() AS promoted
+      SELECT id, data, unstructured, promoted > NOW() AS promoted
       FROM sales_threads
       WHERE approved = 1 AND removed = 0 AND data != '{}'
     `);
@@ -93,9 +93,10 @@ module.exports = async function() {
           })
           // Convert to string for post
           .map(thread =>
-            `  - ${thread.promoted ? '💎' : ''}` +
-            `[${thread.data.title}]` +
-            `(/r/${config.ids.reddit.sub}/comments/${thread.id})`
+            '  - ' +
+            (thread.promoted ? '💎' : '') +
+            `[${thread.data.title}](/r/${sub}/comments/${thread.id})` +
+            (thread.unstructured ? '^unstructured' : '')
           )
           .join('\n')
       )
@@ -104,20 +105,23 @@ module.exports = async function() {
     // **Uncategorized** is always added to the very bottom
     if (categories.Uncategorized) {
       text +=
-        '\n- **Uncategorized / Unstructured**\n' +
+        '\n- **Uncategorized**\n' +
         categories.Uncategorized
+          .sort(() => Math.round(Math.random()) ? 1 : -1)
           .map(thread =>
-            `  - [${thread.data.title}]` +
-            `(/r/${config.ids.reddit.sub}/comments/${thread.id})`
+            '  - ' +
+            (thread.promoted ? '💎' : '') +
+            `[${thread.data.title}](/r/${sub}/comments/${thread.id})` +
+            (thread.unstructured ? '^unstructured' : '')
           )
           .join('\n')
     }
-    
+
     categories = null;
-    
+
     // Get age of daily thread
     let daily = await r
-      .getSubreddit(config.ids.reddit.sub)
+      .getSubreddit(sub)
       .getSticky({ num: 1 })
       .fetch(),
     expires = moment
@@ -131,7 +135,7 @@ module.exports = async function() {
       await daily.remove();
 
       daily = await r
-        .getSubreddit(config.ids.reddit.sub)
+        .getSubreddit(sub)
         .submitSelfpost({
           text,
           title: `Categorized Sales Threads (${
