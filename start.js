@@ -20,7 +20,7 @@ if (config.environment.type != 'dev') {
   setInterval(threadListener, 60 * 1000);  // every minute
   setInterval(updateThreads, 3600 * 1000); // every hour
   setInterval(statsManager, 86400 * 1000); // every day
-  setInterval(postFinder, 3600 * 1000);    // every hour
+  setInterval(postFinder, 1800 * 1000);    // every 30 minutes
   postFinder();
 }
 
