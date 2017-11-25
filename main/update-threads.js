@@ -119,6 +119,32 @@ module.exports = async function() {
 
     categories = null;
 
+    let posts = [''];
+
+    if (text.length > 40000) {
+      posts = text
+        .split(/^\-/gm)
+        .slice(1)
+        .reduce((posts, section) => {
+          const i = posts.length - 1;
+
+          // A new post will be needed
+          // First post (index 0), has 40K character limit
+          if (posts[i].length + section.length > (i ? 10000 : 40000))
+            return posts.concat('-' + section);
+          // Add section to last post
+          else
+            posts[i] += '-' + section;
+
+          return posts;
+        }, ['']);
+    }
+    else {
+      posts[0] = text;
+    }
+
+    text = null;
+
     // Get age of daily thread
     let daily = await r
       .getSubreddit(sub)
@@ -137,7 +163,7 @@ module.exports = async function() {
       daily = await r
         .getSubreddit(sub)
         .submitSelfpost({
-          text,
+          text: posts.shift(),
           title: `Categorized Sales Threads (${
             moment.utc().subtract(12, 'hours').format('MM/DD')
           } - ${
@@ -152,7 +178,17 @@ module.exports = async function() {
     }
     // Edit current daily thread
     else {
-      await daily.edit(text);
+      await daily.edit(posts.shift());
+
+      // Delete all comments
+      for (let comment of daily.comments) {
+        await comment.delete();
+      }
+    }
+
+    // Add comments if needed
+    for (let post of posts) {
+      await daily.reply(post);
     }
 
     console.log('main/update-threads: end2');
