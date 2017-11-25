@@ -286,10 +286,8 @@ If you're the thread author, only the \`u/${config.ids.reddit.user} remove\`
 command will work on it. For other users, no commands will work.`;
 
 exports.POST_FINDER_REPOST = (oldLink, text) =>
-`*[This thread has been automatically reposted](${oldLink}). Contact the 
-original poster if you're interested.*
-
----
+`*[This thread has been automatically reposted. Contact the 
+original poster if you're interested.](${oldLink})*
 
 ${text}`;
 
