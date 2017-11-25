@@ -1,6 +1,6 @@
 module.exports = [
   'Advertising',
-  'Automotives',
+  'Automotive',
   'Books',
   'Collectibles',
   'Computers',
@@ -10,16 +10,16 @@ module.exports = [
   'Entertainment',
   'Fashion',
   'Fiat',
-  'Food and Beverage',
+  'Games & Virtual Items',
   'Home & Garden',
   'Industrial',
   'NSFW',
-  'Other',
   'Precious Metals',
   'Printed Media',
   'Real Estate',
   'Services',
   'Sports & Hobbies',
+  'Uncategorized',
   'Vouchers & Gift Cards',
   'Web'
 ]

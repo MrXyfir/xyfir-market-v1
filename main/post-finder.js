@@ -25,9 +25,9 @@ module.exports = async function() {
     ],
     subredditCategory = {
       giftcardexchange: 'Vouchers & Gift Cards',
-      SteamGameSwap: 'Video Games & Items',
+      SteamGameSwap: 'Games & Virtual Items',
       appleswap: 'Electronics',
-      GameSale: 'Video Games & Items'
+      GameSale: 'Games & Virtual Items'
     };
 
     let posts = [], mods = [];
