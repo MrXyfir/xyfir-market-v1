@@ -5,7 +5,7 @@ const build = require('lib/threads/build');
 const MySQL = require('lib/mysql');
 
 /**
- * Allow a thread creator to repost their expired thread.
+ * Allow a thread creator to repost their expired structured sales thread.
  * @param {Snoowrap} r
  * @param {Snoowrap.Comment} comment
  * @param {string} threadId
@@ -19,10 +19,10 @@ module.exports = async function(r, comment, threadId) {
     const [thread] = await db.query(`
       SELECT id, data FROM sales_threads
       WHERE
-        id = ? AND author = ? AND approved = ? AND
+        id = ? AND author = ? AND approved = ? AND unstructured = ? AND
         (removed = ? OR promoted > NOW())
     `, [
-      threadId, comment.author.name, 1,
+      threadId, comment.author.name, 1, 0,
       1
     ]);
 
@@ -38,6 +38,9 @@ module.exports = async function(r, comment, threadId) {
         title: thread.data.title, text: ''
       })
       .disableInboxReplies()
+      .assignFlair({
+        text: 'Structured', cssClass: 'structured'
+      })
       .approve()
       .fetch();
 
