@@ -63,7 +63,7 @@ module.exports = async function() {
     let categories = {};
 
     rows.forEach(row => {
-      let category = row.data.category + ' (#1)';
+      let category = row.data.category;
       const base = category;
 
       // Check if first group of category exists
@@ -75,11 +75,12 @@ module.exports = async function() {
           base.length + row.id.length + row.data.title.length + 39;
       }
       // Fit row into last category group
-      // else if (categories[base].currentGroupLength < 9500) {
-      else if (categories[base].currentGroupLength < 300) {
+      else if (categories[base].currentGroupLength < 9500) {
         categories[base].currentGroupLength +=
           row.id.length + row.data.title.length + 30;
-        category = row.data.category + ` (#${categories[base].groups})`;
+        category = row.data.category + (
+          categories[base].groups > 1 ? ` (#${categories[base].groups})` : ''
+        );
       }
       // Create a new group for the category
       else {
@@ -95,17 +96,6 @@ module.exports = async function() {
     });
 
     rows = null;
-
-    // Remove (#1) if category only has one group
-    Object
-      .keys(categories)
-      .filter(category => category.indexOf(' (#1)') > -1)
-      .forEach(category => {
-        if (categories[category].groups == 1) {
-          categories[category.replace(' (#1)', '')] = categories[category];
-          delete categories[category];
-        }
-      });
 
     let text = Object
       .keys(categories)
