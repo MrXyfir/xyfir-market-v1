@@ -112,7 +112,8 @@ delete this thread if you wish.
 
 ${exports.SALES_THREAD_COMMANDS(id)}`;
 
-exports.SALES_THREAD_EXPIRED =
+exports.SALES_THREAD_EXPIRED = unstructured => unstructured ?
+`This thread has expired. You may now repost it if you wish.` :
 `This thread has expired. The owner may repost it by commenting on this thread
 \`u/${config.ids.reddit.user} repost\`. This thread will remain removed and a 
 new copy of it will be posted. If this thread has autobuy enabled, any items 
