@@ -19,7 +19,7 @@ module.exports = async function() {
     // Get ids of all active threads that are over a week old
     await db.getConnection();
     let rows = await db.query(`
-      SELECT id FROM sales_threads
+      SELECT id, unstructured FROM sales_threads
       WHERE created < ? AND removed = 0 AND NOW() > promoted
     `, [
       moment().subtract(1, 'week').utc().unix()
@@ -39,7 +39,7 @@ module.exports = async function() {
         await thread.remove();
 
         // Notify creator that their thread has expired and that they can repost
-        await thread.reply(templates.SALES_THREAD_EXPIRED);
+        await thread.reply(templates.SALES_THREAD_EXPIRED(row.unstructured));
       }
     }
 
@@ -63,18 +63,52 @@ module.exports = async function() {
     let categories = {};
 
     rows.forEach(row => {
-      if (!categories[row.data.category])
-        categories[row.data.category] = [];
+      let category = row.data.category + ' (#1)';
+      const base = category;
 
-      categories[row.data.category].push(row);
+      // Check if first group of category exists
+      // Initialize values
+      if (!categories[base]) {
+        categories[base] = [],
+        categories[base].groups = 1,
+        categories[base].currentGroupLength =
+          base.length + row.id.length + row.data.title.length + 39;
+      }
+      // Fit row into last category group
+      // else if (categories[base].currentGroupLength < 9500) {
+      else if (categories[base].currentGroupLength < 300) {
+        categories[base].currentGroupLength +=
+          row.id.length + row.data.title.length + 30;
+        category = row.data.category + ` (#${categories[base].groups})`;
+      }
+      // Create a new group for the category
+      else {
+        categories[base].groups++,
+        categories[base].currentGroupLength =
+          category.length + row.id.length + row.data.title.length + 39,
+        category = row.data.category + ` (#${categories[base].groups})`;
+
+        categories[category] = [];
+      }
+
+      categories[category].push(row);
     });
 
     rows = null;
 
+    // Remove (#1) if category only has one group
+    Object
+      .keys(categories)
+      .filter(category => category.indexOf(' (#1)') > -1)
+      .forEach(category => {
+        if (categories[category].groups == 1) {
+          categories[category.replace(' (#1)', '')] = categories[category];
+          delete categories[category];
+        }
+      });
+
     let text = Object
       .keys(categories)
-      // Remove 'Uncategorized' category
-      .filter(category => category != 'Uncategorized')
       // Sort the categories randomly
       .sort(() => Math.round(Math.random()) ? 1 : -1)
       // Build list of categories
@@ -95,27 +129,11 @@ module.exports = async function() {
           .map(thread =>
             '  - ' +
             (thread.promoted ? '💎' : '') +
-            `[${thread.data.title}](/r/${sub}/comments/${thread.id})` +
-            (thread.unstructured ? '^unstructured' : '')
+            `[${thread.data.title}](/r/${sub}/comments/${thread.id})`
           )
           .join('\n')
       )
       .join('\n');
-
-    // **Uncategorized** is always added to the very bottom
-    if (categories.Uncategorized) {
-      text +=
-        '\n- **Uncategorized**\n' +
-        categories.Uncategorized
-          .sort(() => Math.round(Math.random()) ? 1 : -1)
-          .map(thread =>
-            '  - ' +
-            (thread.promoted ? '💎' : '') +
-            `[${thread.data.title}](/r/${sub}/comments/${thread.id})` +
-            (thread.unstructured ? '^unstructured' : '')
-          )
-          .join('\n')
-    }
 
     categories = null;
 
