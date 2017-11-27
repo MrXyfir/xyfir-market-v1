@@ -13,16 +13,23 @@ module.exports = async function(r, comment, thread) {
 
   try {
     await db.getConnection();
-    const result = await db.query(
-      'UPDATE sales_threads SET removed = 1 WHERE id = ? AND author = ?',
+    const rows = await db.query(
+      'SELECT unstructured FROM sales_threads WHERE id = ? AND author = ?',
       [thread, comment.author.name]
+    );
+
+    if (!rows.length) throw templates.UNAUTHORIZED_COMMAND;
+
+    const result = await db.query(
+      'UPDATE sales_threads SET removed = 1 WHERE id = ?',
+      [thread]
     );
     db.release();
 
-    if (!result.affectedRows) return;
-
-    await comment.reply(templates.THREAD_REMOVED_BY_CREATOR(thread));
     await r.getSubmission(thread).remove();
+    await comment.reply(
+      templates.THREAD_REMOVED_BY_CREATOR(thread, rows[0].unstructured)
+    );
   }
   catch (err) {
     db.release();
