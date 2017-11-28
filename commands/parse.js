@@ -12,6 +12,9 @@ const note = body => body.split('\n\n').slice(1).join('\n\n').trim();
  */
 module.exports = function(message) {
 
+  // Strip comments and whitespace off both ends
+  message.body = message.body.replace(/^\/\/ .+$/gm, '').trim();
+
   message.isMention =
     message.was_comment &&
     /^\/?u\/xyMarket(Dev)?Bot\s+/i.test(message.body);
@@ -19,8 +22,6 @@ module.exports = function(message) {
   if (message.isMention) {
     message.body = message.body.replace(/^\/?u\/xyMarket(Dev)?Bot\s+/i, '');
   }
-
-  message.body = message.body.trim();
 
   // REVISE
   let match = message.body.match(/^revise$/i);
