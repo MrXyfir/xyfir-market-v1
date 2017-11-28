@@ -1,3 +1,4 @@
+const categories = require('constants/categories');
 const templates = require('constants/templates');
 const getUser = require('lib/users/get-info');
 const config = require('constants/config');
@@ -31,6 +32,8 @@ module.exports = async function(r, comment, threadId) {
     thread.data = JSON.parse(thread.data);
     const user = await getUser(comment.author.name, db);
 
+    const category = categories[thread.data.category];
+
     // Create thread
     const repost = await r
       .getSubreddit(config.ids.reddit.sub)
@@ -39,7 +42,7 @@ module.exports = async function(r, comment, threadId) {
       })
       .disableInboxReplies()
       .assignFlair({
-        text: 'Structured', cssClass: 'structured'
+        text: category.text, cssClass: category.css
       })
       .approve()
       .fetch();
