@@ -1,9 +1,10 @@
+const categories = require('constants/categories');
 const config = require('constants/config');
 
 const buildCommandLink = require('lib/messages/build-command-link');
 const threadLink = id => `/r/${config.ids.reddit.sub}/comments/${id}`;
 
-const HOW_TO_REVISE =
+exports.HOW_TO_REVISE =
 `
 
 Edit your thread and then comment on it 
@@ -13,29 +14,31 @@ exports.INVALID_TITLE =
 'Invalid title: it must be 5-200 characters in length.\
  Due to Reddit not allowing titles to be changed, you can add the `**Title**`\
  field to your thread body, and the title provided after it will be used.' +
- HOW_TO_REVISE;
+ exports.HOW_TO_REVISE;
 
 exports.INVALID_TYPE =
 'Invalid type: it must be `Physical/Digital Item/Service`.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_CATEGORY =
-'Invalid category: it must be within our categories list. It must be an\
- *exact* match, even capitalization.' +
-HOW_TO_REVISE;
+`Invalid category: it must exist within our categories list and be an *exact*
+match, even capitalization.
+
+- **Categories**
+${Object.keys(categories).map(c => `  - ${c}`).join('\n')}`;
 
 exports.INVALID_DESCRIPTION =
 'No description found.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_PRICE =
 'Invalid price: it must be like `$X.XX`. Prices must be in USD.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_CURRENCY =
 'Invalid currency: it must be a space-delimited list of currencies like:\
  `BTC PP ETH LTC`.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_IMAGES =
 'Invalid image(s): value must be a space-delimited list of direct image links.\
@@ -44,19 +47,19 @@ exports.INVALID_IMAGES =
 \n\n\
 **Example:** `http://i.imgur.com/XXXXXXXXXXXXXX.jpg\
  https://i.imgur.com/XXXXXXXXXXXXXZ.png`' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_TRACKING =
 'Enabling tracking requires accepting `BTC`, `LTC`, or `ETH` currency.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_ESCROW_OR_AUTOBUY =
 'Escrow and/or autobuy require `**Tracking** True`.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_TYPE_FOR_AUTOBUY =
 '`**Type**` must be `Digital Item` when `**Autobuy** True`.' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.INVALID_ADDRESSES =
 'Missing or invalid `**Addresses**` field. This field is required when\
@@ -67,11 +70,11 @@ exports.INVALID_ADDRESSES =
  `BTC=1YourBitcoinAddressObR76b53LETtpyT\
  LTC=3YourLitecoinAddressHXHXEeLygMXoAj\
  ETH=0xYourEthereumAddress32487E1EfdD8729b87445`' +
-HOW_TO_REVISE;
+exports.HOW_TO_REVISE;
 
 exports.PRICE_TOO_LOW =
 `Sales threads with \`**Tracking** True\` require \`**Price**\` to be at or
-above $5.00 (USD).` + HOW_TO_REVISE;
+above $5.00 (USD).` + exports.HOW_TO_REVISE;
 
 exports.SALES_THREAD_COMMANDS = id =>
 `# Commands
