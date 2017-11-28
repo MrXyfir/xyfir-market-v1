@@ -296,18 +296,19 @@ original poster if you're interested.](${oldLink})*
 
 ${text}`;
 
-exports.POST_FINDER_REPOSTED = (oldLink, newLink) =>
+exports.POST_FINDER_REPOSTED = (oldLink, newId) =>
 `Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace subreddit.
 
-I've discovered your [thread](${oldLink}) and reposted it [here](${newLink}). 
-If you don't want your thread on xyMarket, you can remove it by commenting on 
-the new post \`u/${config.ids.reddit.user} remove\`.
+I've discovered your [thread](${oldLink}) and reposted it [here](/r/${
+  `${config.ids.reddit.sub}/comments/${newId}`
+}). If you don't want your thread on xyMarket, you can remove it by commenting 
+on the new post \`u/${config.ids.reddit.user} remove\`.
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
 miss out on most of xyMarket's special features. You can optionally post a 
 structured thread to xyMarket using [this form](https://xyfir.com/#/market).
 
-Some of the benefits structured sales threads offer are:
+Some of the benefits that structured sales threads offer are:
 
 - If you accept BTC, LTC, or ETH, and add payment addresses to your structured 
 thread, payments using those currencies will be tracked by xyMarketBot and 
@@ -324,7 +325,17 @@ one from xyMarket. You should also update your original thread that was
 reposted, and point it to your structured thread so more people can take 
 advantage of its features!
 
-If you have questions, complaints, or feedback, post them in r/xyMarketMeta.
+Don't want to bother with structured threads? You can at least increase your 
+unstructured thread's visibility by categorizing it using [this link](${
+  buildCommandLink([
+    `categorize ${newId} as Uncategorized`,,
+    `// Change "Uncategorized" to one of the categories below:  `,
+    `// ${Object.keys(categories).join(', ')}  `,
+    `// The spelling and capitalization must match exactly!`
+  ])
+}).
+
+Have questions, complaints, or feedback? Post them in r/xyMarketMeta.
 
 Have a nice day!
 

@@ -119,10 +119,6 @@ module.exports = async function() {
         })
         .fetch();
 
-      const text = templates.POST_FINDER_REPOSTED(
-        post.permalink, repost.permalink
-      );
-
       await createUser(author.name, db);
 
       await db.query(`
@@ -139,7 +135,7 @@ module.exports = async function() {
       // Notify author
       await r.composeMessage({
         to: author.name,
-        text,
+        text: templates.POST_FINDER_REPOSTED(post.permalink, repost.id),
         subject: 'r/xyMarket'
       });
     }
