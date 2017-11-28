@@ -1,3 +1,4 @@
+const categories = require('constants/categories');
 const createUser = require('lib/users/create');
 const templates = require('constants/templates');
 const config = require('constants/config');
@@ -100,7 +101,9 @@ module.exports = async function() {
 
       if (rows.length) continue;
 
-      let text = '';
+      const category = categories[
+        subredditCategory[post.subreddit.display_name] || 'Uncategorized'
+      ];
 
       // Post to r/xyMarket as unstructured
       const repost = await r
@@ -112,11 +115,11 @@ module.exports = async function() {
         .disableInboxReplies()
         .approve()
         .assignFlair({
-          text: 'Unstructured', cssClass: 'unstructured'
+          text: category.text, cssClass: category.css
         })
         .fetch();
 
-      text = templates.POST_FINDER_REPOSTED(
+      const text = templates.POST_FINDER_REPOSTED(
         post.permalink, repost.permalink
       );
 
@@ -128,7 +131,7 @@ module.exports = async function() {
         id: repost.id, author: post.author.name, created: repost.created_utc,
         unstructured: true, approved: true,
         data: JSON.stringify({
-          category: subredditCategory[post.subreddit.display_name],
+          category: category.text,
           title: repost.title
         })
       });
