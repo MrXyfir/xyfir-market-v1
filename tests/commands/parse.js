@@ -211,4 +211,15 @@ module.exports = function() {
   },
   assert.deepEqual(actual, expected, 'Command: stats-lookup');
 
+  // CATEGORIZE
+  actual = parse({
+    body: 'categorize 6s1psl as Games & Virtual Items'
+  }),
+  expected = {
+    category: 'Games & Virtual Items',
+    command: 'categorize',
+    thread: '6s1psl'
+  },
+  assert.deepEqual(actual, expected, 'Command: categorize');
+
 }

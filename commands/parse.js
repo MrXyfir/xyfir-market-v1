@@ -160,6 +160,12 @@ module.exports = function(message) {
   match = message.body.match(/^get stats for u\/(\w+)$/);
   if (match) return { command: 'stats-lookup', user: match[1] };
 
+  // CATEGORIZE SALES THREAD
+  match = message.body.match(/^categorize (\w{6,}) as (.+)$/i);
+  if (match) {
+    return { command: 'categorize', thread: match[1], category: match[2] };
+  }
+  
   return { command: 'error', reply: 'Invalid command or syntax' };
 
 }

@@ -15,6 +15,7 @@ const deleteThread = require('commands/thread/delete');
 const removeThread = require('commands/thread/remove');
 const reviseThread = require('commands/thread/revise');
 const statsLookup = require('commands/user/stats-lookup');
+const categorize = require('commands/thread/categorize');
 const purchase = require('commands/thread/purchase');
 const promote = require('commands/thread/promote');
 const verify = require('commands/thread/verify');
@@ -63,6 +64,9 @@ module.exports = async function() {
           break;
         case 'stats-lookup':
           statsLookup(r, message, command.user);
+          break;
+        case 'categorize':
+          categorize(r, message, command);
           break;
         case 'purchase':
           purchase(r, message, command);
