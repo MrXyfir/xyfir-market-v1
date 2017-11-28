@@ -17,6 +17,7 @@ module.exports = function() {
       '**Tracking** True',
       '**Escrow** True',
       '**Autobuy** True',
+      '**Repost** True',
       '**Addresses** BTC=1MyAddress ETH=0xMyAddress'
     ].join('\n\n')
   });
@@ -33,6 +34,7 @@ module.exports = function() {
       '[Image 2](https://i.imgur.com/XXXXXXXXXXXXXZ.png)'
     ].join(', '),
     nsfw: true, tracking: true, escrow: true, autobuy: true, verified: false,
+    repost: true,
     stock: 0,
     addresses: {
       BTC: '1MyAddress',

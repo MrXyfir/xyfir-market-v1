@@ -27,7 +27,7 @@ module.exports = function() {
     name: user, statsThread: '6tb80z'
   }),
   expected =
-    '\n' +
+    '\n\n\n' +
     '**Price** $5.1 USD\n\n' +
     `**Sold By** u/${user} \n` +
     '[[view stats](/r/xyMarketStats/comments/6tb80z)]\n\n' +
