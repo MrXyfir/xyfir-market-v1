@@ -284,11 +284,18 @@ exports.THREAD_PROMOTED = (thread, months) =>
 `Your thread ${threadLink(thread)} has been promoted for the next
 ${months} month(s).`;
 
-exports.UNSTRUCTURED_THREAD =
+exports.UNSTRUCTURED_THREAD = id =>
 `**This is an unstructured thread.**
 
 If you're the thread author, only the \`u/${config.ids.reddit.user} remove\` 
-command will work on it. For other users, no commands will work.`;
+and [categorize](${
+  buildCommandLink([
+    `categorize ${id} as Uncategorized`,,
+    `// Change "Uncategorized" to one of the categories below:  `,
+    `// ${Object.keys(categories).join(', ')}  `,
+    `// The spelling and capitalization must match exactly!`
+  ])
+}) commands will work on it. For other users, no commands will work.`;
 
 exports.POST_FINDER_REPOST = (oldLink, text) =>
 `*[This thread has been automatically reposted. Contact the 
