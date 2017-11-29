@@ -97,9 +97,12 @@ module.exports = function(message) {
   }
 
   // REMOVE
-  match = message.body.match(/^remove$/i);
-  if (match && message.isMention) {
-    return { command: 'remove', thread: threadId(message.context) };
+  match = message.body.match(/^remove( (\w{6,}))?$/i);
+  if (match) {
+    return {
+      command: 'remove',
+      thread: match[2] || threadId(message.context)
+    };
   };
 
   // DELETE
@@ -107,11 +110,11 @@ module.exports = function(message) {
   if (match) return { command: 'delete', thread: match[1] };
 
   // REQUEST VERIFICATION
-  match = message.body.match(/^request verification\b/i);
-  if (match && message.isMention) {
+  match = message.body.match(/^request verification for (\w{6,})\b/i);
+  if (match) {
     return {
       command: 'request-verification',
-      thread: threadId(message.context),
+      thread: match[1],
       note: note(message.body)
     };
   }

@@ -50,10 +50,19 @@ module.exports = function() {
   };
   assert.deepEqual(actual, expected, 'Command: clear-autobuy-items');
 
-  // REMOVE
+  // REMOVE (on thread)
   actual = parse({
     was_comment: true, body: 'u/xyMarketBot remove',
     context: '/r/xyMarket/comments/6s1psl/daily_thread/'
+  }),
+  expected = {
+    command: 'remove', thread: '6s1psl'
+  };
+  assert.deepEqual(actual, expected, 'Command: remove');
+
+  // REMOVE (in private message)
+  actual = parse({
+    body: 'remove 6s1psl'
   }),
   expected = {
     command: 'remove', thread: '6s1psl'
@@ -157,8 +166,7 @@ module.exports = function() {
 
   // REQUEST VERIFICATION
   actual = parse({
-    was_comment: true, context: '/r/xyMarket/comments/6s1psl/daily_thread/',
-    body: 'u/xyMarketBot request verification\n\nsome note'
+    body: 'request verification for 6s1psl\n\nsome note'
   }),
   expected = {
     command: 'request-verification', thread: '6s1psl', note: 'some note'
