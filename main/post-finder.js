@@ -92,14 +92,19 @@ module.exports = async function() {
       if (author.comment_karma < 0 || author.link_karma < 0) continue;
 
       // Thread must not already exist in database
-      const rows = await db.query(`
-        SELECT id FROM sales_threads
-        WHERE author = ? AND unstructured = ? AND created > ?
+      const [res] = await db.query(`
+        SELECT (
+          SELECT COUNT(id) FROM sales_threads
+          WHERE author = ? AND unstructured = ? AND created > ?
+        ) AS recentThreads, (
+          SELECT ignored FROM users WHERE name = ?
+        ) AS userIsIgnored
       `, [
-        author.name, 1, moment.utc().subtract(2, 'hours').unix()
+        author.name, 1, moment.utc().subtract(2, 'hours').unix(),
+        author.name
       ]);
 
-      if (rows.length) continue;
+      if (res.recentThreads > 0 || res.userIsIgnored) continue;
 
       const category = categories[
         subredditCategory[post.subreddit.display_name] || 'Uncategorized'
