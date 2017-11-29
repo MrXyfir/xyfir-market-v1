@@ -1,9 +1,10 @@
+const buildCommandLink = require('lib/messages/build-command-link');
 const categories = require('constants/categories');
 const config = require('constants/config');
 
-const buildCommandLink = require('lib/messages/build-command-link');
 const threadLink = id => `/r/${config.ids.reddit.sub}/comments/${id}`;
-const docs = 'https://goo.gl/6h9vZD';
+const docs = (file, section = '') => `https://github.com/Xyfir/Documentation/` +
+  `blob/master/xyfir-market/${file}.md#${section}`;
 
 exports.HOW_TO_REVISE =
 `
@@ -80,7 +81,7 @@ above $5.00 (USD).` + exports.HOW_TO_REVISE;
 exports.SALES_THREAD_COMMANDS = id =>
 `# Commands
 
-See xyMarket's [documentation](${docs}) for more information.
+See xyMarket's [documentation](${docs('seller')}) for more information.
 
 - [Remove](${buildCommandLink(`remove ${id}`)})
 - [Repost](${buildCommandLink(`repost ${id}`)}) (if expired or promoted)
@@ -377,6 +378,15 @@ Buyer Feedback | +${
 }, -${
   stats.feedback.buyer.negative
 }
+
+${stats.verifiedProfiles ?
+`# Verified Profiles ^^[[?]](${docs('shared', 'verified-profiles')})
+
+${Object
+  .keys(stats.verifiedProfiles)
+  .map(p => `- [${p}](${stats.verifiedProfiles[p]})`)
+  .join('\n')
+}` : ''}
 
 # Feedback
 
