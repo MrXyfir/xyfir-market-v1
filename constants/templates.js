@@ -3,6 +3,7 @@ const config = require('constants/config');
 
 const buildCommandLink = require('lib/messages/build-command-link');
 const threadLink = id => `/r/${config.ids.reddit.sub}/comments/${id}`;
+const docs = 'https://goo.gl/6h9vZD';
 
 exports.HOW_TO_REVISE =
 `
@@ -79,31 +80,33 @@ above $5.00 (USD).` + exports.HOW_TO_REVISE;
 exports.SALES_THREAD_COMMANDS = id =>
 `# Commands
 
+See xyMarket's [documentation](${docs}) for more information.
+
+- [Remove](${buildCommandLink(`remove ${id}`)})
+- [Repost](${buildCommandLink(`repost ${id}`)}) (if expired or promoted)
+- [Promote](${
+  buildCommandLink(`promote ${id} for 2 months using BTC`)
+})
+- [Request Verification](${
+  buildCommandLink([
+    `request verification for ${id}`,,
+    `// Optionally add a message to the moderators below this line`
+  ])
+})
+
 If your thread has autobuy enabled, you can use the following commands to
 manage autobuy items:
 
-- [Add autobuy items](${
-  buildCommandLink(
-    'add autobuy items to ' + id + '\n\n' +
-    'item 1...\n\n' +
-    'item 2...\n\n' +
-    'item 3...'
-  )
+- [Add](${
+  buildCommandLink([
+    `add autobuy items to ${id}`,,
+    `item 1...`,,
+    `item 2...`,,
+    `item 3...`
+  ])
 })
-- [Clear autobuy items](${buildCommandLink(`clear autobuy items in ${id}`)})
-- [List autobuy items](${buildCommandLink(`list autobuy items in ${id}`)})
-
-You can promote your thread with the [promote](${
-  buildCommandLink(`promote ${id} for 2 months using BTC`)
-}) command.
-
-The following commands must be commented on the *new* thread:
-
-- \`u/${config.ids.reddit.user} request verification <your message here>\`
-- \`u/${config.ids.reddit.user} remove\`
-- \`u/${config.ids.reddit.user} repost\` (thread must be expired or promoted)
-
-See xyMarket's documentation for more information.`;
+- [Clear](${buildCommandLink(`clear autobuy items in ${id}`)})
+- [List](${buildCommandLink(`list autobuy items in ${id}`)})`;
 
 exports.SALES_THREAD_APPROVED = id =>
 `Your sales thread was approved and reposted at ${threadLink(id)}.
@@ -287,8 +290,9 @@ ${months} month(s).`;
 exports.UNSTRUCTURED_THREAD = id =>
 `**This is an unstructured thread.**
 
-If you're the thread author, only the \`u/${config.ids.reddit.user} remove\` 
-and [categorize](${
+If you're the thread author, only the [remove](${
+  buildCommandLink(`remove ${id}`)
+}) and [categorize](${
   buildCommandLink([
     `categorize ${id} as Uncategorized`,,
     `// Change "Uncategorized" to one of the categories below:  `,
@@ -306,10 +310,11 @@ ${text}`;
 exports.POST_FINDER_REPOSTED = (oldLink, newId) =>
 `Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace subreddit.
 
-I've discovered your [thread](${oldLink}) and reposted it [here](/r/${
-  `${config.ids.reddit.sub}/comments/${newId}`
-}). If you don't want your thread on xyMarket, you can remove it by commenting 
-on the new post \`u/${config.ids.reddit.user} remove\`.
+I've discovered your [thread](${oldLink}) and reposted it [here](${
+  threadLink(newId)
+}). If you don't want your thread on xyMarket, you can remove it [here](${
+  buildCommandLink(`remove ${newId}`)
+}).
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
 miss out on most of xyMarket's special features. You can optionally post a 
