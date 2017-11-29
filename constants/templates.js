@@ -413,3 +413,7 @@ exports.USER_STATS_THREAD_MOVED = id =>
 exports.USER_STATS_LOOKUP = id => id ?
 `/r/xyMarketStats/comments/${id}` :
 `That user is not in my database.`;
+
+exports.DAILY_THREAD_HEADER =
+`This thread's categories and posts are updated and randomized every hour. 
+Large categories are broken into multiple sections.\n\n`;

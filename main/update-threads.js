@@ -145,10 +145,12 @@ module.exports = async function() {
             posts[i] += '-' + section;
 
           return posts;
-        }, ['']);
+        }, [
+          templates.DAILY_THREAD_HEADER
+        ]);
     }
     else {
-      posts[0] = text;
+      posts[0] = templates.DAILY_THREAD_HEADER + text;
     }
 
     text = null;
