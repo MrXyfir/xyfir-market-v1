@@ -230,4 +230,13 @@ module.exports = function() {
   },
   assert.deepEqual(actual, expected, 'Command: categorize');
 
+  // IGNORE MY POSTS
+  actual = parse({
+    body: 'ignore my posts'
+  }),
+  expected = {
+    command: 'ignore-my-posts'
+  },
+  assert.deepEqual(actual, expected, 'Command: ignore-my-posts');
+
 }

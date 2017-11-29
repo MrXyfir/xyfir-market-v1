@@ -168,6 +168,10 @@ module.exports = function(message) {
   if (match) {
     return { command: 'categorize', thread: match[1], category: match[2] };
   }
+
+  // IGNORE MY POSTS
+  match = message.body.match(/^ignore my posts$/i);
+  if (match) return { command: 'ignore-my-posts' };
   
   return { command: 'error', reply: 'Invalid command or syntax' };
 
