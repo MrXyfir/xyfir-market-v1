@@ -3,13 +3,18 @@ const categories = require('constants/categories');
 const config = require('constants/config');
 
 const threadLink = id => `/r/${config.ids.reddit.sub}/comments/${id}`;
-const docs = (file, section = '') => `https://github.com/Xyfir/Documentation/` +
-  `blob/master/xyfir-market/${file}.md#${section}`;
+
+const table = (header, body) =>
+  header.join(' | ') + '\n' +
+  header.map(c => '-').join(' | ') + '\n' +
+  body.map(row => row.join(' | ')).join('\n')
+
+const docs = (file, section = '') =>
+`https://github.com/Xyfir/Documentation/` +
+`blob/master/xyfir-market/${file}.md#${section}`;
 
 exports.HOW_TO_REVISE =
-`
-
-Edit your thread and then comment on it 
+`\n\nEdit your thread and then comment on it 
 \`u/${config.ids.reddit.user} revise\`.`;
 
 exports.INVALID_TITLE =
@@ -368,24 +373,28 @@ exports.USER_STATS_THREAD = stats =>
 `
 # Stats
 
-Name | Value
-- | -
-Joined xyMarket | ${stats.joined}
-Reputation | ${
-  (stats.feedback.seller.positive - stats.feedback.seller.negative) +
-  (stats.feedback.buyer.positive - stats.feedback.buyer.negative)
-} points
-Completed Orders | ${stats.sales} sales, ${stats.buys} buys
-Seller Feedback | +${
-  stats.feedback.seller.positive
-}, -${
-  stats.feedback.seller.negative
-}
-Buyer Feedback | +${
-  stats.feedback.buyer.positive
-}, -${
-  stats.feedback.buyer.negative
-}
+${table([
+  `Name`, `Value`
+], [
+  [`Joined xyMarket`, stats.joined],
+  [`Reputation`, `${stats.reputation} points`],
+  [
+    `Completed Orders ^[[?]](${docs('info', 'completed-orders')})`,
+    `${stats.sales} sales, ${stats.buys} buys`
+  ],
+  [
+    `Completed Trades ^[[?]](${docs('info', 'completed-trades')})`,
+    stats.trades
+  ],
+  [
+    `Seller Feedback`,
+    `+${stats.feedback.seller.positive}, -${stats.feedback.seller.negative}`
+  ],
+  [
+    `Buyer Feedback`,
+    `+${stats.feedback.buyer.positive}, -${stats.feedback.buyer.negative}`
+  ]
+])}
 
 ${stats.verifiedProfiles ?
 `# Verified Profiles ^^[[?]](${docs('shared', 'verified-profiles')})
@@ -398,37 +407,34 @@ ${Object
 
 # Feedback
 
-Up to 30 seller and 10 buyer feedback are displayed in order of newest to oldest. Usernames are obscured for privacy.
+Up to 30 seller and 10 buyer feedback from tracked orders (not trades) are
+displayed in order of newest to oldest. Usernames are obscured for privacy.
 
 ## Received as seller:
 
-* | Buyer | Date | Message
-- | - | - | -
-${stats.feedback.seller.list
+${table([
+  `*`, `Buyer`, `Date`, `Message`
+], stats.feedback.seller.list
   .map(fb => [
     fb.type == 1 ? '+' : '-',
     fb.user,
     fb.given,
     fb.message
-  ]
-  .join(' | '))
-  .join('\n')
-}
+  ])
+)}
 
 ## Received as buyer:
 
-* | Seller | Date | Message
-- | - | - | -
-${stats.feedback.buyer.list
+${table([
+  `*`, `Seller`, `Date`, `Message`
+], stats.feedback.buyer.list
   .map(fb => [
     fb.type == 1 ? '+' : '-',
     fb.user,
     fb.given,
     fb.message
-  ]
-  .join(' | '))
-  .join('\n')
-}`;
+  ])
+)}`;
 
 exports.USER_STATS_THREAD_MOVED = id =>
 `This thread has moved: /r/xyMarketStats/comments/${id}`;
