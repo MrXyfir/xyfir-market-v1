@@ -3,6 +3,7 @@ const createUser = require('lib/users/create');
 const templates = require('constants/templates');
 const config = require('constants/config');
 const moment = require('moment');
+const sleep = require('lib/sleep');
 const MySQL = require('lib/mysql');
 const snoo = require('snoowrap');
 
@@ -85,6 +86,12 @@ module.exports = async function() {
 
     await db.getConnection();
 
+    posts
+      // Sort oldest to newest
+      .sort((a, b) => a.created_utc - b.created_utc)
+      // Limit to 45 posts
+      .splice(45, 999);
+
     for (let post of posts) {
       const author = await post.author.fetch();
 
@@ -105,6 +112,9 @@ module.exports = async function() {
       ]);
 
       if (res.recentThreads > 0 || res.userIsIgnored) continue;
+
+      // Sleep so that there is not more than one post every 30 seconds
+      await sleep(30 * 1000);
 
       const category = categories[
         subredditCategory[post.subreddit.display_name] || 'Uncategorized'
