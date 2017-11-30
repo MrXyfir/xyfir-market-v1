@@ -12,30 +12,31 @@ const note = body => body.split('\n\n').slice(1).join('\n\n').trim();
  */
 module.exports = function(message) {
 
+  const { context, was_comment: wasComment} = message;
+  let {body: text} = message;
+
   // Strip comments and whitespace off both ends
-  message.body = message.body.replace(/^\/\/ .+$/gm, '').trim();
+  text = text.replace(/^\/\/ .+$/gm, '').trim();
 
-  message.isMention =
-    message.was_comment &&
-    /^\/?u\/xyMarket(Dev)?Bot\s+/i.test(message.body);
+  const isMention = wasComment && /^\/?u\/xyMarket(Dev)?Bot\s+/i.test(text);
 
-  if (message.isMention) {
-    message.body = message.body.replace(/^\/?u\/xyMarket(Dev)?Bot\s+/i, '');
+  if (isMention) {
+    text = text.replace(/^\/?u\/xyMarket(Dev)?Bot\s+/i, '');
   }
 
   // REVISE
-  let match = message.body.match(/^revise$/i);
-  if (match && message.isMention) {
-    return { command: 'revise', thread: threadId(message.context) };
+  let match = text.match(/^revise$/i);
+  if (match && isMention) {
+    return { command: 'revise', thread: threadId(context) };
   }
   
   // PROMOTE
-  match = message.body.match(
+  match = text.match(
     /^promote( (\w{6,}))? for (\d+) months? using (BTC|LTC|ETH)$/i
   );
   if (match) {
     return {
-      thread: match[2] || threadId(message.context),
+      thread: match[2] || threadId(context),
       months: +match[3],
       command: 'promote',
       currency: match[4].toUpperCase()
@@ -43,20 +44,20 @@ module.exports = function(message) {
   }
 
   // PURCHASE
-  match = message.body.match(
+  match = text.match(
     /^(purchase|buy) (\d+)( of (\w+))? using (BTC|LTC|ETH)( and escrow)?$/i
   );
   if (match) {
     return {
       escrow: !!match[6],
-      thread: match[4] || threadId(message.context),
+      thread: match[4] || threadId(context),
       command: 'purchase',
       quantity: +match[2],
       currency: match[5].toUpperCase()
     };
   }
 
-  match = message.body.match(
+  match = text.match(
     /^confirm order (\d+) with transaction (\w+)$/i
   );
   if (match) {
@@ -68,23 +69,23 @@ module.exports = function(message) {
   }
   
   // RELEASE ESCROW
-  match = message.body.match(/^release escrow for (\d+)$/i);
+  match = text.match(/^release escrow for (\d+)$/i);
   if (match) return { command: 'release-escrow', order: +match[1] };
 
   // REQUEST ESCROW
-  match = message.body.match(
+  match = text.match(
     /^request escrow for (\d+)\b/i
   );
   if (match) {
     return {
       command: 'request-escrow',
       order: +match[1],
-      note: note(message.body) || 'None'
+      note: note(text) || 'None'
     };
   }
 
   // GIVE FEEDBACK
-  match = message.body.match(
+  match = text.match(
     /^give (positive|negative) feedback for (\d+)( .+)?$/i
   );
   if (match) {
@@ -97,81 +98,104 @@ module.exports = function(message) {
   }
 
   // REMOVE
-  match = message.body.match(/^remove( (\w{6,}))?$/i);
+  match = text.match(/^remove( (\w{6,}))?$/i);
   if (match) {
     return {
       command: 'remove',
-      thread: match[2] || threadId(message.context)
+      thread: match[2] || threadId(context)
     };
   };
 
   // DELETE
-  match = message.body.match(/^delete (\w+)$/i);
+  match = text.match(/^delete (\w+)$/i);
   if (match) return { command: 'delete', thread: match[1] };
 
   // REQUEST VERIFICATION
-  match = message.body.match(/^request verification for (\w{6,})\b/i);
+  match = text.match(/^request verification for (\w{6,})\b/i);
   if (match) {
     return {
       command: 'request-verification',
       thread: match[1],
-      note: note(message.body)
+      note: note(text)
     };
   }
 
   // VERIFY
-  match = message.body.match(/^verify\b/i);
-  if (match && message.isMention) {
+  match = text.match(/^verify\b/i);
+  if (match && isMention) {
     return {
       command: 'verify',
-      thread: threadId(message.context),
-      note: note(message.body) || ''      
+      thread: threadId(context),
+      note: note(text) || ''      
     };
   }
 
   // ADD AUTOBUY ITEMS
-  match = message.body.match(/^add autobuy items to (\w{6,})\s/i);
+  match = text.match(/^add autobuy items to (\w{6,})\s/i);
   if (match) {
     return {
       command: 'add-autobuy-items', thread: match[1],
-      items: message.body.split('\n\n').slice(1)
+      items: text.split('\n\n').slice(1)
     };
   }
 
   // LIST AUTOBUY ITEMS
-  match = message.body.match(/^list autobuy items in (\w{6,})$/i);
+  match = text.match(/^list autobuy items in (\w{6,})$/i);
   if (match) {
     return { command: 'list-autobuy-items', thread: match[1] };
   }
 
   // CLEAR AUTOBUY ITEMS
-  match = message.body.match(/^clear autobuy items in (\w{6,})$/i);
+  match = text.match(/^clear autobuy items in (\w{6,})$/i);
   if (match) {
     return { command: 'clear-autobuy-items', thread: match[1] };
   }
 
   // REPOST (on thread)
-  match = message.body.match(/^repost$/i);
-  if (match && message.isMention)
-    return { command: 'repost', thread: threadId(message.context) };
+  match = text.match(/^repost$/i);
+  if (match && isMention)
+    return { command: 'repost', thread: threadId(context) };
 
   // REPOST (in private message)
-  match = message.body.match(/^repost (\w+)$/i);
+  match = text.match(/^repost (\w+)$/i);
   if (match) return { command: 'repost', thread: match[1] };
 
   // USER STATS LOOKUP
-  match = message.body.match(/^get stats for u\/(\w+)$/);
+  match = text.match(/^get stats for u\/(\w+)$/);
   if (match) return { command: 'stats-lookup', user: match[1] };
 
   // CATEGORIZE SALES THREAD
-  match = message.body.match(/^categorize (\w{6,}) as (.+)$/i);
+  match = text.match(/^categorize (\w{6,}) as (.+)$/i);
   if (match) {
     return { command: 'categorize', thread: match[1], category: match[2] };
   }
 
   // IGNORE MY POSTS
-  match = message.body.match(/^ignore my posts$/i);
+  match = text.match(/^ignore my posts$/i);
   if (match) return { command: 'ignore-my-posts' };
+
+  // CONFIRM TRADE (step 1)
+  match = text.match(/^confirm trade of (.+) to \/?u\/(\w{1,20}) for (.+)$/i);
+  if (match) {
+    return {
+      command: 'confirm-trade',
+      item1: match[1],
+      item2: match[3],
+      user: match[2],
+      step: 1
+    };
+  }
+
+  // CONFIRM TRADE (step 2)
+  match = text.match(/^confirm trade (\d+) with \/?u\/(\w{1,20})$/i);
+  if (match) {
+    return {
+      command: 'confirm-trade',
+      trade: +match[1],
+      user: match[2],
+      step: 2
+    };
+  }
   
   return { command: 'error', reply: 'Invalid command or syntax' };
 
