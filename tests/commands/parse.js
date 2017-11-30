@@ -239,4 +239,29 @@ module.exports = function() {
   },
   assert.deepEqual(actual, expected, 'Command: ignore-my-posts');
 
+  // CONFIRM TRADE (step 1)
+  actual = parse({
+    body: 'confirm trade of 1x $25 Amazon GC to u/MrXyfir for $20 PayPal'
+  }),
+  expected = {
+    command: 'confirm-trade',
+    item1: '1x $25 Amazon GC',
+    item2: '$20 PayPal',
+    user: 'MrXyfir',
+    step: 1
+  },
+  assert.deepEqual(actual, expected, 'Command: confirm-trade 1');
+
+  // CONFIRM TRADE (step 2)
+  actual = parse({
+    body: 'confirm trade 54321 with /u/MrXyfir'
+  }),
+  expected = {
+    command: 'confirm-trade',
+    trade: 54321,
+    user: 'MrXyfir',
+    step: 2
+  },
+  assert.deepEqual(actual, expected, 'Command: confirm-trade 2');
+
 }

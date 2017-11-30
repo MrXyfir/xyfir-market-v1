@@ -88,6 +88,14 @@ See xyMarket's [documentation](${docs('seller')}) for more information.
 - [Promote](${
   buildCommandLink(`promote ${id} for 2 months using BTC`)
 })
+- [Confirm a Trade](${
+  buildCommandLink([
+    `confirm trade of Some Item to u/User for Some Other Item`,,
+    `// Update "Some Item", "User", and "Some Other Item"`,
+    `// You can optionally confirm trades publicly by commenting the above ` +
+    `command anywhere, just prefixed with \`u/${config.ids.reddit.user} \` `
+  ])
+}) (for trades that don't involve a payment tracked by xyMarket)
 - [Request Verification](${
   buildCommandLink([
     `request verification for ${id}`,,
@@ -432,3 +440,24 @@ exports.USER_STATS_LOOKUP = id => id ?
 exports.DAILY_THREAD_HEADER =
 `This thread's categories and posts are updated and randomized every hour. 
 Large categories are broken into multiple sections.\n\n`;
+
+exports.CONFIRM_TRADE_REQUEST = data =>
+`u/${data.user} is attempting to confirm a trade with you of *${data.item1}* 
+for *${data.item2}*.
+
+Click [here](${
+  buildCommandLink(`confirm trade ${data.id} with u/${data.user}`)
+}) to confirm the trade privately. Optionally, you can also confirm the trade 
+publicly by pasting the following command as a comment somewhere: 
+\`u/${config.ids.reddit.user} confirm trade ${data.id} with u/${data.user}\`.`;
+
+exports.CONFIRM_TRADE_REQUEST_SENT = data =>
+`A request to confirm the trade of *${data.item1}* for *${data.item2}* has been
+sent to u/${data.user}.`;
+
+exports.TRADE_CONFIRMED = trade =>
+`A trade (#${trade.id}) of *${trade.item1}* for *${trade.item2}* between
+u/${trade.trader1} and u/${trade.trader2} has been confirmed.`;
+
+exports.TRADE_CONFIRMATION_LIMIT_HIT =
+`You cannot confirm more than one trade every 24 hours with this user.`;

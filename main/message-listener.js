@@ -10,6 +10,7 @@ const addAutobuyItems = require('commands/thread/autobuy/add');
 //const requestEscrow = require('commands/order/escrow/request');
 //const releaseEscrow = require('commands/order/escrow/release');
 const ignoreMyPosts = require('commands/user/ignore-my-posts');
+const confirmTrade = require('commands/user/confirm-trade');
 const confirmOrder = require('commands/order/confirm');
 const giveFeedback = require('commands/order/give-feedback');
 const deleteThread = require('commands/thread/delete');
@@ -59,6 +60,9 @@ module.exports = async function() {
         //   break;
         case 'ignore-my-posts':
           ignoreMyPosts(r, message);
+          break;
+        case 'confirm-trade':
+          confirmTrade(r, message, command);
           break;
         case 'confirm-order':
           confirmOrder(r, message, command);
