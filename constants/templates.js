@@ -315,20 +315,30 @@ If you're the thread author, only the [remove](${
   ])
 }) commands will work on it. For other users, no commands will work.`;
 
-exports.POST_FINDER_REPOST = (oldLink, text) =>
-`*[This thread has been automatically reposted. Contact the 
-original poster if you're interested.](${oldLink})*
+exports.POST_FINDER_COMMENT = (user, id) =>
+`This is an unstructured thread that was automatically reposted. Contact the
+original poster u/${user} if you're interested.
 
-${text}`;
+If you're the original poster, click [here](${
+  buildCommandLink([
+    `claim thread ${id}`,,
+    `// Send this message, and wait shortly for a reply`
+  ])
+}) to learn more about why your thread was reposted and how to manage it on
+xyMarket. If you're a normal user, most commands will not work on this thread
+because it is unstructured.
 
-exports.POST_FINDER_REPOSTED = (oldLink, newId) =>
-`Hello! I'm a bot for r/xyMarket, a new, highly automated marketplace subreddit.
+*This action was performed automatically by a bot. A xyMarket moderator
+may remove this unstructured thread from xyMarket once noticed if it doesn't
+meet certain requirements.*`
 
-I've discovered your [thread](${oldLink}) and reposted it [here](${
-  threadLink(newId)
-}). If you don't want your thread on xyMarket, you can remove it [here](${
-  buildCommandLink(`remove ${newId}`)
-}).
+exports.THREAD_CLAIMED = id =>
+`You have claimed your thread that was reposted to r/xyMarket: a new, highly
+automated marketplace subreddit.
+
+---
+
+# Info
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
 miss out on most of xyMarket's special features. You can optionally post a 
@@ -351,23 +361,41 @@ one from xyMarket. You should also update your original thread that was
 reposted, and point it to your structured thread so more people can take 
 advantage of its features!
 
+---
+
+# Commands
+
+If you wish to remove your thread from xyMarket, you can do so [here](${
+  buildCommandLink(`remove ${id}`)
+}).
+
+If you don't want your threads to ever be automatically reposted to xyMarket
+again in the future, click [here](${buildCommandLink(`ignore my posts`)}).
+
 Don't want to bother with structured threads? You can at least increase your 
 unstructured thread's visibility by categorizing it using [this link](${
   buildCommandLink([
-    `categorize ${newId} as Uncategorized`,,
+    `categorize ${id} as Uncategorized`,,
     `// Change "Uncategorized" to one of the categories below:  `,
     `// ${Object.keys(categories).join(', ')}  `,
     `// The spelling and capitalization must match exactly!`
   ])
 }).
 
-Have questions, complaints, or feedback? Post them in r/xyMarketMeta.
+You can start building your reputation on xyMarket by [confirming trades](${
+  buildCommandLink([
+    `confirm trade of Some Item to u/User for Some Other Item`,,
+    `// Update "Some Item", "User", and "Some Other Item"`,
+    `// You can optionally confirm trades publicly by commenting the above ` +
+    `command anywhere, just prefixed with \`u/${config.ids.reddit.user} \` `
+  ])
+}) you've made with other users.
 
-Have a nice day!
+---
 
-*This action was performed automatically by a bot. A xyMarket moderator
-may remove your unstructured thread from xyMarket once noticed if it doesn't
-meet certain requirements.*`;
+Questions, complaints, or feedback? Post them in r/xyMarketMeta.
+
+Have a nice day!`;
 
 exports.USER_STATS_THREAD = stats =>
 `

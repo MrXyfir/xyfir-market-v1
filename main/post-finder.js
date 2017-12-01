@@ -120,18 +120,17 @@ module.exports = async function() {
         subredditCategory[post.subreddit.display_name] || 'Uncategorized'
       ];
 
-      // Post to r/xyMarket as unstructured
-      const repost = await r
-        .getSubreddit(config.ids.reddit.sub)
-        .submitSelfpost({
-          title: post.title,
-          text: templates.POST_FINDER_REPOST(post.permalink, post.selftext)
+      // Crosspost to r/xyMarket
+      const repost = await post
+        .submitCrosspost({
+          subredditName: config.ids.reddit.sub,
+          sendReplies: false,
+          title: post.title
         })
-        .disableInboxReplies()
-        .approve()
         .assignFlair({
           text: category.text, cssClass: category.css
         })
+        .approve()
         .fetch();
 
       await createUser(author.name, db);
@@ -139,7 +138,7 @@ module.exports = async function() {
       await db.query(`
         INSERT INTO sales_threads SET ?
       `, {
-        id: repost.id, author: post.author.name, created: repost.created_utc,
+        id: repost.id, author: author.name, created: repost.created_utc,
         unstructured: true, approved: true,
         data: JSON.stringify({
           category: category.text,
@@ -147,12 +146,9 @@ module.exports = async function() {
         })
       });
 
-      // Notify author
-      await r.composeMessage({
-        to: author.name,
-        text: templates.POST_FINDER_REPOSTED(post.permalink, repost.id),
-        subject: 'r/xyMarket'
-      });
+      await repost
+        .reply(templates.POST_FINDER_COMMENT(author.name, repost.id))
+        .distinguish({ status: true, sticky: true });
     }
 
     db.release();
