@@ -17,6 +17,7 @@ const deleteThread = require('commands/thread/delete');
 const removeThread = require('commands/thread/remove');
 const reviseThread = require('commands/thread/revise');
 const statsLookup = require('commands/user/stats-lookup');
+const claimThread = require('commands/thread/claim');
 const categorize = require('commands/thread/categorize');
 const purchase = require('commands/thread/purchase');
 const promote = require('commands/thread/promote');
@@ -72,6 +73,9 @@ module.exports = async function() {
           break;
         case 'stats-lookup':
           statsLookup(r, message, command.user);
+          break;
+        case 'claim-thread':
+          claimThread(r, message, command.thread);
           break;
         case 'categorize':
           categorize(r, message, command);

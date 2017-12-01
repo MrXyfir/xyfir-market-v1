@@ -264,4 +264,14 @@ module.exports = function() {
   },
   assert.deepEqual(actual, expected, 'Command: confirm-trade 2');
 
+  // CLAIM THREAD
+  actual = parse({
+    body: 'claim thread 6s1psl'
+  }),
+  expected = {
+    command: 'claim-thread',
+    thread: '6s1psl'
+  },
+  assert.deepEqual(actual, expected, 'Command: claim-thread');
+
 }

@@ -196,6 +196,10 @@ module.exports = function(message) {
       step: 2
     };
   }
+
+  // CLAIM THREAD
+  match = text.match(/^claim thread (\w{6,})$/i);
+  if (match) return { command: 'claim-thread', thread: match[1] };
   
   return { command: 'error', reply: 'Invalid command or syntax' };
 
