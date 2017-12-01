@@ -15,11 +15,9 @@ module.exports = async function() {
 
   try {
     await db.getConnection();
-    const users = await db.query(`
-      SELECT name, joined, statsThread
-      FROM users
-      WHERE NOW() > statsThreadExpires
-    `);
+    const users = await db.query(
+      'SELECT * FROM users WHERE NOW() > statsThreadExpires'
+    );
 
     for (let user of users) {
       // Create new stats thread
