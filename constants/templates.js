@@ -79,10 +79,6 @@ exports.INVALID_ADDRESSES =
  ETH=0xYourEthereumAddress32487E1EfdD8729b87445`' +
 exports.HOW_TO_REVISE;
 
-exports.PRICE_TOO_LOW =
-`Sales threads with \`**Tracking** True\` require \`**Price**\` to be at or
-above $5.00 (USD).` + exports.HOW_TO_REVISE;
-
 exports.SALES_THREAD_COMMANDS = id =>
 `# Commands
 
@@ -324,9 +320,9 @@ If you're the original poster, click [here](${
     `claim thread ${id}`,,
     `// Send this message, and wait shortly for a reply`
   ])
-}) to learn more about why your thread was reposted and how to manage it on
-xyMarket. If you're a normal user, most commands will not work on this thread
-because it is unstructured.
+}) to claim your thread and receive commands to manage it on xyMarket (remove,
+categorize, etc). If you're a normal user, most commands will not work on this
+thread because it is unstructured.
 
 *This action was performed automatically by a bot. A xyMarket moderator
 may remove this unstructured thread from xyMarket once noticed if it doesn't
