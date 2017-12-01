@@ -9,9 +9,9 @@ const table = (header, body) =>
   header.map(c => '-').join(' | ') + '\n' +
   body.map(row => row.join(' | ')).join('\n')
 
-const docs = (file, section = '') =>
+const docs = (section = '') =>
 `https://github.com/Xyfir/Documentation/` +
-`blob/master/xyfir-market/${file}.md#${section}`;
+`blob/master/xyfir-market/help.md#${section}`;
 
 exports.HOW_TO_REVISE =
 `\n\nEdit your thread and then comment on it 
@@ -82,7 +82,7 @@ exports.HOW_TO_REVISE;
 exports.SALES_THREAD_COMMANDS = id =>
 `# Commands
 
-See xyMarket's [documentation](${docs('seller')}) for more information.
+See xyMarket's [documentation](${docs()}) for more information.
 
 - [Remove](${buildCommandLink(`remove ${id}`)})
 - [Repost](${buildCommandLink(`repost ${id}`)}) (if expired or promoted)
@@ -162,7 +162,8 @@ it by clicking [here](${buildCommandLink('repost ' + id)}).`;
 exports.TRACKING_NOT_ENABLED =
 `This sales thread does not have tracking enabled. You must contact the seller 
 directly to make a purchase. You will not be able to use escrow or give or 
-receive feedback on a non-tracked purchase.`;
+receive feedback on a non-tracked purchase. You *will* however, be able to
+confirm trades.`;
 
 exports.CURRENCY_NOT_ACCEPTED = currency =>
 `This sales thread does not accept the currency \`${currency}\`.`;
@@ -261,8 +262,7 @@ If you need to respond to the seller you must contact them directly.
 **Message from seller:** ${note}`;
 
 exports.FEEDBACK_GIVEN =
-`Your feedback has been saved.
-You will not be able to update it.`;
+`Your feedback has been saved. You will not be able to update it.`;
 
 exports.FEEDBACK_ALREADY_GIVEN =
 `You have already given feedback for that order.`;
@@ -346,7 +346,7 @@ Some of the benefits that structured sales threads offer are:
 thread, payments using those currencies will be tracked by xyMarketBot and 
 you'll be notified when a buyer makes a purchase. Payments go directly from 
 the buyer to your receiving address, so there are no added fees.
-- You can build your reputation by receiving feedback on sales, and you can 
+- You can easily build your reputation by receiving feedback on sales, and you can 
 give feedback to buyers.
 - Your thread will be categorized and easier to find in xyMarket's daily thread.
 - You can enable 'Autobuy' and have your items automatically sent out to a 
@@ -403,11 +403,11 @@ ${table([
   [`Joined xyMarket`, stats.joined],
   [`Reputation`, `${stats.reputation} points`],
   [
-    `Completed Orders ^[[?]](${docs('info', 'completed-orders')})`,
+    `Completed Orders ^[[?]](${docs('completed-orders')})`,
     `${stats.sales} sales, ${stats.buys} buys`
   ],
   [
-    `Completed Trades ^[[?]](${docs('info', 'completed-trades')})`,
+    `Completed Trades ^[[?]](${docs('completed-trades')})`,
     stats.trades
   ],
   [
@@ -421,7 +421,7 @@ ${table([
 ])}
 
 ${stats.verifiedProfiles ?
-`# Verified Profiles ^^[[?]](${docs('shared', 'verified-profiles')})
+`# Verified Profiles ^^[[?]](${docs('verified-profiles')})
 
 ${Object
   .keys(stats.verifiedProfiles)
