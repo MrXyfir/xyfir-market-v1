@@ -309,7 +309,7 @@ If you're the thread author, only the [remove](${
     `// ${Object.keys(categories).join(', ')}  `,
     `// The spelling and capitalization must match exactly!`
   ])
-}) commands will work on it. For other users, no commands will work.`;
+}) commands will work on it. For other users, most commands won't work.`;
 
 exports.POST_FINDER_COMMENT = (user, id) =>
 `This is an unstructured thread that was automatically reposted. Contact the
@@ -491,3 +491,13 @@ u/${trade.trader1} and u/${trade.trader2} has been confirmed.`;
 
 exports.TRADE_CONFIRMATION_LIMIT_HIT =
 `You cannot confirm more than one trade every 24 hours with this user.`;
+
+exports.INVALID_COMMAND =
+`Invalid command or syntax.
+
+I'm a bot that only understands certain preconfigured commands. See my
+[documentation](${docs()}) for more information.
+
+If you're inquiring about one of the sales threads I've posted, please send
+your message to the original poster mentioned in the post itself, or in the
+stickied comment.`

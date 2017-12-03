@@ -1,4 +1,5 @@
 const parseCommand = require('commands/parse');
+const templates = require('constants/templates');
 const config = require('constants/config');
 const snoo = require('snoowrap');
 
@@ -102,7 +103,7 @@ module.exports = async function() {
           repost(r, message, command.thread);
           break;
         case 'error':
-          message.reply(command.reply);
+          message.reply(templates.INVALID_COMMAND);
           break;
       }
     }
