@@ -32,16 +32,6 @@ module.exports = async function() {
       orderStatus.AWAITING_CONFIRMATIONS
     ]);
 
-    // Occasionally delete bad orders
-    if (Math.round(Math.random() * 5) == 5) {
-      await db.query(`
-        DELETE FROM orders
-        WHERE status IN (?) AND created < DATE_SUB(NOW(), INTERVAL 1 HOUR)
-      `, [
-        [orderStatus.UNPAID, orderStatus.AWAITING_CONFIRMATIONS]
-      ]);
-    }
-
     if (!orders.length) {
       db.release();
       return console.log('main/payment-listener: end1');
