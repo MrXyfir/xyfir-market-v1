@@ -52,10 +52,14 @@ module.exports = async function(r, comment, threadId) {
     if (thread.data.nsfw) await repost.markNsfw();
 
     // Updated id will cascade to other tables
-    await db.query(
-      'UPDATE sales_threads SET id = ?, created = ?, removed = ? WHERE id = ?',
-      [repost.id, repost.created, 0, threadId]
-    );
+    await db.query(`
+      UPDATE sales_threads
+      SET id = ?, created = ?, removed = ?, dateRemoved = ?
+      WHERE id = ?
+    `, [
+      repost.id, repost.created, 0, '0000-00-00 00:00:00',
+      threadId
+    ]);
     db.release();
 
     // In case thread is promoted and still live

@@ -21,8 +21,8 @@ module.exports = async function(r, comment, thread) {
     if (!rows.length) throw templates.UNAUTHORIZED_COMMAND;
 
     const result = await db.query(
-      'UPDATE sales_threads SET removed = 1 WHERE id = ?',
-      [thread]
+      'UPDATE sales_threads SET removed = ?, dateRemoved = NOW() WHERE id = ?',
+      [1, thread]
     );
     db.release();
 

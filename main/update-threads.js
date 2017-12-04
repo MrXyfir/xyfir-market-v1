@@ -27,10 +27,13 @@ module.exports = async function() {
 
     if (rows.length) {
       // Mark threads as 'removed'
-      await db.query(
-        'UPDATE sales_threads SET removed = 1 WHERE id IN (?)',
-        [rows.map(r => r.id)]
-      );
+      await db.query(`
+        UPDATE sales_threads
+        SET removed = 1, dateRemoved = NOW()
+        WHERE id IN (?)
+      `, [
+        rows.map(r => r.id)
+      ]);
 
       for (let row of rows) {
         const thread = await r.getSubmission(row.id);
