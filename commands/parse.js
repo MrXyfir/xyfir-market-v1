@@ -8,12 +8,17 @@ const note = body => body.split('\n\n').slice(1).join('\n\n').trim();
  * Only basic validation is done here, more will likely be done in the command 
  * handler.
  * @param {snoowrap.PrivateMessage|snoowrap.Comment}
+ * @param {boolean} [decode=false] Determines whether the message should be 
+ * URL decoded. Used only if the first attempt to parse fails. Some Reddit 
+ * clients don't seem to decode the message properly.
  * @return {object}
  */
-module.exports = function(message) {
+function parseCommand(message, decode = false) {
 
   const { context, was_comment: wasComment} = message;
   let {body: text} = message;
+
+  text = decode ? decodeURIComponent(text) : text;
 
   // Strip comments and whitespace off both ends
   text = text.replace(/^\/\/ .+$/gm, '').trim();
@@ -200,7 +205,12 @@ module.exports = function(message) {
   // CLAIM THREAD
   match = text.match(/^claim thread (\w{6,})$/i);
   if (match) return { command: 'claim-thread', thread: match[1] };
-  
-  return { command: 'error' };
+
+  if (decode)
+    return { command: 'error' };
+  else
+    return parseCommand(message, true);
 
 }
+
+module.exports = parseCommand;

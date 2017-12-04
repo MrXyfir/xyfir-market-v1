@@ -5,6 +5,17 @@ module.exports = function() {
 
   let actual = {}, expected = {};
 
+  // ENCODED MESSAGE TEST
+  actual = parse({
+    body:
+      'claim%20thread%207hfurW%0A%0A%2F%2F%20Send%20this%20message' +
+      '%2C%20and%20wait%20shortly%20for%20a%20reply'
+  }),
+  expected = {
+    command: 'claim-thread', thread: '7hfurw'
+  };
+  assert.deepEqual(actual, expected, 'Command: encode test');
+
   // REVISE
   actual = parse({
     was_comment: true, body: 'u/xyMarketBot revise',
