@@ -1,25 +1,71 @@
 module.exports = {
-  'Advertising': { text: 'Advertising', css: 'advertising' },
-  'Automotive': { text: 'Automotive', css: 'automotive' },
-  'Books': { text: 'Books', css: 'books' },
-  'Collectibles': { text: 'Collectibles', css: 'collectibles' },
-  'Computers': { text: 'Computers', css: 'computers' },
-  'Cryptocurrency': { text: 'Cryptocurrency', css: 'cryptocurrency' },
-  'Digital Goods': { text: 'Digital Goods', css: 'digital-goods' },
-  'Electronics': { text: 'Electronics', css: 'electronics' },
-  'Entertainment': { text: 'Entertainment', css: 'entertainment' },
-  'Fashion': { text: 'Fashion', css: 'fashion' },
-  'Fiat': { text: 'Fiat', css: 'fiat' },
-  'Games & Virtual Items': { text: 'Games & Virtual Items', css: 'games' },
-  'Home & Garden': { text: 'Home & Garden', css: 'home-and-garden' },
-  'Industrial': { text: 'Industrial', css: 'industrial' },
-  'NSFW': { text: 'NSFW', css: 'nsfw' },
-  'Precious Metals': { text: 'Precious Metals', css: 'precious-metals' },
-  'Printed Media': { text: 'Printed Media', css: 'printed-media' },
-  'Real Estate': { text: 'Real Estate', css: 'real-estate' },
-  'Services': { text: 'Services', css: 'services' },
-  'Sports & Hobbies': { text: 'Sports & Hobbies', css: 'sports-and-hobbies' },
-  'Uncategorized': { text: 'Uncategorized', css: 'uncategorized' },
-  'Vouchers & Gift Cards': { text: 'Vouchers & Gift Cards', css: 'vouchers' },
-  'Web': { text: 'Web', css: 'web' }
+  'Advertising': {
+    text: 'Advertising', css: 'advertising'
+  },
+  'Automotive': {
+    text: 'Automotive', css: 'automotive'
+  },
+  'Books': {
+    text: 'Books', css: 'books'
+  },
+  'Collectibles': {
+    text: 'Collectibles', css: 'collectibles'
+  },
+  'Computers': {
+    text: 'Computers', css: 'computers'
+  },
+  'Cryptocurrency': {
+    text: 'Cryptocurrency', css: 'cryptocurrency'
+  },
+  'Digital Goods': {
+    text: 'Digital Goods', css: 'digital-goods'
+  },
+  'Electronics': {
+    text: 'Electronics', css: 'electronics'
+  },
+  'Entertainment': {
+    text: 'Entertainment', css: 'entertainment'
+  },
+  'Fashion': {
+    text: 'Fashion', css: 'fashion'
+  },
+  'Fiat': {
+    text: 'Fiat', css: 'fiat'
+  },
+  'Games & Virtual Items': {
+    text: 'Games and Virtual Items', css: 'games'
+  },
+  'Home & Garden': {
+    text: 'Home and Garden', css: 'home-and-garden'
+  },
+  'Industrial': {
+    text: 'Industrial', css: 'industrial'
+  },
+  'Internet': {
+    text: 'Internet', css: 'internet'
+  },
+  'NSFW': {
+    text: 'NSFW', css: 'nsfw'
+  },
+  'Precious Metals': {
+    text: 'Precious Metals', css: 'precious-metals'
+  },
+  'Printed Media': {
+    text: 'Printed Media', css: 'printed-media'
+  },
+  'Real Estate': {
+    text: 'Real Estate', css: 'real-estate'
+  },
+  'Services': {
+    text: 'Services', css: 'services'
+  },
+  'Sports & Hobbies': {
+    text: 'Sports and Hobbies', css: 'sports-and-hobbies'
+  },
+  'Uncategorized': {
+    text: 'Uncategorized', css: 'uncategorized'
+  },
+  'Vouchers & Gift Cards': {
+    text: 'Vouchers and Gift Cards', css: 'vouchers-and-gift-cards'
+  }
 }
