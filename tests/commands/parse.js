@@ -8,7 +8,7 @@ module.exports = function() {
   // ENCODED MESSAGE TEST
   actual = parse({
     body:
-      'claim%20thread%207hfurW%0A%0A%2F%2F%20Send%20this%20message' +
+      'claim%20thread%207hfurw%0A%0A%2F%2F%20Send%20this%20message' +
       '%2C%20and%20wait%20shortly%20for%20a%20reply'
   }),
   expected = {
