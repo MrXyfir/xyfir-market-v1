@@ -32,10 +32,10 @@ module.exports = {
   'Fiat': {
     text: 'Fiat', css: 'fiat'
   },
-  'Games & Virtual Items': {
+  'Games and Virtual Items': {
     text: 'Games and Virtual Items', css: 'games'
   },
-  'Home & Garden': {
+  'Home and Garden': {
     text: 'Home and Garden', css: 'home-and-garden'
   },
   'Industrial': {
@@ -59,13 +59,13 @@ module.exports = {
   'Services': {
     text: 'Services', css: 'services'
   },
-  'Sports & Hobbies': {
+  'Sports and Hobbies': {
     text: 'Sports and Hobbies', css: 'sports-and-hobbies'
   },
   'Uncategorized': {
     text: 'Uncategorized', css: 'uncategorized'
   },
-  'Vouchers & Gift Cards': {
+  'Vouchers and Gift Cards': {
     text: 'Vouchers and Gift Cards', css: 'vouchers-and-gift-cards'
   }
 }
