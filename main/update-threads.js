@@ -57,7 +57,10 @@ module.exports = async function() {
     if (!rows.length) return console.log('main/update-threads: end1');
 
     rows = rows.map(row => {
-      const { title, category = 'Uncategorized' } = JSON.parse(row.data);
+      let { title, category = 'Uncategorized' } = JSON.parse(row.data);
+
+      title = title.replace(/\[/g, '{').replace(/\]/g, '}');
+
       row.data = { title, category };
       return row;
     });
