@@ -30,7 +30,7 @@ module.exports = async function(r, message, command) {
 
     if (!thread || !thread.unstructured)
       throw templates.NO_MATCHING_THREAD(command.thread);
-    if (!isMod || thread.author != message.author.name)
+    if (!isMod && thread.author != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
     if (!categories[command.category])
       throw templates.INVALID_CATEGORY;
