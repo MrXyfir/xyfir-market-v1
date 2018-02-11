@@ -125,7 +125,7 @@ module.exports = async function() {
       .sort(() => Math.round(Math.random()) ? 1 : -1)
       // Build list of categories
       .map(category =>
-        `## ${category}\n` +
+        `\n## ${category}\n` +
         categories[category]
           // Promoted threads go to top
           // Both promoted and normal are randomly sorted (but separate)
