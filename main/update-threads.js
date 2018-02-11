@@ -59,12 +59,15 @@ module.exports = async function() {
     rows = rows.map(row => {
       let { title, category = 'Uncategorized' } = JSON.parse(row.data);
 
-      title = title.replace(/\[/g, '{').replace(/\]/g, '}');
+      title = title
+        .replace(/\[/g, '(')
+        .replace(/\]/g, ')')
+        .replace(/\)\s+\(/g, ')(');
 
       row.data = { title, category };
       return row;
     });
-  
+
     // Categorize threads
     let categories = {};
 
@@ -101,6 +104,19 @@ module.exports = async function() {
       categories[category].push(row);
     });
 
+    const header = templates.DAILY_THREAD_HEADER(
+      // 5 random promoted threads
+      rows
+        .filter(r => r.promoted)
+        .sort(() => Math.floor(Math.random()) ? 1 : -1)
+        .slice(0, 5),
+      // 5 random non-promoted threads
+      rows
+        .filter(r => !r.promoted)
+        .sort(() => Math.floor(Math.random()) ? 1 : -1)
+        .slice(0, 5)
+    );
+
     rows = null;
 
     let text = Object
@@ -109,7 +125,7 @@ module.exports = async function() {
       .sort(() => Math.round(Math.random()) ? 1 : -1)
       // Build list of categories
       .map(category =>
-        `- **${category}**\n` +
+        `## ${category}\n` +
         categories[category]
           // Promoted threads go to top
           // Both promoted and normal are randomly sorted (but separate)
@@ -123,7 +139,7 @@ module.exports = async function() {
           })
           // Convert to string for post
           .map(thread =>
-            '  - ' +
+            '- ' +
             (thread.promoted ? '💎' : '') +
             `[${thread.data.title}](/r/${sub}/comments/${thread.id})`
           )
@@ -152,11 +168,11 @@ module.exports = async function() {
 
           return posts;
         }, [
-          templates.DAILY_THREAD_HEADER
+          header
         ]);
     }
     else {
-      posts[0] = templates.DAILY_THREAD_HEADER + text;
+      posts[0] = header + text;
     }
 
     text = null;
@@ -213,5 +229,5 @@ module.exports = async function() {
     db.release();
     console.error('main/updateThreads', err);
   }
-  
+
 }
