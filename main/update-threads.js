@@ -153,7 +153,7 @@ module.exports = async function() {
 
     if (text.length > 40000) {
       posts = text
-        .split(/^\-/gm)
+        .split(/^\##/gm)
         .slice(1)
         .reduce((posts, section) => {
           const i = posts.length - 1;
@@ -161,10 +161,10 @@ module.exports = async function() {
           // A new post will be needed
           // First post (index 0), has 40K character limit
           if (posts[i].length + section.length > (i ? 10000 : 40000))
-            return posts.concat('-' + section);
+            return posts.concat('##' + section);
           // Add section to last post
           else
-            posts[i] += '-' + section;
+            posts[i] += '##' + section;
 
           return posts;
         }, [
