@@ -14,7 +14,7 @@ const docs = (section = '') =>
 `blob/master/xyfir-market/help.md#${section}`;
 
 exports.HOW_TO_REVISE =
-`\n\nEdit your thread and then comment on it 
+`\n\nEdit your thread and then comment on it
 \`u/${config.ids.reddit.user} revise\`.`;
 
 exports.INVALID_TITLE =
@@ -131,8 +131,8 @@ ${exports.SALES_THREAD_COMMANDS(id)}`;
 exports.SALES_THREAD_EXPIRED = unstructured => unstructured ?
 `This thread has expired. You may now repost it if you wish.` :
 `This thread has expired. The owner may repost it by commenting on this thread
-\`u/${config.ids.reddit.user} repost\`. This thread will remain removed and a 
-new copy of it will be posted. If this thread has autobuy enabled, any items 
+\`u/${config.ids.reddit.user} repost\`. This thread will remain removed and a
+new copy of it will be posted. If this thread has autobuy enabled, any items
 in stock will be transferred.`;
 
 exports.NO_MATCHING_THREAD = id =>
@@ -160,8 +160,8 @@ exports.THREAD_REMOVED_BY_CREATOR = (id, unstructured) => unstructured ?
 it by clicking [here](${buildCommandLink('repost ' + id)}).`;
 
 exports.TRACKING_NOT_ENABLED =
-`This sales thread does not have tracking enabled. You must contact the seller 
-directly to make a purchase. You will not be able to use escrow or give or 
+`This sales thread does not have tracking enabled. You must contact the seller
+directly to make a purchase. You will not be able to use escrow or give or
 receive feedback on a non-tracked purchase. You *will* however, be able to
 confirm trades.`;
 
@@ -172,7 +172,7 @@ exports.ESCROW_NOT_ACCEPTED =
 `This sales thread does not accept escrow.`;
 
 exports.ESCROW_DISABLED =
-`Escrow is currently disabled while we determine its feasibility and consider 
+`Escrow is currently disabled while we determine its feasibility and consider
 other implementations of an escrow system.`;
 
 exports.BUYER_SENDS_PAYMENT = order =>
@@ -216,7 +216,7 @@ exports.ORDER_COMPLETE = id =>
   buildCommandLink(`give negative feedback for ${id} <your message here>`)
 }) feedback.
 
-**Warning:** Your feedback message (but not your username) will be public! You 
+**Warning:** Your feedback message (but not your username) will be public! You
 will not be able to change your feedback type or message afterwards.`;
 
 exports.SEND_PAYMENT = data =>
@@ -236,8 +236,8 @@ You may abandon this order and start a new one at any time by sending the
 purchase command again.`;
 
 exports.PAYMENT_AWAITING_CONFIRMATIONS =
-`The transaction you provided is valid. You will be notified once the 
-transaction has reached the required number of confirmations. This process 
+`The transaction you provided is valid. You will be notified once the
+transaction has reached the required number of confirmations. This process
 should take *at most* around 30 minutes depending on the currency used.`;
 
 exports.UNEXPECTED_ERROR =
@@ -337,24 +337,24 @@ automated marketplace subreddit.
 # Info
 
 Your thread has been reposted as an *unstructured* thread. Unstructured threads
-miss out on most of xyMarket's special features. You can optionally post a 
+miss out on most of xyMarket's special features. You can optionally post a
 structured thread to xyMarket using [this form](https://xyfir.com/#/market).
 
 Some of the benefits that structured sales threads offer are:
 
-- If you accept BTC, LTC, or ETH, and add payment addresses to your structured 
-thread, payments using those currencies will be tracked by xyMarketBot and 
-you'll be notified when a buyer makes a purchase. Payments go directly from 
+- If you accept BTC, LTC, or ETH, and add payment addresses to your structured
+thread, payments using those currencies will be tracked by xyMarketBot and
+you'll be notified when a buyer makes a purchase. Payments go directly from
 the buyer to your receiving address, so there are no added fees.
-- You can easily build your reputation by receiving feedback on sales, and you can 
+- You can easily build your reputation by receiving feedback on sales, and you can
 give feedback to buyers.
 - Your thread will be categorized and easier to find in xyMarket's daily thread.
-- You can enable 'Autobuy' and have your items automatically sent out to a 
+- You can enable 'Autobuy' and have your items automatically sent out to a
 buyer after a successful purchase.
 
-If you decide to post a structured thread, be sure to remove the unstructured 
-one from xyMarket. You should also update your original thread that was 
-reposted, and point it to your structured thread so more people can take 
+If you decide to post a structured thread, be sure to remove the unstructured
+one from xyMarket. You should also update your original thread that was
+reposted, and point it to your structured thread so more people can take
 advantage of its features!
 
 ---
@@ -368,7 +368,7 @@ If you wish to remove your thread from xyMarket, you can do so [here](${
 If you don't want your threads to ever be automatically reposted to xyMarket
 again in the future, click [here](${buildCommandLink(`ignore my posts`)}).
 
-Don't want to bother with structured threads? You can at least increase your 
+Don't want to bother with structured threads? You can at least increase your
 unstructured thread's visibility by categorizing it using [this link](${
   buildCommandLink([
     `categorize ${id} as Uncategorized`,,
@@ -467,18 +467,37 @@ exports.USER_STATS_LOOKUP = id => id ?
 `/r/xyMarketStats/comments/${id}` :
 `That user is not in my database.`;
 
-exports.DAILY_THREAD_HEADER =
-`This thread's categories and posts are updated and randomized every hour. 
-Large categories are broken into multiple sections.\n\n`;
+exports.DAILY_THREAD_HEADER = (promoted, spotlight) =>
+`This thread's categories and posts are updated and randomized every hour.
+Large categories are broken into multiple sections.
+
+${promoted.length ? `
+# Promoted
+${promoted.map(t => `- [${t.data.title}](${threadLink(t.id)})`).join('\n')}
+`: ''}
+
+${spotlight.length ? `
+# Spotlight
+${spotlight.map(t => `- [${t.data.title}](${threadLink(t.id)})`).join('\n')}
+`: ''}
+
+# Categorized\n`;
+
+exports.CATEGORY_SEARCH = category =>
+`[[view all]](/r/${
+  config.ids.reddit.sub
+}/search?q=flair%3${
+  encodeURIComponent(category)
+}&sort=new&restrict_sr=on)`;
 
 exports.CONFIRM_TRADE_REQUEST = data =>
-`u/${data.user} is attempting to confirm a trade with you of *${data.item1}* 
+`u/${data.user} is attempting to confirm a trade with you of *${data.item1}*
 for *${data.item2}*.
 
 Click [here](${
   buildCommandLink(`confirm trade ${data.id} with u/${data.user}`)
-}) to confirm the trade privately. Optionally, you can also confirm the trade 
-publicly by pasting the following command as a comment somewhere: 
+}) to confirm the trade privately. Optionally, you can also confirm the trade
+publicly by pasting the following command as a comment somewhere:
 \`u/${config.ids.reddit.user} confirm trade ${data.id} with u/${data.user}\`.`;
 
 exports.CONFIRM_TRADE_REQUEST_SENT = data =>
