@@ -38,77 +38,90 @@ module.exports = async function() {
     // Get all messages not marked as read
     const messages = await r.getUnreadMessages();
 
-    for (let message of messages) {
-      const command = parseCommand(message);
+    // Mark as read immediately, because if this fails it will prevent the
+    // same message from being acted on multiple times
+    if (messages.length) await r.markMessagesAsRead(messages);
 
-      switch (command.command) {
-        case 'request-verification':
-          requestVerification(r, message, command);
-          break;
-        case 'clear-autobuy-items':
-          clearAutobuyItems(r, message, command.thread);
-          break;
-        case 'list-autobuy-items':
-          listAutobuyItems(r, message, command.thread);
-          break;
-        case 'add-autobuy-items':
-          addAutobuyItems(r, message, command);
-          break;
-        // case 'release-escrow':
-        //   releaseEscrow(r, message, command.order);
-        //   break;
-        // case 'request-escrow':
-        //   requestEscrow(r, message, command);
-        //   break;
-        case 'ignore-my-posts':
-          ignoreMyPosts(r, message);
-          break;
-        case 'confirm-trade':
-          confirmTrade(r, message, command);
-          break;
-        case 'confirm-order':
-          confirmOrder(r, message, command);
-          break;
-        case 'give-feedback':
-          giveFeedback(r, message, command);
-          break;
-        case 'stats-lookup':
-          statsLookup(r, message, command.user);
-          break;
-        case 'claim-thread':
-          claimThread(r, message, command.thread);
-          break;
-        case 'categorize':
-          categorize(r, message, command);
-          break;
-        case 'purchase':
-          purchase(r, message, command);
-          break;
-        case 'promote':
-          promote(r, message, command);
-          break;
-        case 'revise':
-          reviseThread(r, message, command.thread);
-          break;
-        case 'remove':
-          removeThread(r, message, command.thread);
-          break;
-        case 'delete':
-          deleteThread(r, message, command.thread);
-          break;
-        case 'verify':
-          verify(r, message, command);
-          break;
-        case 'repost':
-          repost(r, message, command.thread);
-          break;
-        case 'error':
-          message.reply(templates.INVALID_COMMAND);
-          break;
+    for (let message of messages) {
+      // Ignore user name mentions from outside of subreddit
+      if (
+        message.was_comment &&
+        message.subreddit_name_prefixed != `r/${config.ids.reddit.sub}`
+      ) continue;
+
+      try {
+        const command = parseCommand(message);
+
+        switch (command.command) {
+          case 'request-verification':
+            await requestVerification(r, message, command);
+            break;
+          case 'clear-autobuy-items':
+            await clearAutobuyItems(r, message, command.thread);
+            break;
+          case 'list-autobuy-items':
+            await listAutobuyItems(r, message, command.thread);
+            break;
+          case 'add-autobuy-items':
+            await addAutobuyItems(r, message, command);
+            break;
+          // case 'release-escrow':
+          //   await releaseEscrow(r, message, command.order);
+          //   break;
+          // case 'request-escrow':
+          //   await requestEscrow(r, message, command);
+          //   break;
+          case 'ignore-my-posts':
+            await ignoreMyPosts(r, message);
+            break;
+          case 'confirm-trade':
+            await confirmTrade(r, message, command);
+            break;
+          case 'confirm-order':
+            await confirmOrder(r, message, command);
+            break;
+          case 'give-feedback':
+            await giveFeedback(r, message, command);
+            break;
+          case 'stats-lookup':
+            await statsLookup(r, message, command.user);
+            break;
+          case 'claim-thread':
+            await claimThread(r, message, command.thread);
+            break;
+          case 'categorize':
+            await categorize(r, message, command);
+            break;
+          case 'purchase':
+            await purchase(r, message, command);
+            break;
+          case 'promote':
+            await promote(r, message, command);
+            break;
+          case 'revise':
+            await reviseThread(r, message, command.thread);
+            break;
+          case 'remove':
+            await removeThread(r, message, command.thread);
+            break;
+          case 'delete':
+            await deleteThread(r, message, command.thread);
+            break;
+          case 'verify':
+            await verify(r, message, command);
+            break;
+          case 'repost':
+            await repost(r, message, command.thread);
+            break;
+          case 'error':
+            message.reply(templates.INVALID_COMMAND);
+            break;
+        }
+      }
+      catch (err) {
+        console.error('main/messageListener', err);
       }
     }
-    
-    if (messages.length) await r.markMessagesAsRead(messages);
 
     console.log('main/message-listener: end');
   }
