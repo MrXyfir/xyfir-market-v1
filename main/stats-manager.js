@@ -15,11 +15,31 @@ module.exports = async function() {
 
   try {
     await db.getConnection();
-    const users = await db.query(
-      'SELECT * FROM users WHERE NOW() > statsThreadExpires'
-    );
+    const users = await db.query(`
+      SELECT
+        u.name, u.statsThread, u.ignored, u.verifiedProfiles, u.baseRep,
+        COUNT(o.id) AS orders,
+        COUNT(t.id) AS trades,
+        COUNT(s.id) AS threads
+      FROM users u
+      LEFT JOIN orders o ON o.buyer = u.name
+      LEFT JOIN sales_threads s ON s.author = u.name AND s.unstructured = 1
+      LEFT JOIN trades t ON (t.trader1 = u.name OR t.trader2 = u.name)
+      WHERE NOW() > u.statsThreadExpires
+      GROUP BY u.name
+    `);
 
     for (let user of users) {
+      // Keep user if they're ignored or have any data on xyMarket other than
+      // unstructured threads
+      if (
+        !user.ignored && !user.verifiedProfiles && !user.baseRep &&
+        !user.orders && !user.trades && !user.threads
+      ) {
+        await db.query('DELETE FROM users WHERE name = ?', [user.name]);
+        continue;
+      }
+
       // Create new stats thread
       const newThreadId = await createUserStatsThread(user.name);
 
