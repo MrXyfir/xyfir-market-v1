@@ -10,7 +10,7 @@ const snoo = require('snoowrap');
 const r = new snoo(config.snoowrap);
 
 /**
- * Finds posts in similar subreddits, contacts the posters, and optionally 
+ * Finds posts in similar subreddits, contacts the posters, and optionally
  * reposts to xyMarket as unstructured.
  */
 module.exports = async function() {
@@ -51,6 +51,10 @@ module.exports = async function() {
         )
         // BitMarket threads must start with [WTS]
         .filter(post => !(sub == 'BitMarket' && !/\[WTS\]/.test(post.title)))
+        // Ignore threads with 'scammer' in the title
+        .filter(post => !/scammer/i.test(post.title))
+        // Ignore [META] threads
+        .filter(post => !/\[META\]/.test(post.title))
         // Make sure posts in trade subreddits with strict title formats are
         // looking to receive some known currency
         .filter(post => {
@@ -158,5 +162,5 @@ module.exports = async function() {
     db.release();
     console.error('main/post-finder', err);
   }
-  
+
 }
