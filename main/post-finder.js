@@ -23,11 +23,12 @@ module.exports = async function() {
     const subreddits = [
       'BitMarket', 'redditbay', 'barter', 'forsale', 'Sell', 'marketplace',
       'REDDITEXCHANGE', 'giftcardexchange', 'appleswap', 'GameSale',
-      'SteamGameSwap'
+      'SteamGameSwap', 'CryptoTrade'
     ],
     subredditCategory = {
       giftcardexchange: 'Vouchers and Gift Cards',
       SteamGameSwap: 'Games and Virtual Items',
+      CryptoTrade: 'Cryptocurrency',
       appleswap: 'Electronics',
       GameSale: 'Games and Virtual Items'
     };
