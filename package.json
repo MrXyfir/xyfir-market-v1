@@ -1,6 +1,6 @@
 {
   "name": "xyfir-market",
-  "version": "0.4.9",
+  "version": "1.0.0",
   "description": "",
   "main": "start.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "dependencies": {
     "app-module-path": "^2.2.0",
     "coinbase": "^2.0.7",
-    "moment": "^2.20.1",
+    "moment": "^2.21.0",
     "mysql": "^2.15.0",
     "snoowrap": "^1.15.2",
     "superagent": "^3.8.2"
