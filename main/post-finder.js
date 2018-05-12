@@ -187,8 +187,7 @@ module.exports = async function() {
       if (res.userHasBeenContacted) continue;
 
       await r.composeMessage({
-        // to: author.name,
-        to: 'MrXyfir',
+        to: author.name,
         subject: 'Your post has been reposted to r/xyMarket',
         text: templates.POST_FINDER_MESSAGE(repost.id)
       });
