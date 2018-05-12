@@ -312,7 +312,7 @@ may remove this unstructured thread from xyMarket once noticed if it doesn't
 meet certain requirements.*`;
 
 exports.THREAD_CLAIMED = id =>
-  `You have claimed your thread that was reposted to r/xyMarket: a new, highly
+  `You have claimed your thread that was reposted to r/xyMarket: a highly
 automated marketplace subreddit.
 
 ---
@@ -377,6 +377,75 @@ You can start building your reputation on xyMarket by [confirming trades](${buil
 Questions, complaints, or feedback? Post them in r/xyMarketMeta.
 
 Have a nice day!`;
+
+exports.POST_FINDER_MESSAGE = id =>
+  `Your thread was automatically [reposted](${threadLink(id)}) to r/xyMarket:
+a highly automated marketplace subreddit. You will only receive this
+message once!
+
+---
+
+# Info
+
+Your thread has been reposted as an *unstructured* thread. Unstructured threads
+miss out on most of xyMarket's special features. You can optionally post a
+structured thread to xyMarket using [this form](https://www.xyfir.com/market).
+
+Some of the benefits that structured sales threads offer are:
+
+- If you accept BTC, LTC, or ETH, and add payment addresses to your structured
+thread, payments using those currencies will be tracked by xyMarketBot and
+you'll be notified when a buyer makes a purchase. Payments go directly from
+the buyer to your receiving address, so there are no added fees.
+- You can easily build your reputation by receiving feedback on sales, and you can
+give feedback to buyers.
+- Your thread will be categorized and easier to find in xyMarket's daily thread.
+- You can enable 'Autobuy' and have your items automatically sent out to a
+buyer after a successful purchase.
+
+If you decide to post a structured thread, be sure to remove the unstructured
+one from xyMarket. You should also update your original thread that was
+reposted, and point it to your structured thread so more people can take
+advantage of its features!
+
+---
+
+# Commands
+
+If you wish to remove your thread from xyMarket, you can do so
+[here](${buildCommandLink(`remove ${id}`)}).
+
+If you don't want your threads to ever be automatically reposted to xyMarket
+again in the future, click [here](${buildCommandLink(`ignore my posts`)}).
+
+Don't want to bother with structured threads? You can at least increase your
+unstructured thread's visibility by categorizing it using
+[this link](${buildCommandLink([
+    `categorize ${id} as Uncategorized`,
+    ,
+    `// Change "Uncategorized" to one of the categories below:  `,
+    `// ${Object.keys(categories).join(', ')}  `,
+    `// The spelling and capitalization must match exactly!`
+  ])}).
+
+You can start building your reputation on xyMarket by
+[confirming trades](${buildCommandLink([
+    `confirm trade of Some Item to u/User for Some Other Item`,
+    ,
+    `// Update "Some Item", "User", and "Some Other Item"`,
+    `// You can optionally confirm trades publicly by commenting the above ` +
+      `command anywhere, just prefixed with \`u/${config.ids.reddit.user} \` `
+  ])}) you've made with other users.
+
+---
+
+Questions, complaints, or feedback? Post them in r/xyMarketMeta.
+
+Have a nice day!
+
+*This action was performed automatically by a bot. A xyMarket moderator
+may remove your thread from xyMarket once noticed if it doesn't meet certain
+requirements.*`;
 
 exports.USER_STATS_THREAD = stats =>
   `

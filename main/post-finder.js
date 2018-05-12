@@ -20,28 +20,28 @@ module.exports = async function() {
 
   try {
     const subreddits = [
-        'BitMarket',
-        'redditbay',
-        'barter',
-        'forsale',
-        'Sell',
-        'marketplace',
-        'REDDITEXCHANGE',
-        'giftcardexchange',
-        'appleswap',
-        'GameSale',
-        'SteamGameSwap',
-        'CryptoTrade',
-        'slavelabour'
-      ],
-      subredditCategory = {
-        giftcardexchange: 'Vouchers and Gift Cards',
-        SteamGameSwap: 'Games and Virtual Items',
-        CryptoTrade: 'Cryptocurrency',
-        slavelabour: 'Services',
-        appleswap: 'Electronics',
-        GameSale: 'Games and Virtual Items'
-      };
+      'BitMarket',
+      'redditbay',
+      'barter',
+      'forsale',
+      'Sell',
+      'marketplace',
+      'REDDITEXCHANGE',
+      'giftcardexchange',
+      'appleswap',
+      'GameSale',
+      'SteamGameSwap',
+      'CryptoTrade',
+      'slavelabour'
+    ];
+    const subredditCategory = {
+      giftcardexchange: 'Vouchers and Gift Cards',
+      SteamGameSwap: 'Games and Virtual Items',
+      CryptoTrade: 'Cryptocurrency',
+      slavelabour: 'Services',
+      appleswap: 'Electronics',
+      GameSale: 'Games and Virtual Items'
+    };
 
     let posts = [],
       mods = [];
@@ -125,13 +125,15 @@ module.exports = async function() {
       // Thread must not already exist in database
       const [res] = await db.query(
         `
-        SELECT (
-          SELECT COUNT(id) FROM sales_threads
-          WHERE author = ? AND unstructured = ? AND created > ?
-        ) AS recentThreads, (
-          SELECT ignored FROM users WHERE name = ?
-        ) AS userIsIgnored
-      `,
+          SELECT (
+            SELECT COUNT(id) FROM sales_threads
+            WHERE author = ? AND unstructured = ? AND created > ?
+          ) AS recentThreads, (
+            SELECT ignored FROM users WHERE name = ?
+          ) AS userIsIgnored, (
+            SELECT contacted FROM users WHERE name = ?
+          ) AS userHasBeenContacted
+        `,
         [
           author.name,
           1,
@@ -139,6 +141,7 @@ module.exports = async function() {
             .utc()
             .subtract(2, 'hours')
             .unix(),
+          author.name,
           author.name
         ]
       );
@@ -169,26 +172,30 @@ module.exports = async function() {
 
       await createUser(author.name, db);
 
-      await db.query(
-        `
-        INSERT INTO sales_threads SET ?
-      `,
-        {
-          id: repost.id,
-          author: author.name,
-          created: repost.created_utc,
-          unstructured: true,
-          approved: true,
-          data: JSON.stringify({
-            category: category.text,
-            title: repost.title
-          })
-        }
-      );
+      await db.query(`INSERT INTO sales_threads SET ?`, {
+        id: repost.id,
+        author: author.name,
+        created: repost.created_utc,
+        unstructured: true,
+        approved: true,
+        data: JSON.stringify({
+          category: category.text,
+          title: repost.title
+        })
+      });
 
-      await repost
-        .reply(templates.POST_FINDER_COMMENT(author.name, repost.id))
-        .distinguish({ status: true, sticky: true });
+      if (res.userHasBeenContacted) continue;
+
+      await r.composeMessage({
+        // to: author.name,
+        to: 'MrXyfir',
+        subject: 'Your post has been reposted to r/xyMarket',
+        text: templates.POST_FINDER_MESSAGE(repost.id)
+      });
+
+      await db.query(`UPDATE users SET contacted = 1 WHERE name = ?`, [
+        author.name
+      ]);
     }
 
     db.release();
