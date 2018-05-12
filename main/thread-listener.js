@@ -11,15 +11,12 @@ const r = new snoo(config.snoowrap);
  * Listens for new, unapproved, and unchecked threads that have been posted.
  */
 module.exports = async function() {
-
   console.log('main/thread-listener: start');
 
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
-    let posts = await r
-      .getSubreddit(config.ids.reddit.sub)
-      .getUnmoderated();
+    let posts = await r.getSubreddit(config.ids.reddit.sub).getUnmoderated();
 
     // Posts by xyMarketBot will eventually be approved by code that
     // originally created the post
@@ -33,7 +30,7 @@ module.exports = async function() {
       `SELECT id FROM sales_threads WHERE id IN (?)`,
       [posts.map(p => p.id)]
     );
-    
+
     const remove = [];
 
     for (let post of posts) {
@@ -64,18 +61,13 @@ module.exports = async function() {
     }
 
     if (remove.length) {
-      await db.query(
-        `DELETE FROM sales_threads WHERE id IN (?)`,
-        [remove]
-      );
+      await db.query(`DELETE FROM sales_threads WHERE id IN (?)`, [remove]);
     }
 
     db.release();
     console.log('main/thread-listener: end2');
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
     console.error('main/threadListener', err);
   }
-
-}
+};

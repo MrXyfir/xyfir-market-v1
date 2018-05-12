@@ -14,8 +14,7 @@ const mysql = require('lib/mysql');
  * @param {RequestVerificationCommand} command
  */
 module.exports = async function(r, comment, command) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     await db.getConnection();
@@ -33,8 +32,7 @@ module.exports = async function(r, comment, command) {
       subject: 'Verification Requested'
     });
     await comment.remove();
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -42,5 +40,4 @@ module.exports = async function(r, comment, command) {
 
     comment.reply(err);
   }
-
-}
+};

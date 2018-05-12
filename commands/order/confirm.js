@@ -15,13 +15,13 @@ const MySQL = require('lib/mysql');
  * @param {ConfirmOrderCommand} command
  */
 module.exports = async function(r, message, command) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     // Validate order and retrieve needed data
     await db.getConnection();
-    const [order] = await db.query(`
+    const [order] = await db.query(
+      `
       SELECT
         o.amount, o.currency, st.data AS threadData
       FROM
@@ -29,10 +29,9 @@ module.exports = async function(r, message, command) {
       WHERE
         o.id = ? AND o.buyer = ? AND o.status = ? AND
         st.id = o.thread AND o.created > DATE_SUB(NOW(), INTERVAL 16 MINUTE)
-    `, [
-      command.orderId, message.author.name,
-      orderStatus.UNPAID
-    ]);
+    `,
+      [command.orderId, message.author.name, orderStatus.UNPAID]
+    );
 
     if (!order) throw templates.NO_MATCHING_ORDER(command.orderId);
 
@@ -45,18 +44,17 @@ module.exports = async function(r, message, command) {
     });
 
     // Set order status and transaction
-    await db.query(`
+    await db.query(
+      `
       UPDATE orders SET status = ?, transaction = ?
       WHERE id = ?
-    `, [
-      orderStatus.AWAITING_CONFIRMATIONS, command.transaction,
-      command.orderId
-    ]);
+    `,
+      [orderStatus.AWAITING_CONFIRMATIONS, command.transaction, command.orderId]
+    );
     db.release();
 
     await message.reply(templates.PAYMENT_AWAITING_CONFIRMATIONS);
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -64,5 +62,4 @@ module.exports = async function(r, message, command) {
 
     message.reply(err);
   }
-
-}
+};

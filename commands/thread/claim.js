@@ -8,8 +8,7 @@ const MySQL = require('lib/mysql');
  * @param {string} thread
  */
 module.exports = async function(r, message, thread) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     await db.getConnection();
@@ -19,20 +18,16 @@ module.exports = async function(r, message, thread) {
     );
     db.release();
 
-    if (!rows.length)
-      throw templates.NO_MATCHING_THREAD;
+    if (!rows.length) throw templates.NO_MATCHING_THREAD;
     else if (rows[0].author != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
 
     message.reply(templates.THREAD_CLAIMED(thread));
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
-    if (typeof err != 'string')
-      console.error('commands/thread/claim', err);
+    if (typeof err != 'string') console.error('commands/thread/claim', err);
 
     message.reply(err);
   }
-
-}
+};

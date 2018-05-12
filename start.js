@@ -18,12 +18,12 @@ statsManager();
 
 if (config.environment.type != 'dev') {
   setInterval(databaseCleanup, 86400 * 1000); // every day
-  setInterval(paymentListener, 60 * 1000);    // every minute
-  setInterval(messageListener, 60 * 1000);    // every minute
-  setInterval(threadListener, 60 * 1000);     // every minute
-  setInterval(updateThreads, 3600 * 1000);    // every hour
-  setInterval(statsManager, 86400 * 1000);    // every day
-  setInterval(postFinder, 1800 * 1000);       // every 30 minutes
+  setInterval(paymentListener, 60 * 1000); // every minute
+  setInterval(messageListener, 60 * 1000); // every minute
+  setInterval(threadListener, 60 * 1000); // every minute
+  setInterval(updateThreads, 3600 * 1000); // every hour
+  setInterval(statsManager, 86400 * 1000); // every day
+  setInterval(postFinder, 1800 * 1000); // every 30 minutes
   postFinder();
 }
 

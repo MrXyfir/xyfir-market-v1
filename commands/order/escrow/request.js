@@ -15,8 +15,7 @@ const mysql = require('lib/mysql');
  * @param {RequestEscrowCommand} command
  */
 module.exports = async function(r, message, command) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     // Make sure order exists and is in escrow
@@ -41,11 +40,12 @@ module.exports = async function(r, message, command) {
       to: order.buyer,
       subject: 'Escrow Release',
       text: templates.ESCROW_RELEASE_REQUESTED(
-        command.order, message.author.name, command.note
+        command.order,
+        message.author.name,
+        command.note
       )
     });
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -53,5 +53,4 @@ module.exports = async function(r, message, command) {
 
     message.reply(err);
   }
-
-}
+};

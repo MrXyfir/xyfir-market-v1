@@ -12,20 +12,19 @@ const MySQL = require('lib/mysql');
  * @param {string} threadId
  */
 module.exports = async function(r, comment, threadId) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     await db.getConnection();
-    const [thread] = await db.query(`
+    const [thread] = await db.query(
+      `
       SELECT id, data FROM sales_threads
       WHERE
         id = ? AND author = ? AND approved = ? AND unstructured = ? AND
         (removed = ? OR promoted > NOW())
-    `, [
-      threadId, comment.author.name, 1, 0,
-      1
-    ]);
+    `,
+      [threadId, comment.author.name, 1, 0, 1]
+    );
 
     if (!thread) throw templates.NO_MATCHING_THREAD(threadId);
 
@@ -38,11 +37,13 @@ module.exports = async function(r, comment, threadId) {
     const repost = await r
       .getSubreddit(config.ids.reddit.sub)
       .submitSelfpost({
-        title: thread.data.title, text: ''
+        title: thread.data.title,
+        text: ''
       })
       .disableInboxReplies()
       .assignFlair({
-        text: category.text, cssClass: category.css
+        text: category.text,
+        cssClass: category.css
       })
       .approve()
       .fetch();
@@ -52,22 +53,21 @@ module.exports = async function(r, comment, threadId) {
     if (thread.data.nsfw) await repost.markNsfw();
 
     // Updated id will cascade to other tables
-    await db.query(`
+    await db.query(
+      `
       UPDATE sales_threads
       SET id = ?, created = ?, removed = ?, dateRemoved = ?
       WHERE id = ?
-    `, [
-      repost.id, repost.created, 0, '0000-00-00 00:00:00',
-      threadId
-    ]);
+    `,
+      [repost.id, repost.created, 0, '0000-00-00 00:00:00', threadId]
+    );
     db.release();
 
     // In case thread is promoted and still live
     await r.getSubmission(threadId).remove();
 
     await comment.reply(templates.THREAD_REPOSTED(repost.id));
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -75,5 +75,4 @@ module.exports = async function(r, comment, threadId) {
 
     comment.reply(err);
   }
-
-}
+};

@@ -8,8 +8,7 @@ const MySQL = require('lib/mysql');
  * @param {string} user
  */
 module.exports = async function(r, message, user) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     await db.getConnection();
@@ -22,8 +21,7 @@ module.exports = async function(r, message, user) {
     message.reply(
       templates.USER_STATS_LOOKUP(rows.length ? rows[0].statsThread : null)
     );
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -31,5 +29,4 @@ module.exports = async function(r, message, user) {
 
     message.reply(err);
   }
-
-}
+};

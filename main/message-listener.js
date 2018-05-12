@@ -31,7 +31,6 @@ const r = new snoo(config.snoowrap);
  * Listens for unread commands sent as private messages or username mentions.
  */
 module.exports = async function() {
-
   console.log('main/message-listener: start');
 
   try {
@@ -47,7 +46,8 @@ module.exports = async function() {
       if (
         message.was_comment &&
         message.subreddit_name_prefixed != `r/${config.ids.reddit.sub}`
-      ) continue;
+      )
+        continue;
 
       try {
         const command = parseCommand(message);
@@ -117,16 +117,13 @@ module.exports = async function() {
             message.reply(templates.INVALID_COMMAND);
             break;
         }
-      }
-      catch (err) {
+      } catch (err) {
         console.error('main/messageListener', err);
       }
     }
 
     console.log('main/message-listener: end');
-  }
-  catch (err) {
+  } catch (err) {
     console.error('main/messageListener', err);
   }
-
-}
+};

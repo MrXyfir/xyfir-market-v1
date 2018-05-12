@@ -10,30 +10,37 @@ const r = new snoo(config.snoowrap);
  * Updates the daily thread and removes expired sales threads.
  */
 module.exports = async function() {
-
   console.log('main/update-threads: start');
 
-  const db = new MySQL, {sub} = config.ids.reddit;
+  const db = new MySQL(),
+    { sub } = config.ids.reddit;
 
   try {
     // Get ids of all active threads that are over a week old
     await db.getConnection();
-    let rows = await db.query(`
+    let rows = await db.query(
+      `
       SELECT id, unstructured FROM sales_threads
       WHERE created < ? AND removed = 0 AND NOW() > promoted
-    `, [
-      moment().subtract(1, 'week').utc().unix()
-    ]);
+    `,
+      [
+        moment()
+          .subtract(1, 'week')
+          .utc()
+          .unix()
+      ]
+    );
 
     if (rows.length) {
       // Mark threads as 'removed'
-      await db.query(`
+      await db.query(
+        `
         UPDATE sales_threads
         SET removed = 1, dateRemoved = NOW()
         WHERE id IN (?)
-      `, [
-        rows.map(r => r.id)
-      ]);
+      `,
+        [rows.map(r => r.id)]
+      );
 
       for (let row of rows) {
         const thread = await r.getSubmission(row.id);
@@ -78,25 +85,25 @@ module.exports = async function() {
       // Check if first group of category exists
       // Initialize values
       if (!categories[base]) {
-        categories[base] = [],
-        categories[base].groups = 1,
-        categories[base].currentGroupLength =
-          base.length + row.id.length + row.data.title.length + 39;
+        (categories[base] = []),
+          (categories[base].groups = 1),
+          (categories[base].currentGroupLength =
+            base.length + row.id.length + row.data.title.length + 39);
       }
       // Fit row into last category group
       else if (categories[base].currentGroupLength < 9500) {
         categories[base].currentGroupLength +=
           row.id.length + row.data.title.length + 30;
-        category = row.data.category + (
-          categories[base].groups > 1 ? ` (#${categories[base].groups})` : ''
-        );
+        category =
+          row.data.category +
+          (categories[base].groups > 1 ? ` (#${categories[base].groups})` : '');
       }
       // Create a new group for the category
       else {
         categories[base].groups++,
-        categories[base].currentGroupLength =
-          category.length + row.id.length + row.data.title.length + 39,
-        category = row.data.category + ` (#${categories[base].groups})`;
+          (categories[base].currentGroupLength =
+            category.length + row.id.length + row.data.title.length + 39),
+          (category = row.data.category + ` (#${categories[base].groups})`);
 
         categories[category] = [];
       }
@@ -108,42 +115,40 @@ module.exports = async function() {
       // 5 random promoted threads
       rows
         .filter(r => r.promoted)
-        .sort(() => Math.floor(Math.random()) ? 1 : -1)
+        .sort(() => (Math.floor(Math.random()) ? 1 : -1))
         .slice(0, 5),
       // 5 random non-promoted threads
       rows
         .filter(r => !r.promoted)
-        .sort(() => Math.floor(Math.random()) ? 1 : -1)
+        .sort(() => (Math.floor(Math.random()) ? 1 : -1))
         .slice(0, 5)
     );
 
     rows = null;
 
-    let text = Object
-      .keys(categories)
+    let text = Object.keys(categories)
       // Sort the categories randomly
-      .sort(() => Math.round(Math.random()) ? 1 : -1)
+      .sort(() => (Math.round(Math.random()) ? 1 : -1))
       // Build list of categories
-      .map(category =>
-        `\n## ${category}\n` +
-        categories[category]
-          // Promoted threads go to top
-          // Both promoted and normal are randomly sorted (but separate)
-          .sort((a, b) => {
-            if (!a.promoted && b.promoted)
-              return 1;
-            else if (a.promoted && !b.promoted)
-              return -1;
-            else
-              return Math.round(Math.random()) ? 1 : -1;
-          })
-          // Convert to string for post
-          .map(thread =>
-            '- ' +
-            (thread.promoted ? '💎' : '') +
-            `[${thread.data.title}](/r/${sub}/comments/${thread.id})`
-          )
-          .join('\n')
+      .map(
+        category =>
+          `\n## ${category}\n` +
+          categories[category]
+            // Promoted threads go to top
+            // Both promoted and normal are randomly sorted (but separate)
+            .sort((a, b) => {
+              if (!a.promoted && b.promoted) return 1;
+              else if (a.promoted && !b.promoted) return -1;
+              else return Math.round(Math.random()) ? 1 : -1;
+            })
+            // Convert to string for post
+            .map(
+              thread =>
+                '- ' +
+                (thread.promoted ? '💎' : '') +
+                `[${thread.data.title}](/r/${sub}/comments/${thread.id})`
+            )
+            .join('\n')
       )
       .join('\n');
 
@@ -155,23 +160,22 @@ module.exports = async function() {
       posts = text
         .split(/^\##/gm)
         .slice(1)
-        .reduce((posts, section) => {
-          const i = posts.length - 1;
+        .reduce(
+          (posts, section) => {
+            const i = posts.length - 1;
 
-          // A new post will be needed
-          // First post (index 0), has 40K character limit
-          if (posts[i].length + section.length > (i ? 10000 : 40000))
-            return posts.concat('##' + section);
-          // Add section to last post
-          else
-            posts[i] += '##' + section;
+            // A new post will be needed
+            // First post (index 0), has 40K character limit
+            if (posts[i].length + section.length > (i ? 10000 : 40000))
+              return posts.concat('##' + section);
+            // Add section to last post
+            else posts[i] += '##' + section;
 
-          return posts;
-        }, [
-          header
-        ]);
-    }
-    else {
+            return posts;
+          },
+          [header]
+        );
+    } else {
       posts[0] = header + text;
     }
 
@@ -179,14 +183,14 @@ module.exports = async function() {
 
     // Get age of daily thread
     let daily = await r
-      .getSubreddit(sub)
-      .getSticky({ num: 1 })
-      .fetch(),
-    expires = moment
-      .unix(daily.created_utc)
-      .utc()
-      .add(1, 'day')
-      .unix();
+        .getSubreddit(sub)
+        .getSticky({ num: 1 })
+        .fetch(),
+      expires = moment
+        .unix(daily.created_utc)
+        .utc()
+        .add(1, 'day')
+        .unix();
 
     // Remove current daily thread and create a new one
     if (expires < moment.utc().unix()) {
@@ -196,11 +200,13 @@ module.exports = async function() {
         .getSubreddit(sub)
         .submitSelfpost({
           text: posts.shift(),
-          title: `Categorized Sales Threads (${
-            moment.utc().subtract(12, 'hours').format('MM/DD')
-          } - ${
-            moment.utc().add(12, 'hours').format('MM/DD')
-          })`,
+          title: `Categorized Sales Threads (${moment
+            .utc()
+            .subtract(12, 'hours')
+            .format('MM/DD')} - ${moment
+            .utc()
+            .add(12, 'hours')
+            .format('MM/DD')})`,
           sendReplies: false
         })
         .disableInboxReplies()
@@ -224,10 +230,8 @@ module.exports = async function() {
     }
 
     console.log('main/update-threads: end2');
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
     console.error('main/updateThreads', err);
   }
-
-}
+};

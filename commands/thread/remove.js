@@ -9,8 +9,7 @@ const MySQL = require('lib/mysql');
  * @param {string} thread
  */
 module.exports = async function(r, message, thread) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     const isMod = await isModerator(r, message.author.name);
@@ -21,8 +20,7 @@ module.exports = async function(r, message, thread) {
       [thread]
     );
 
-    if (!rows.length)
-      throw templates.NO_MATCHING_THREAD(thread);
+    if (!rows.length) throw templates.NO_MATCHING_THREAD(thread);
     if (!isMod && rows[0].author != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
 
@@ -36,10 +34,8 @@ module.exports = async function(r, message, thread) {
     await message.reply(
       templates.THREAD_REMOVED_BY_CREATOR(thread, rows[0].unstructured)
     );
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
     console.error('commands/thread/remove', err);
   }
-
-}
+};

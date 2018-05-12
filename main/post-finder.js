@@ -14,26 +14,35 @@ const r = new snoo(config.snoowrap);
  * reposts to xyMarket as unstructured.
  */
 module.exports = async function() {
-
   console.log('main/post-finder: start');
 
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     const subreddits = [
-      'BitMarket', 'redditbay', 'barter', 'forsale', 'Sell', 'marketplace',
-      'REDDITEXCHANGE', 'giftcardexchange', 'appleswap', 'GameSale',
-      'SteamGameSwap', 'CryptoTrade'
-    ],
-    subredditCategory = {
-      giftcardexchange: 'Vouchers and Gift Cards',
-      SteamGameSwap: 'Games and Virtual Items',
-      CryptoTrade: 'Cryptocurrency',
-      appleswap: 'Electronics',
-      GameSale: 'Games and Virtual Items'
-    };
+        'BitMarket',
+        'redditbay',
+        'barter',
+        'forsale',
+        'Sell',
+        'marketplace',
+        'REDDITEXCHANGE',
+        'giftcardexchange',
+        'appleswap',
+        'GameSale',
+        'SteamGameSwap',
+        'CryptoTrade'
+      ],
+      subredditCategory = {
+        giftcardexchange: 'Vouchers and Gift Cards',
+        SteamGameSwap: 'Games and Virtual Items',
+        CryptoTrade: 'Cryptocurrency',
+        appleswap: 'Electronics',
+        GameSale: 'Games and Virtual Items'
+      };
 
-    let posts = [], mods = [];
+    let posts = [],
+      mods = [];
 
     for (let sub of subreddits) {
       // Load new posts
@@ -41,14 +50,20 @@ module.exports = async function() {
 
       _posts = _posts
         // Filter out posts over 2 hours old (should already have been seen)
-        .filter(post =>
-          moment.utc().subtract(2, 'hours').unix() < post.created_utc
+        .filter(
+          post =>
+            moment
+              .utc()
+              .subtract(2, 'hours')
+              .unix() < post.created_utc
         )
         // Ignore link and empty selftext posts
         .filter(post => !!post.selftext)
         // Ignore posts marked as completed or closed
-        .filter(post =>
-          !post.link_flair_text || !/complete|close/i.test(post.link_flair_text)
+        .filter(
+          post =>
+            !post.link_flair_text ||
+            !/complete|close/i.test(post.link_flair_text)
         )
         // BitMarket threads must start with [WTS]
         .filter(post => !(sub == 'BitMarket' && !/\[WTS\]/.test(post.title)))
@@ -83,8 +98,8 @@ module.exports = async function() {
     }
 
     // Ignore posts made by users in mods[]
-    posts = posts.filter(post =>
-      mods.findIndex(mod => post.author.name == mod) == -1
+    posts = posts.filter(
+      post => mods.findIndex(mod => post.author.name == mod) == -1
     );
 
     if (!posts.length) return console.log('main/post-finder: end1');
@@ -104,26 +119,35 @@ module.exports = async function() {
       if (author.comment_karma < 0 || author.link_karma < 0) continue;
 
       // Thread must not already exist in database
-      const [res] = await db.query(`
+      const [res] = await db.query(
+        `
         SELECT (
           SELECT COUNT(id) FROM sales_threads
           WHERE author = ? AND unstructured = ? AND created > ?
         ) AS recentThreads, (
           SELECT ignored FROM users WHERE name = ?
         ) AS userIsIgnored
-      `, [
-        author.name, 1, moment.utc().subtract(2, 'hours').unix(),
-        author.name
-      ]);
+      `,
+        [
+          author.name,
+          1,
+          moment
+            .utc()
+            .subtract(2, 'hours')
+            .unix(),
+          author.name
+        ]
+      );
 
       if (res.recentThreads > 0 || res.userIsIgnored) continue;
 
       // Sleep so that there is not more than one post every 30 seconds
       await sleep(30 * 1000);
 
-      const category = categories[
-        subredditCategory[post.subreddit.display_name] || 'Uncategorized'
-      ];
+      const category =
+        categories[
+          subredditCategory[post.subreddit.display_name] || 'Uncategorized'
+        ];
 
       // Crosspost to r/xyMarket
       const repost = await post
@@ -133,23 +157,30 @@ module.exports = async function() {
           title: post.title
         })
         .assignFlair({
-          text: category.text, cssClass: category.css
+          text: category.text,
+          cssClass: category.css
         })
         .approve()
         .fetch();
 
       await createUser(author.name, db);
 
-      await db.query(`
+      await db.query(
+        `
         INSERT INTO sales_threads SET ?
-      `, {
-        id: repost.id, author: author.name, created: repost.created_utc,
-        unstructured: true, approved: true,
-        data: JSON.stringify({
-          category: category.text,
-          title: repost.title
-        })
-      });
+      `,
+        {
+          id: repost.id,
+          author: author.name,
+          created: repost.created_utc,
+          unstructured: true,
+          approved: true,
+          data: JSON.stringify({
+            category: category.text,
+            title: repost.title
+          })
+        }
+      );
 
       await repost
         .reply(templates.POST_FINDER_COMMENT(author.name, repost.id))
@@ -158,10 +189,8 @@ module.exports = async function() {
 
     db.release();
     console.log('main/post-finder: end2');
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
     console.error('main/post-finder', err);
   }
-
-}
+};

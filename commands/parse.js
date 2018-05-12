@@ -1,22 +1,26 @@
 const threadId = context => context.split('/')[4];
-const note = body => body.split('\n\n').slice(1).join('\n\n').trim();
+const note = body =>
+  body
+    .split('\n\n')
+    .slice(1)
+    .join('\n\n')
+    .trim();
 
 /**
- * Takes in the content from a username mention or private message and returns 
- * a usable object with data pulled out of the content to be passed to the 
- * appropriate command handler. 
- * Only basic validation is done here, more will likely be done in the command 
+ * Takes in the content from a username mention or private message and returns
+ * a usable object with data pulled out of the content to be passed to the
+ * appropriate command handler.
+ * Only basic validation is done here, more will likely be done in the command
  * handler.
  * @param {snoowrap.PrivateMessage|snoowrap.Comment}
- * @param {boolean} [decode=false] Determines whether the message should be 
- * URL decoded. Used only if the first attempt to parse fails. Some Reddit 
+ * @param {boolean} [decode=false] Determines whether the message should be
+ * URL decoded. Used only if the first attempt to parse fails. Some Reddit
  * clients don't seem to decode the message properly.
  * @return {object}
  */
 function parseCommand(message, decode = false) {
-
-  const { context, was_comment: wasComment} = message;
-  let {body: text} = message;
+  const { context, was_comment: wasComment } = message;
+  let { body: text } = message;
 
   text = decode ? decodeURIComponent(text) : text;
 
@@ -34,7 +38,7 @@ function parseCommand(message, decode = false) {
   if (match && isMention) {
     return { command: 'revise', thread: threadId(context) };
   }
-  
+
   // PROMOTE
   match = text.match(
     /^promote( (\w{6,}))? for (\d+) months? using (BTC|LTC|ETH)$/i
@@ -62,9 +66,7 @@ function parseCommand(message, decode = false) {
     };
   }
 
-  match = text.match(
-    /^confirm order (\d+) with transaction (\w+)$/i
-  );
+  match = text.match(/^confirm order (\d+) with transaction (\w+)$/i);
   if (match) {
     return {
       command: 'confirm-order',
@@ -72,15 +74,13 @@ function parseCommand(message, decode = false) {
       transaction: match[2]
     };
   }
-  
+
   // RELEASE ESCROW
   match = text.match(/^release escrow for (\d+)$/i);
   if (match) return { command: 'release-escrow', order: +match[1] };
 
   // REQUEST ESCROW
-  match = text.match(
-    /^request escrow for (\d+)\b/i
-  );
+  match = text.match(/^request escrow for (\d+)\b/i);
   if (match) {
     return {
       command: 'request-escrow',
@@ -90,13 +90,11 @@ function parseCommand(message, decode = false) {
   }
 
   // GIVE FEEDBACK
-  match = text.match(
-    /^give (positive|negative) feedback for (\d+)( .+)?$/i
-  );
+  match = text.match(/^give (positive|negative) feedback for (\d+)( .+)?$/i);
   if (match) {
     return {
       feedback: (match[3] || '').trim(),
-      command: 'give-feedback', 
+      command: 'give-feedback',
       order: match[2],
       type: match[1].toLowerCase() == 'positive' ? 1 : -1
     };
@@ -109,7 +107,7 @@ function parseCommand(message, decode = false) {
       command: 'remove',
       thread: match[2] || threadId(context)
     };
-  };
+  }
 
   // DELETE
   match = text.match(/^delete (\w+)$/i);
@@ -131,7 +129,7 @@ function parseCommand(message, decode = false) {
     return {
       command: 'verify',
       thread: threadId(context),
-      note: note(text) || ''      
+      note: note(text) || ''
     };
   }
 
@@ -139,7 +137,8 @@ function parseCommand(message, decode = false) {
   match = text.match(/^add autobuy items to (\w{6,})\s/i);
   if (match) {
     return {
-      command: 'add-autobuy-items', thread: match[1],
+      command: 'add-autobuy-items',
+      thread: match[1],
       items: text.split('\n\n').slice(1)
     };
   }
@@ -206,11 +205,8 @@ function parseCommand(message, decode = false) {
   match = text.match(/^claim thread (\w{6,})$/i);
   if (match) return { command: 'claim-thread', thread: match[1] };
 
-  if (decode)
-    return { command: 'error' };
-  else
-    return parseCommand(message, true);
-
+  if (decode) return { command: 'error' };
+  else return parseCommand(message, true);
 }
 
 module.exports = parseCommand;

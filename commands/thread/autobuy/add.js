@@ -15,8 +15,7 @@ const mysql = require('lib/mysql');
  * @param {AddAutobuyItemsCommand} command
  */
 module.exports = async function(r, message, command) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     await db.getConnection();
@@ -25,25 +24,22 @@ module.exports = async function(r, message, command) {
       [command.thread]
     );
 
-    if (!rows.length)
-      throw templates.NO_MATCHING_THREAD(command.thread);
+    if (!rows.length) throw templates.NO_MATCHING_THREAD(command.thread);
 
     const thread = rows[0];
     thread.data = JSON.parse(thread.data);
 
     if (thread.author != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
-    if (!thread.data.autobuy)
-      throw templates.AUTOBUY_NOT_ENABLED;
-    if (!command.items.length)
-      throw templates.NO_AUTOBUY_ITEMS;
+    if (!thread.data.autobuy) throw templates.AUTOBUY_NOT_ENABLED;
+    if (!command.items.length) throw templates.NO_AUTOBUY_ITEMS;
 
     // Add items to database
     const sql =
-      'INSERT INTO autobuy_items (thread, item) VALUES ' +
-      command.items.map(i => '(?, ?)').join(', '),
-    vars = [];
-    command.items.forEach(item => vars.push(command.thread, item))
+        'INSERT INTO autobuy_items (thread, item) VALUES ' +
+        command.items.map(i => '(?, ?)').join(', '),
+      vars = [];
+    command.items.forEach(item => vars.push(command.thread, item));
     const result = await db.query(sql, vars);
     db.release();
 
@@ -53,8 +49,7 @@ module.exports = async function(r, message, command) {
     // Update stock count
     thread.data.stock += result.affectedRows;
     await updateThread(r, thread);
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -62,5 +57,4 @@ module.exports = async function(r, message, command) {
 
     message.reply(err);
   }
-
-}
+};

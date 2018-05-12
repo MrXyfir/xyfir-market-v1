@@ -9,8 +9,7 @@ const mysql = require('lib/mysql');
  * @param {string} thread - The id of the sales thread.
  */
 module.exports = async function(r, message, thread) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     await db.getConnection();
@@ -19,19 +18,14 @@ module.exports = async function(r, message, thread) {
       [thread]
     );
 
-    if (!rows.length)
-      throw templates.NO_MATCHING_THREAD(thread);
+    if (!rows.length) throw templates.NO_MATCHING_THREAD(thread);
 
     rows[0].data = JSON.parse(rows[0].data);
     const { data, author } = rows[0];
 
-    if (author != message.author.name)
-      throw templates.UNAUTHORIZED_COMMAND;
+    if (author != message.author.name) throw templates.UNAUTHORIZED_COMMAND;
 
-    await db.query(
-      'DELETE FROM autobuy_items WHERE thread = ?',
-      [thread]
-    );
+    await db.query('DELETE FROM autobuy_items WHERE thread = ?', [thread]);
     db.release();
 
     await message.reply(templates.AUTOBUY_ITEMS_CLEARED);
@@ -39,8 +33,7 @@ module.exports = async function(r, message, thread) {
     // Update stock count
     data.stock = 0;
     await updateThread(r, { id: thread, data, author });
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -48,5 +41,4 @@ module.exports = async function(r, message, thread) {
 
     message.reply(err);
   }
-
-}
+};

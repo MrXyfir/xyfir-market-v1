@@ -10,20 +10,20 @@ const mysql = require('lib/mysql');
  * @param {number} orderId
  */
 module.exports = async function(r, message, orderId) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     // Make sure order exists, is in escrow, user is buyer
     await db.getConnection();
-    const [order] = await db.query(`
+    const [order] = await db.query(
+      `
       SELECT
         id, thread, buyer, amountForSeller, currency
       FROM orders
       WHERE id = ? AND status = ? AND buyer = ?
-    `, [
-      orderId, orderStatus.IN_ESCROW, message.author.name
-    ]);
+    `,
+      [orderId, orderStatus.IN_ESCROW, message.author.name]
+    );
 
     if (!order) throw templates.NO_MATCHING_ORDER(orderId);
 
@@ -58,8 +58,7 @@ module.exports = async function(r, message, orderId) {
       text: templates.ESCROW_RELEASED(order.id),
       subject: 'Escrow Released'
     });
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -67,5 +66,4 @@ module.exports = async function(r, message, orderId) {
 
     message.reply(err);
   }
-
-}
+};

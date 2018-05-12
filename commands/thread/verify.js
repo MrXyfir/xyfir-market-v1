@@ -16,8 +16,7 @@ const mysql = require('lib/mysql');
  * @param {VerifyThreadCommand} command
  */
 module.exports = async function(r, comment, command) {
-
-  const db = new mysql;
+  const db = new mysql();
 
   try {
     const isMod = await isModerator(r, comment.author.name);
@@ -41,14 +40,11 @@ module.exports = async function(r, comment, command) {
       .reply(templates.VERIFIED(comment.author.name, command.note))
       .distinguish({ status: true, sticky: true });
     await comment.remove();
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
-    if (typeof err != 'string')
-      console.error('commands/thread/verify', err);
+    if (typeof err != 'string') console.error('commands/thread/verify', err);
 
     comment.reply(err);
   }
-
-}
+};

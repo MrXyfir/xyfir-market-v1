@@ -19,45 +19,47 @@ const MySQL = require('lib/mysql');
  * @param {PurchaseCommand} command
  */
 module.exports = async function(r, message, command) {
-
-  const db = new MySQL;
+  const db = new MySQL();
 
   try {
     if (command.escrow) throw templates.ESCROW_DISABLED;
 
     // Load sales thread's data
     await db.getConnection();
-    let rows = await db.query(`
+    let rows = await db.query(
+      `
       SELECT author AS seller, data
       FROM sales_threads
       WHERE id = ? AND approved = ? AND removed = ?
-    `, [
-      command.thread, 1, 0
-    ]);
+    `,
+      [command.thread, 1, 0]
+    );
 
     if (!rows.length) throw templates.NO_MATCHING_THREAD(command.thread);
 
     const thread = rows[0];
     thread.data = JSON.parse(thread.data);
 
-    if (!thread.data.tracking)
-      throw templates.TRACKING_NOT_ENABLED;
+    if (!thread.data.tracking) throw templates.TRACKING_NOT_ENABLED;
     if (!thread.data.addresses[command.currency])
       throw templates.CURRENCY_NOT_ACCEPTED(command.currency);
     if (command.escrow && !thread.data.escrow)
       throw templates.ESCROW_NOT_ACCEPTED;
 
     // Generate and create order
-    const dbRes = await db.query(`
+    const dbRes = await db.query(
+      `
       INSERT INTO orders SET ?
-    `, {
-      type: orderTypes.PURCHASE,
-      buyer: message.author.name,
-      thread: command.thread,
-      escrow: command.escrow,
-      currency: command.currency,
-      quantity: command.quantity
-    });
+    `,
+      {
+        type: orderTypes.PURCHASE,
+        buyer: message.author.name,
+        thread: command.thread,
+        escrow: command.escrow,
+        currency: command.currency,
+        quantity: command.quantity
+      }
+    );
 
     if (!dbRes.insertId) throw templates.UNEXPECTED_ERROR;
 
@@ -66,22 +68,24 @@ module.exports = async function(r, message, command) {
 
     // Convert USD price to currency
     let amount = await convertCurrency(
-      thread.data.price * command.quantity, 'USD', command.currency
+      thread.data.price * command.quantity,
+      'USD',
+      command.currency
     );
 
     // Get amounts for recent unpaid orders for the same currency
     // and for threads owned by the creator of this thread
-    rows = await db.query(`
+    rows = await db.query(
+      `
       SELECT amount
       FROM orders
       WHERE
         thread IN (SELECT id FROM sales_threads WHERE author = ?) AND
         created > DATE_SUB(NOW(), INTERVAL 1 HOUR) AND
         status = ? AND type = ? AND currency = ?
-    `, [
-      thread.seller,
-      orderStatus.UNPAID, orderTypes.PURCHASE, command.currency
-    ]);
+    `,
+      [thread.seller, orderStatus.UNPAID, orderTypes.PURCHASE, command.currency]
+    );
 
     // xyMarket is currently waiting for payments of these amounts to the same
     // address that the buyer will be sending to
@@ -94,10 +98,10 @@ module.exports = async function(r, message, command) {
     }
 
     // Update amount in orders table
-    await db.query(
-      'UPDATE orders SET amount = ? WHERE id = ?',
-      [amount, orderId]
-    );
+    await db.query('UPDATE orders SET amount = ? WHERE id = ?', [
+      amount,
+      orderId
+    ]);
 
     await createUser(message.author.name, db);
     db.release();
@@ -111,8 +115,7 @@ module.exports = async function(r, message, command) {
         amount
       })
     );
-  }
-  catch (err) {
+  } catch (err) {
     db.release();
 
     if (typeof err != 'string')
@@ -120,5 +123,4 @@ module.exports = async function(r, message, command) {
 
     message.reply(err);
   }
-
-}
+};
