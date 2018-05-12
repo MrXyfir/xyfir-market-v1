@@ -31,12 +31,14 @@ module.exports = async function() {
         'appleswap',
         'GameSale',
         'SteamGameSwap',
-        'CryptoTrade'
+        'CryptoTrade',
+        'slavelabour'
       ],
       subredditCategory = {
         giftcardexchange: 'Vouchers and Gift Cards',
         SteamGameSwap: 'Games and Virtual Items',
         CryptoTrade: 'Cryptocurrency',
+        slavelabour: 'Services',
         appleswap: 'Electronics',
         GameSale: 'Games and Virtual Items'
       };
@@ -83,7 +85,9 @@ module.exports = async function() {
 
           if (/\bPayPal|BTC|Bitcoin|ETH|Ethereum|LTC|Litecoin\b/i.test(want))
             return true;
-        });
+        })
+        // slavelabour threads must start with [OFFER]
+        .filter(post => sub != 'slavelabour' || /\[OFFER\]/.test(post.title));
       posts = posts.concat(_posts);
 
       // Load moderators
