@@ -1,6 +1,6 @@
 {
   "name": "xyfir-market",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "start.js",
   "scripts": {
@@ -8,13 +8,18 @@
   },
   "author": "Xyfir, LLC <contact@xyfir.com> (https://xyfir.com/)",
   "license": "ISC",
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "app-module-path": "^2.2.0",
-    "coinbase": "^2.0.7",
-    "moment": "^2.21.0",
+    "coinbase": "^2.0.8",
+    "moment": "^2.22.1",
     "mysql": "^2.15.0",
     "snoowrap": "^1.15.2",
-    "superagent": "^3.8.2"
+    "superagent": "^3.8.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^1.12.1"
+  }
 }
