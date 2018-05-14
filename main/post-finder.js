@@ -22,11 +22,11 @@ module.exports = async function() {
     const subreddits = [
       'BitMarket',
       'redditbay',
-      'barter',
-      'forsale',
-      'Sell',
-      'marketplace',
-      'REDDITEXCHANGE',
+      // 'barter',
+      // 'forsale',
+      // 'Sell',
+      // 'marketplace',
+      // 'REDDITEXCHANGE',
       'giftcardexchange',
       'appleswap',
       'GameSale',
@@ -72,7 +72,7 @@ module.exports = async function() {
         // Ignore threads with 'scammer' in the title
         .filter(post => !/scammer/i.test(post.title))
         // Ignore [META] threads
-        .filter(post => !/\[META\]/.test(post.title))
+        .filter(post => !/\[META\]/i.test(post.title))
         // Make sure posts in trade subreddits with strict title formats are
         // looking to receive some known currency
         .filter(post => {
@@ -87,7 +87,7 @@ module.exports = async function() {
             return true;
         })
         // slavelabour threads must start with [OFFER]
-        .filter(post => sub != 'slavelabour' || /\[OFFER\]/.test(post.title));
+        .filter(post => sub != 'slavelabour' || /\[OFFER\]/i.test(post.title));
       posts = posts.concat(_posts);
 
       // Load moderators
@@ -114,7 +114,7 @@ module.exports = async function() {
       // Sort oldest to newest
       .sort((a, b) => a.created_utc - b.created_utc)
       // Limit to 45 posts
-      .splice(45, 999);
+      .splice(0, 45);
 
     for (let post of posts) {
       const author = await post.author.fetch();
