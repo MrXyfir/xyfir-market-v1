@@ -374,8 +374,6 @@ You can start building your reputation on xyMarket by [confirming trades](${buil
 
 ---
 
-Questions, complaints, or feedback? Post them in r/xyMarketMeta.
-
 Have a nice day!`;
 
 exports.POST_FINDER_MESSAGE = id =>
@@ -438,8 +436,6 @@ You can start building your reputation on xyMarket by
   ])}) you've made with other users.
 
 ---
-
-Questions, complaints, or feedback? Post them in r/xyMarketMeta.
 
 Have a nice day!
 
