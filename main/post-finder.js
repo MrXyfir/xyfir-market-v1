@@ -114,7 +114,7 @@ module.exports = async function() {
       // Sort oldest to newest
       .sort((a, b) => a.created_utc - b.created_utc)
       // Limit to 45 posts
-      .splice(0, 45);
+      .splice(45, 999);
 
     for (let post of posts) {
       const author = await post.author.fetch();
