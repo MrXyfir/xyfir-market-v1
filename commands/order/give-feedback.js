@@ -23,12 +23,12 @@ module.exports = async function(r, message, command) {
     await db.getConnection();
     let rows = await db.query(
       `
-      SELECT
-        thread, buyer, (
-          SELECT orderId FROM feedback WHERE orderId = ? AND user = ?
-        ) AS feedbackExists
-      FROM orders WHERE id = ? AND status = ?
-    `,
+        SELECT
+          thread, buyer, (
+            SELECT orderId FROM feedback WHERE orderId = ? AND user = ?
+          ) AS feedbackExists
+        FROM orders WHERE id = ? AND status = ?
+      `,
       [command.order, message.author.name, command.order, orderStatus.COMPLETE]
     );
 
@@ -47,18 +47,13 @@ module.exports = async function(r, message, command) {
     if (!isBuyer && order.seller != message.author.name)
       throw templates.UNAUTHORIZED_COMMAND;
 
-    await db.query(
-      `
-      INSERT INTO feedback SET ?
-    `,
-      {
-        feedbackType: command.type,
-        feedback: command.feedback,
-        userType: isBuyer ? 1 : 2,
-        orderId: command.order,
-        user: message.author.name
-      }
-    );
+    await db.query(`INSERT INTO feedback SET ?`, {
+      feedbackType: command.type,
+      feedback: command.feedback,
+      userType: isBuyer ? 1 : 2,
+      orderId: command.order,
+      user: message.author.name
+    });
 
     // Update the stats thread of the user who received the feedback
     await updateUserStatsThread(isBuyer ? order.seller : order.buyer, db);

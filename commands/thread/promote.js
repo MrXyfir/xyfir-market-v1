@@ -25,27 +25,22 @@ module.exports = async function(r, message, command) {
     await db.getConnection();
     let rows = await db.query(
       `
-      SELECT id FROM sales_threads
-      WHERE id = ? AND author = ? AND approved = ? AND removed = ?
-    `,
+        SELECT id FROM sales_threads
+        WHERE id = ? AND author = ? AND approved = ? AND removed = ?
+      `,
       [command.thread, message.author.name, 1, 0]
     );
 
     if (!rows.length) throw templates.NO_MATCHING_THREAD(command.thread);
 
     // Create order
-    const dbRes = await db.query(
-      `
-      INSERT INTO orders SET ?
-    `,
-      {
-        type: orderTypes.PROMOTE_THREAD,
-        buyer: message.author.name,
-        thread: command.thread,
-        currency: command.currency,
-        quantity: command.months
-      }
-    );
+    const dbRes = await db.query(`INSERT INTO orders SET ?`, {
+      type: orderTypes.PROMOTE_THREAD,
+      buyer: message.author.name,
+      thread: command.thread,
+      currency: command.currency,
+      quantity: command.months
+    });
     const orderId = dbRes.insertId;
 
     if (!orderId) throw templates.UNEXPECTED_ERROR;
@@ -63,12 +58,12 @@ module.exports = async function(r, message, command) {
     // Get amounts for recent unpaid 'promote thread' orders for same currency
     rows = await db.query(
       `
-      SELECT amount
-      FROM orders
-      WHERE
-        created > DATE_SUB(NOW(), INTERVAL 1 HOUR) AND
-        status = ? AND type = ? AND currency = ?
-    `,
+        SELECT amount
+        FROM orders
+        WHERE
+          created > DATE_SUB(NOW(), INTERVAL 1 HOUR) AND
+          status = ? AND type = ? AND currency = ?
+      `,
       [orderStatus.UNPAID, orderTypes.PROMOTE_THREAD, command.currency]
     );
 

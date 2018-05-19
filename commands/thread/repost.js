@@ -18,11 +18,11 @@ module.exports = async function(r, comment, threadId) {
     await db.getConnection();
     const [thread] = await db.query(
       `
-      SELECT id, data FROM sales_threads
-      WHERE
-        id = ? AND author = ? AND approved = ? AND unstructured = ? AND
-        (removed = ? OR promoted > NOW())
-    `,
+        SELECT id, data FROM sales_threads
+        WHERE
+          id = ? AND author = ? AND approved = ? AND unstructured = ? AND
+          (removed = ? OR promoted > NOW())
+      `,
       [threadId, comment.author.name, 1, 0, 1]
     );
 
@@ -55,10 +55,10 @@ module.exports = async function(r, comment, threadId) {
     // Updated id will cascade to other tables
     await db.query(
       `
-      UPDATE sales_threads
-      SET id = ?, created = ?, removed = ?, dateRemoved = ?
-      WHERE id = ?
-    `,
+        UPDATE sales_threads
+        SET id = ?, created = ?, removed = ?, dateRemoved = ?
+        WHERE id = ?
+      `,
       [repost.id, repost.created, 0, '0000-00-00 00:00:00', threadId]
     );
     db.release();

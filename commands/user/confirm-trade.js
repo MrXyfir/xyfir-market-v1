@@ -29,17 +29,12 @@ module.exports = async function(r, message, command) {
       await createUser(command.user, db);
 
       // Save trade / get id
-      const result = await db.query(
-        `
-        INSERT INTO trades SET ?
-      `,
-        {
-          trader1: message.author.name,
-          trader2: command.user,
-          item1: command.item1,
-          item2: command.item2
-        }
-      );
+      const result = await db.query(`INSERT INTO trades SET ?`, {
+        trader1: message.author.name,
+        trader2: command.user,
+        item1: command.item1,
+        item2: command.item2
+      });
 
       if (!result.insertId) throw templates.UNEXPECTED_ERROR;
 
@@ -69,20 +64,20 @@ module.exports = async function(r, message, command) {
       // Validate that an unconfirmed trade exists between user, other user, at id
       const [trade] = await db.query(
         `
-        SELECT * FROM trades
-        WHERE id = ? AND trader1 = ? AND trader2 = ? AND confirmed = ?
-      `,
+          SELECT * FROM trades
+          WHERE id = ? AND trader1 = ? AND trader2 = ? AND confirmed = ?
+        `,
         [command.trade, command.user, message.author.name, 0]
       );
 
       // Validate that other trades between the two users have not taken place within 24 hours
       const rows = await db.query(
         `
-        SELECT id FROM trades
-        WHERE
-          trader1 IN(?) AND trader2 IN(?) AND
-          completed > DATE_SUB(NOW(), INTERVAL 1 DAY)
-      `,
+          SELECT id FROM trades
+          WHERE
+            trader1 IN(?) AND trader2 IN(?) AND
+            completed > DATE_SUB(NOW(), INTERVAL 1 DAY)
+        `,
         new Array(2).fill([command.user, message.author.name])
       );
 

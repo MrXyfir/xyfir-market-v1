@@ -28,10 +28,10 @@ module.exports = async function(r, message, command) {
     await db.getConnection();
     let rows = await db.query(
       `
-      SELECT author AS seller, data
-      FROM sales_threads
-      WHERE id = ? AND approved = ? AND removed = ?
-    `,
+        SELECT author AS seller, data
+        FROM sales_threads
+        WHERE id = ? AND approved = ? AND removed = ?
+      `,
       [command.thread, 1, 0]
     );
 
@@ -47,19 +47,14 @@ module.exports = async function(r, message, command) {
       throw templates.ESCROW_NOT_ACCEPTED;
 
     // Generate and create order
-    const dbRes = await db.query(
-      `
-      INSERT INTO orders SET ?
-    `,
-      {
-        type: orderTypes.PURCHASE,
-        buyer: message.author.name,
-        thread: command.thread,
-        escrow: command.escrow,
-        currency: command.currency,
-        quantity: command.quantity
-      }
-    );
+    const dbRes = await db.query(`INSERT INTO orders SET ?`, {
+      type: orderTypes.PURCHASE,
+      buyer: message.author.name,
+      thread: command.thread,
+      escrow: command.escrow,
+      currency: command.currency,
+      quantity: command.quantity
+    });
 
     if (!dbRes.insertId) throw templates.UNEXPECTED_ERROR;
 
@@ -77,13 +72,13 @@ module.exports = async function(r, message, command) {
     // and for threads owned by the creator of this thread
     rows = await db.query(
       `
-      SELECT amount
-      FROM orders
-      WHERE
-        thread IN (SELECT id FROM sales_threads WHERE author = ?) AND
-        created > DATE_SUB(NOW(), INTERVAL 1 HOUR) AND
-        status = ? AND type = ? AND currency = ?
-    `,
+        SELECT amount
+        FROM orders
+        WHERE
+          thread IN (SELECT id FROM sales_threads WHERE author = ?) AND
+          created > DATE_SUB(NOW(), INTERVAL 1 HOUR) AND
+          status = ? AND type = ? AND currency = ?
+      `,
       [thread.seller, orderStatus.UNPAID, orderTypes.PURCHASE, command.currency]
     );
 

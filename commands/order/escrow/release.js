@@ -1,7 +1,7 @@
 const orderStatus = require('constants/types/order-statuses');
 const sendMoney = require('lib/coinbase/send-money');
 const templates = require('constants/templates');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 
 /**
  * Allows buyer to release owed funds to seller.
@@ -10,18 +10,18 @@ const mysql = require('lib/mysql');
  * @param {number} orderId
  */
 module.exports = async function(r, message, orderId) {
-  const db = new mysql();
+  const db = new MySQL();
 
   try {
     // Make sure order exists, is in escrow, user is buyer
     await db.getConnection();
     const [order] = await db.query(
       `
-      SELECT
-        id, thread, buyer, amountForSeller, currency
-      FROM orders
-      WHERE id = ? AND status = ? AND buyer = ?
-    `,
+        SELECT
+          id, thread, buyer, amountForSeller, currency
+        FROM orders
+        WHERE id = ? AND status = ? AND buyer = ?
+      `,
       [orderId, orderStatus.IN_ESCROW, message.author.name]
     );
 

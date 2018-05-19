@@ -224,7 +224,8 @@ After sending the payment, you must confirm it by clicking [here](${buildCommand
 You may abandon this order and start a new one at any time by sending the
 purchase command again.`;
 
-exports.PAYMENT_AWAITING_CONFIRMATIONS = `The transaction you provided is valid. You will be notified once the
+exports.PAYMENT_AWAITING_CONFIRMATIONS = `
+The transaction you provided is valid. You will be notified once the
 transaction has reached the required number of confirmations. This process
 should take *at most* around 30 minutes depending on the currency used.`;
 

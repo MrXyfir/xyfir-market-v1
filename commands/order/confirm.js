@@ -22,14 +22,14 @@ module.exports = async function(r, message, command) {
     await db.getConnection();
     const [order] = await db.query(
       `
-      SELECT
-        o.amount, o.currency, st.data AS threadData
-      FROM
-        orders AS o, sales_threads AS st
-      WHERE
-        o.id = ? AND o.buyer = ? AND o.status = ? AND
-        st.id = o.thread AND o.created > DATE_SUB(NOW(), INTERVAL 16 MINUTE)
-    `,
+        SELECT
+          o.amount, o.currency, st.data AS threadData
+        FROM
+          orders AS o, sales_threads AS st
+        WHERE
+          o.id = ? AND o.buyer = ? AND o.status = ? AND
+          st.id = o.thread AND o.created > DATE_SUB(NOW(), INTERVAL 16 MINUTE)
+      `,
       [command.orderId, message.author.name, orderStatus.UNPAID]
     );
 
@@ -46,9 +46,9 @@ module.exports = async function(r, message, command) {
     // Set order status and transaction
     await db.query(
       `
-      UPDATE orders SET status = ?, transaction = ?
-      WHERE id = ?
-    `,
+        UPDATE orders SET status = ?, transaction = ?
+        WHERE id = ?
+      `,
       [orderStatus.AWAITING_CONFIRMATIONS, command.transaction, command.orderId]
     );
     db.release();

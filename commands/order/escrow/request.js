@@ -1,6 +1,6 @@
 const orderStatus = require('constants/types/order-statuses');
 const templates = require('constants/templates');
-const mysql = require('lib/mysql');
+const MySQL = require('lib/mysql');
 
 /**
  * @typedef {object} RequestEscrowCommand
@@ -15,7 +15,7 @@ const mysql = require('lib/mysql');
  * @param {RequestEscrowCommand} command
  */
 module.exports = async function(r, message, command) {
-  const db = new mysql();
+  const db = new MySQL();
 
   try {
     // Make sure order exists and is in escrow
