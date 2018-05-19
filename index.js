@@ -1,4 +1,5 @@
 require('app-module-path').addPath(__dirname);
+require('main/track')();
 
 const databaseCleanup = require('main/database-cleanup');
 const paymentListener = require('main/payment-listener');
