@@ -49,12 +49,12 @@ module.exports = async function() {
       // Update statsThread, statsThreadExpires in users table
       await db.query(
         `
-        UPDATE users SET
-          statsThread = ?,
-          statsThreadExpires = DATE_ADD(NOW(), INTERVAL 5 MONTH)
-        WHERE
-          name = ?
-      `,
+          UPDATE users SET
+            statsThread = ?,
+            statsThreadExpires = DATE_ADD(NOW(), INTERVAL 5 MONTH)
+          WHERE
+            name = ?
+        `,
         [newThreadId, user.name]
       );
 

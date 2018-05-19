@@ -16,9 +16,9 @@ module.exports = async function() {
     // Delete unconfirmed/unpaid orders over a day old
     await db.query(
       `
-      DELETE FROM orders
-      WHERE status IN (?) AND created < DATE_SUB(NOW(), INTERVAL 1 DAY)
-    `,
+        DELETE FROM orders
+        WHERE status IN (?) AND created < DATE_SUB(NOW(), INTERVAL 1 DAY)
+      `,
       [[orderStatus.UNPAID, orderStatus.AWAITING_CONFIRMATIONS]]
     );
 

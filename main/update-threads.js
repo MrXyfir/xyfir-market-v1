@@ -20,9 +20,9 @@ module.exports = async function() {
     await db.getConnection();
     let rows = await db.query(
       `
-      SELECT id, unstructured FROM sales_threads
-      WHERE created < ? AND removed = 0 AND NOW() > promoted
-    `,
+        SELECT id, unstructured FROM sales_threads
+        WHERE created < ? AND removed = 0 AND NOW() > promoted
+      `,
       [
         moment()
           .subtract(1, 'week')
@@ -35,10 +35,10 @@ module.exports = async function() {
       // Mark threads as 'removed'
       await db.query(
         `
-        UPDATE sales_threads
-        SET removed = 1, dateRemoved = NOW()
-        WHERE id IN (?)
-      `,
+          UPDATE sales_threads
+          SET removed = 1, dateRemoved = NOW()
+          WHERE id IN (?)
+        `,
         [rows.map(r => r.id)]
       );
 
@@ -85,10 +85,10 @@ module.exports = async function() {
       // Check if first group of category exists
       // Initialize values
       if (!categories[base]) {
-        (categories[base] = []),
-          (categories[base].groups = 1),
-          (categories[base].currentGroupLength =
-            base.length + row.id.length + row.data.title.length + 39);
+        categories[base] = [];
+        categories[base].groups = 1;
+        categories[base].currentGroupLength =
+          base.length + row.id.length + row.data.title.length + 39;
       }
       // Fit row into last category group
       else if (categories[base].currentGroupLength < 9500) {
@@ -100,10 +100,10 @@ module.exports = async function() {
       }
       // Create a new group for the category
       else {
-        categories[base].groups++,
-          (categories[base].currentGroupLength =
-            category.length + row.id.length + row.data.title.length + 39),
-          (category = row.data.category + ` (#${categories[base].groups})`);
+        categories[base].groups++;
+        categories[base].currentGroupLength =
+          category.length + row.id.length + row.data.title.length + 39;
+        category = row.data.category + ` (#${categories[base].groups})`;
 
         categories[category] = [];
       }

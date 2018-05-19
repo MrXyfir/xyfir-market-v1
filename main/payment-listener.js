@@ -22,13 +22,13 @@ module.exports = async function() {
     await db.getConnection();
     const orders = await db.query(
       `
-      SELECT
-        id, type, thread, buyer, escrow, quantity, currency,
-        amount, transaction
-      FROM orders
-      WHERE
-        status = ? AND created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
-    `,
+        SELECT
+          id, type, thread, buyer, escrow, quantity, currency,
+          amount, transaction
+        FROM orders
+        WHERE
+          status = ? AND created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+      `,
       [orderStatus.AWAITING_CONFIRMATIONS]
     );
 
@@ -69,10 +69,10 @@ module.exports = async function() {
         // Mark thread as promoted
         await db.query(
           `
-          UPDATE sales_threads
-          SET promoted = DATE_ADD(NOW(), INTERVAL ? MONTH)
-          WHERE id = ?
-        `,
+            UPDATE sales_threads
+            SET promoted = DATE_ADD(NOW(), INTERVAL ? MONTH)
+            WHERE id = ?
+          `,
           [order.quantity, thread.id]
         );
 
@@ -83,7 +83,7 @@ module.exports = async function() {
           to: order.buyer
         });
       } else if (order.type == orderTypes.PURCHASE) {
-      /* Handle normal purchase */
+        /* Handle normal purchase */
         try {
           // Validate confirmations of transaction
           await validateTransaction({
@@ -101,9 +101,9 @@ module.exports = async function() {
           // Load enough autobuy items to satisfy order
           rows = await db.query(
             `
-            SELECT id, item FROM autobuy_items WHERE thread = ?
-            ORDER BY added ASC LIMIT ?
-          `,
+              SELECT id, item FROM autobuy_items WHERE thread = ?
+              ORDER BY added ASC LIMIT ?
+            `,
             [thread.id, order.quantity]
           );
 
